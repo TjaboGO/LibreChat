@@ -43,6 +43,7 @@ import usePastedTextEdit from '~/hooks/Files/usePastedTextEdit';
 import useAskAnswerMode from '~/hooks/Input/useAskAnswerMode';
 import AskUserQuestionPopover from './AskUserQuestionPopover';
 import InterruptSteerButton from './InterruptSteerButton';
+import ComposerQuickToggles from './ComposerQuickToggles';
 import PastedTextDialog from './Files/PastedTextDialog';
 import DuringRunSendButton from './DuringRunSendButton';
 import ProjectLandingChip from '../ProjectLandingChip';
@@ -56,6 +57,7 @@ import CodeWorkspaceMenu from './CodeWorkspaceMenu';
 import useSteering from '~/hooks/Chat/useSteering';
 import CodeApprovalMenu from './CodeApprovalMenu';
 import FileFormChat from './Files/FileFormChat';
+import ComposerTopBar from './ComposerTopBar';
 import EffortSelector from './EffortSelector';
 import InFlightSteers from './InFlightSteers';
 import TextareaHeader from './TextareaHeader';
@@ -743,6 +745,11 @@ const ChatForm = memo(function ChatForm({
                 isTemporary && 'border-series-6/50 bg-series-6/10 high-contrast:border-series-6',
               )}
             >
+              <ComposerTopBar
+                text={textValue ?? ''}
+                isCollapsed={isCollapsed}
+                onToggleCollapse={() => setIsCollapsed((prev) => !prev)}
+              />
               <TextareaHeader addedConvo={addedConvo} setAddedConvo={setAddedConvo} />
               <PendingManualSkillsChips conversationId={conversationId} />
               {quotesEnabled && (
@@ -942,6 +949,7 @@ const ChatForm = memo(function ChatForm({
               </BadgeRowProvider>
               {TextToSpeech && automaticPlayback && <AutoPlayAudio index={index} />}
             </div>
+            <ComposerQuickToggles index={index} />
           </div>
         </div>
       </div>

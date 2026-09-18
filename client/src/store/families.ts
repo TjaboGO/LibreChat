@@ -298,12 +298,25 @@ const showPlusPopoverFamily = atomFamily<boolean, string | number | null>({
  *  mode for now — it changes the attach menu's contents but does not yet
  *  drive a real autonomy setting or task list (planned for Fas 7, see
  *  docs/ui-reference/PLAN.md). */
-const composerModeFamily = atomFamily<'chat' | 'cowork', string | number | null>({
+export type OutputFormat = 'artifact' | 'docs' | 'slides' | 'design';
+export type AutoApprovalOption = 'auto' | 'manual' | 'skip';
+
+export const autoApprovalFamily = atomFamily<AutoApprovalOption, string | number | null>({
+  key: 'autoApprovalByIndex',
+  default: 'auto',
+});
+
+export const outputFormatFamily = atomFamily<OutputFormat, string | number | null>({
+  key: 'outputFormatByIndex',
+  default: 'artifact',
+});
+
+export const composerModeFamily = atomFamily<'chat' | 'cowork', string | number | null>({
   key: 'composerModeByIndex',
   default: 'chat',
 });
 
-const researchModeFamily = atomFamily<boolean, string | number | null>({
+export const researchModeFamily = atomFamily<boolean, string | number | null>({
   key: 'researchModeByIndex',
   default: false,
 });
@@ -829,6 +842,8 @@ export default {
   showPlusPopoverFamily,
   composerModeFamily,
   researchModeFamily,
+  outputFormatFamily,
+  autoApprovalFamily,
   activePromptByIndex,
   useClearSubmissionState,
   showPromptsPopoverFamily,
