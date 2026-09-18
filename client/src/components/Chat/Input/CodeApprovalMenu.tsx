@@ -2,7 +2,7 @@ import * as Ariakit from '@ariakit/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { QueryKeys, Constants } from 'librechat-data-provider';
 import { TooltipAnchor, composerControlClasses } from '@librechat/client';
-import { Check, ChevronDown, FilePen, FileQuestionMark, FileTerminal } from 'lucide-react';
+import { Check, ChevronDown, Hand, ChevronsRight, TriangleAlert } from 'lucide-react';
 import type { CodeApprovalMode, TConversation } from 'librechat-data-provider';
 import type { LucideIcon } from 'lucide-react';
 import type { SetterOrUpdater } from 'recoil';
@@ -11,28 +11,26 @@ import { useCodeApprovalModePreference } from '~/hooks/Agents/codeApprovalPrefer
 import { useCodeApprovalMode, useLocalize } from '~/hooks';
 import { cn } from '~/utils';
 
-/** The modes answer one question — what may happen to the workspace without the
- *  reader — so they share the document glyph and differ only in what is drawn on
- *  it, escalating with what each mode permits: a question the reader answers, a
- *  pen for writes that need no answer, a prompt for commands that need none
- *  either. The shield stays with the pending review button, which sits in this
- *  same row. */
+/** Icons escalate with what each mode permits, matching Claude's own approval
+ *  dropdown: a raised hand for "ask me first", a fast-forward for "keep going
+ *  without stopping", a warning for "don't ask even for risky changes". The
+ *  shield stays with the pending review button, which sits in this same row. */
 const modeOptions: Record<
   CodeApprovalMode,
   { icon: LucideIcon; label: TranslationKeys; description: TranslationKeys }
 > = {
   ask: {
-    icon: FileQuestionMark,
+    icon: Hand,
     label: 'com_ui_code_approval_ask',
     description: 'com_ui_code_approval_ask_description',
   },
   acceptEdits: {
-    icon: FilePen,
+    icon: ChevronsRight,
     label: 'com_ui_code_approval_accept_edits',
     description: 'com_ui_code_approval_accept_edits_description',
   },
   fullAccess: {
-    icon: FileTerminal,
+    icon: TriangleAlert,
     label: 'com_ui_code_approval_full_access',
     description: 'com_ui_code_approval_full_access_description',
   },
