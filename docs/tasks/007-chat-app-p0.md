@@ -69,3 +69,33 @@ istället för att bygga ny backend-infrastruktur som inte är beställd än.
 **Klart när:** `npx tsc --noEmit` och `npm --prefix packages/client run test`
 är gröna, och varje delmoment ovan är visuellt/funktionellt jämförbart med
 motsvarande skärmdump.
+
+## Resultat — +-menyn och Settings-skalet (Fas 6)
+
+### Vad som har gjorts:
+1. **Composer `+`-meny (`AttachPlusMenu.tsx`):**
+   - Implementerad som en cirkulär `+`-knapp med tooltip och snabbkommandot `⌘U`.
+   - **Chat-läge:** "Add files or photos" (`⌘U`), "Take a screenshot" (web API `getDisplayMedia`), "Add to project" (submenu), skiljelinje, "Skills" (submenu), "Connectors" (submenu), "Design system" (submenu), "Add plugins", skiljelinje, "Research", "Web search" (med checkmark kopplad till `BadgeRowContext.webSearch`), "Memory" (med checkmark kopplad till `BadgeRowContext.memory`).
+   - **Cowork-läge:** "Add files or photos", "Take a screenshot", skiljelinje, "Skills", "Connectors", "Design system", "Add plugins", "Devices" (med "Run tasks on"-enhetslista), "Memory".
+   - Full testtäckning i `AttachPlusMenu.spec.tsx` (6/6 tester gröna) och full regressionstestning mot `AttachFileChat.spec.tsx` (29/29 tester gröna).
+
+2. **Settings-skal och grupperad navigering (`Sidebar.tsx`, `Content.tsx`, `Dialog.tsx`):**
+   - Vänsternavigeringen är grupperad exakt enligt Claude-skärmdumparna (`batch-2-screenshots.md`):
+     - **Settings:** Preferences, Account, Privacy, Billing & APIs, Capabilities, Memory, Design systems, Claude Code, Cowork, Claude in Chrome.
+     - **Desktop app:** General, Extensions, Developer, About (villkorad på `aboutEnabled`).
+     - **Customize:** Skills, Connectors, Plugins, Langfuse (villkorad på `langfuseConnectionAccess`).
+   - Sökfältet överst med sökning mot `registry.tsx` och direkt rensningsknapp (`X` och `Escape`).
+   - Bakåtkompatibel med sökindexering för legacy-tabbarna (Chat, Speech, Data) så sökning fungerar friktionsfritt utan att bryta `registry.spec.ts`.
+
+3. **Settings — Flikar:**
+   - **Preferences (`PreferencesTab.tsx`):** Appearance (System/Light/Dark med temaintegration mot `ThemeContext`, Anthropic Serif chat font-dropdown, System/Reduced motion-kontroll), Voice (Language, Style, Speed dropdowns), Notifications (exakt de 5 togglarna från Anthropics UI med `aria-label`).
+   - **Account (`AccountTab.tsx`):** Profil (Avatar med initierad användare och ändra-knapp, Full name, "What should Claude call you?", arbetsbeskrivning-dropdown, "Instructions for Claude"-textarea), Account (Log out, inaktiverad Delete account, Organisation ID), Trusted devices (tom state-kort), Active sessions-datamodell med "Current"-badge.
+   - **Privacy (`PrivacyTab.tsx`):** Introkopiering och expanderbara paneler ("How we protect your data", "How we use your data"), Location metadata-toggle, Help improve AI-toggle, Your data-knappar (Export data, Shared chats, Shared artifacts, Uploaded files, Your feedback, Memory preferences).
+   - **Billing & APIs (`BillingApiTab.tsx`):** Anpassad för vår självhostade OpenRouter-gateway och DeepSeek direct API istället för Claude Pro: länk till `openrouter.ai/credits`, visning av token credits vid aktiverat saldo, statusindikatorer för aktiv primär OpenRouter-gateway och DeepSeek Direct-endpoint, informationsrutor för Extended Thinking (Effort-selector) och Stop-Token-skydd (`dropParams: ['stop']`), samt integrerad `ProviderKeys`-hanterare.
+   - **Placeholder-skal (`PlaceholderTab.tsx`):** Modulärt skal för Capabilities, Memory, Design systems, Claude Code, Cowork, Chrome, Extensions, Developer, Skills, Connectors och Plugins inför Fas 7–9.
+
+### Verifiering och tester:
+- `npm --prefix client run typecheck` (`tsc --noEmit`): 0 fel, exit code 0.
+- `npm --prefix client run test:ci -- src/components/Nav/Settings/`: Samtliga 7 testsviter och 39 enhetstester gröna.
+- `npm --prefix client run test:ci -- src/components/Chat/Input/Files/`: Samtliga 8 testsviter och 145 enhetstester gröna.
+- Pre-commit hooks (`prettier`, `sort-imports`, `eslint --max-warnings=0`): Godkända utan varningar.

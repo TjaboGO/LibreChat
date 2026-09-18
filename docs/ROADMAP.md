@@ -86,17 +86,16 @@ rullats ut till det kontot skärmdumparna togs från.
 - [x] Composer: Chat/Cowork-segmentväxlare (`ComposerModeToggle`, UI-läge
       klart — uppgiftslista/Devices-undermeny är Fas 7). `CoworkButton`
       omdöpt till `SubagentActivityButton` (rätt funktion, fel varumärke).
-- [ ] Ordräknare-popover, usage-popover, `+`-meny med exakt de rader som
-      syns i skärmdumparna (kräver nya kopplingar för Design system/Add
-      plugins/Research; Web search + Memory kan koppla mot befintlig
-      `useToolToggle`/`BadgeRowContext`-infrastruktur)
+- [x] Composer `+`-meny: Chat- och Cowork-varianter med exakt de rader som
+      syns i skärmdumparna (Add files, Screenshot, Add to project, Skills,
+      Connectors, Design system, Add plugins, Research, Web search, Memory, Devices)
 - [x] Effort/Thinking-väljare (fristående composer-knapp, se
       `docs/tasks/007-chat-app-p0.md` för avvikelsen mot en nästlad
       modell-flyout). Modellväljaren själv är oförändrad — Task 002
       verifierade redan att modellbyte fungerar mot alla OpenRouter-modeller.
-- [ ] Output-format-dropdown (Docs/Slides/Design/Artifact)
-- [ ] Settings-skal: vänster-nav grupperad i Settings/Desktop app/Customize
-- [ ] Settings — Preferences, Account, Privacy-flikar
+- [ ] Ordräknare-popover, usage-popover, output-format-dropdown (Docs/Slides/Design/Artifact)
+- [x] Settings-skal: vänster-nav grupperad i Settings/Desktop app/Customize
+- [x] Settings — Preferences, Account, Privacy, Billing & APIs samt placeholders för efterföljande faser
 - [x] Ersätt `CoworkButton` med den riktiga Cowork-modellen (se Fas 4-anteckning)
 
 → [docs/tasks/007-chat-app-p0.md](tasks/007-chat-app-p0.md)
