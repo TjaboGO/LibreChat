@@ -32,10 +32,19 @@ först eftersom flera senare delmoment hänger på dem):**
    plugins, divider, Research, Web search (checkmark=på), Memory
    (checkmark=på). Exakt ordning och ikoner enligt batch-4.
 
-5. **Modell/Effort/Thinking-väljare** — två-nivå flyout: vänster panel
-   modellista (Fable 5.1/Opus 5/Sonnet 5/Haiku 4.5 med beskrivningar), höger
-   panel Effort (Low/Medium/High "Default"/Extra/Max) + Thinking-toggle. Se
-   batch-1 "model/effort selector dropdown".
+5. ~~**Modell/Effort/Thinking-väljare**~~ — **Klart, men med en medveten
+   avvikelse.** Byggde `EffortSelector.tsx` som en fristående composer-knapp
+   (Low/Medium/High "Default"/Extra/Max + Thinking-toggle) istället för att
+   nästla den i den befintliga modellväljarens flyout. Modellväljaren
+   (`ModelSelector.tsx`) är en komplex, generisk multi-endpoint-meny
+   (`CustomMenu`/`ModelSelectorContext`) som redan listar alla riktiga
+   OpenRouter-modeller korrekt (verifierat i Task 002) — att kirurgiskt
+   nästla en Claude-specifik flyout där inne riskerade regressioner jag inte
+   kan verifiera utan en körande app. Funktionellt likvärdigt
+   (`conversation.reasoning_effort`, samma `ReasoningEffort`-enum), bara
+   placerad som en egen knapp bredvid modellväljaren istället för inuti den.
+   Visas bara på Agents-endpointen (vår OpenRouter-väg); ingen
+   modell-per-modell-koll av vilka som faktiskt stödjer reasoning.
 
 6. **Settings-skal** — modal med vänster-nav grupperad: "Settings" (Preferences,
    Account, Privacy, Billing, Capabilities, Memory, Design systems, Claude Code,

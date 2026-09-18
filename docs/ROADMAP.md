@@ -85,7 +85,10 @@ rullats ut till det kontot skärmdumparna togs från.
       Customize, More — i den ordningen, ersätter dagens "Start new chat"-knapp
 - [ ] Composer: Chat/Cowork-segmentväxlare, ordräknare-popover, usage-popover,
       `+`-meny med exakt de rader som syns i skärmdumparna
-- [ ] Modell/Effort/Thinking-väljare: två-nivå flyout enligt katalogen
+- [x] Effort/Thinking-väljare (fristående composer-knapp, se
+      `docs/tasks/007-chat-app-p0.md` för avvikelsen mot en nästlad
+      modell-flyout). Modellväljaren själv är oförändrad — Task 002
+      verifierade redan att modellbyte fungerar mot alla OpenRouter-modeller.
 - [ ] Output-format-dropdown (Docs/Slides/Design/Artifact)
 - [ ] Settings-skal: vänster-nav grupperad i Settings/Desktop app/Customize
 - [ ] Settings — Preferences, Account, Privacy-flikar
