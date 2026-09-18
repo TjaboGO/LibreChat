@@ -71,6 +71,11 @@ const loadDesignView = () =>
     Component: m.default,
   }));
 
+const loadChatsAndTasksView = () =>
+  import('~/components/Chats/ChatsAndTasksPage').then((m) => ({
+    Component: m.default,
+  }));
+
 const baseEl = document.querySelector('base');
 const baseHref = baseEl?.getAttribute('href') || '/';
 
@@ -206,6 +211,10 @@ export const router = createBrowserRouter(
             {
               path: 'design',
               lazy: loadDesignView,
+            },
+            {
+              path: 'chats',
+              lazy: loadChatsAndTasksView,
             },
             {
               path: 'agents',

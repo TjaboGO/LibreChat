@@ -7,3 +7,7 @@ export { default as CapabilitiesTab } from './CapabilitiesTab';
 export { default as MemoryTab } from './MemoryTab';
 export { default as SkillsTab } from './SkillsTab';
 export { default as ConnectorsTab } from './ConnectorsTab';
+export { default as DesignSystemsTab } from './DesignSystemsTab';
+export { default as PluginsTab } from './PluginsTab';
+export { default as DeveloperTab } from './DeveloperTab';
+export { default as ExtensionsTab } from './ExtensionsTab';

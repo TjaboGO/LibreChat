@@ -33,6 +33,10 @@ import {
   MemoryTab,
   SkillsTab,
   ConnectorsTab,
+  DesignSystemsTab,
+  PluginsTab,
+  DeveloperTab,
+  ExtensionsTab,
 } from '../SettingsTabs/Claude';
 import LangfuseConnection from '../SettingsTabs/Integrations/LangfuseConnection';
 import About from '../SettingsTabs/About/About';
@@ -221,17 +225,7 @@ export const TABS: TabMeta[] = [
     group: 'settings',
     labelKey: 'com_ui_settings_tab_design_systems' as TranslationKeys,
     icon: createElement(Palette, { className: 'h-4 w-4' }),
-    Component: () =>
-      createElement(PlaceholderTab, {
-        title: 'Design systems',
-        description: 'Figma tokens, component systems, and design palettes.',
-        phase: 'Fas 8',
-        icon: Palette,
-        features: [
-          'Create design systems using Claude or Claude Code',
-          'Design token sync with Figma/GitHub',
-        ],
-      }),
+    Component: DesignSystemsTab,
     sections: [],
   },
   {
@@ -323,14 +317,7 @@ export const TABS: TabMeta[] = [
     group: 'desktop',
     labelKey: 'com_ui_settings_tab_extensions' as TranslationKeys,
     icon: createElement(Puzzle, { className: 'h-4 w-4' }),
-    Component: () =>
-      createElement(PlaceholderTab, {
-        title: 'Extensions',
-        description: 'Installed local extensions and runtime connectors.',
-        phase: 'Fas 8',
-        icon: Puzzle,
-        features: ['Local extension manager', 'Permissions & sandbox configuration'],
-      }),
+    Component: ExtensionsTab,
     sections: [],
   },
   {
@@ -338,17 +325,7 @@ export const TABS: TabMeta[] = [
     group: 'desktop',
     labelKey: 'com_ui_settings_tab_developer' as TranslationKeys,
     icon: createElement(Code2, { className: 'h-4 w-4' }),
-    Component: () =>
-      createElement(PlaceholderTab, {
-        title: 'Developer',
-        description: 'Local MCP servers and debug tools.',
-        phase: 'Fas 8',
-        icon: Code2,
-        features: [
-          'Local MCP server discovery & inspection',
-          'Debug diagnostics and raw request logs',
-        ],
-      }),
+    Component: DeveloperTab,
     sections: [],
   },
   {
@@ -383,14 +360,7 @@ export const TABS: TabMeta[] = [
     group: 'customize',
     labelKey: 'com_ui_settings_tab_plugins' as TranslationKeys,
     icon: createElement(Package, { className: 'h-4 w-4' }),
-    Component: () =>
-      createElement(PlaceholderTab, {
-        title: 'Plugins',
-        description: 'Integrated tool bundles and extensions.',
-        phase: 'Fas 8',
-        icon: Package,
-        features: ['Discover and install plugins', 'Bundled connector + skill packs'],
-      }),
+    Component: PluginsTab,
     sections: [],
   },
   {
