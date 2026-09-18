@@ -7,7 +7,7 @@ describe('ProviderAvatar', () => {
   it('paints the brand background and switches art to white on it', () => {
     const { container } = render(<ProviderAvatar provider={ProviderId.anthropic} />);
     const tile = container.firstChild as HTMLElement;
-    expect(tile).toHaveStyle({ background: 'var(--provider-anthropic, #d09a74)' });
+    expect(tile).toHaveStyle({ background: 'var(--provider-anthropic, #D97757)' });
     expect(tile).toHaveStyle({ color: 'var(--provider-foreground, #ffffff)' });
   });
 

@@ -90,7 +90,7 @@ export const defaultBrands: IThemeBrands = Object.freeze({
   'provider-openai': '#19C37D',
   'provider-openai-gpt4': '#AB68FF',
   'provider-openai-reasoning': '#000000',
-  'provider-anthropic': '#d09a74',
+  'provider-anthropic': '#D97757',
   'provider-azure': 'linear-gradient(0.375turn, #61bde2, #4389d0)',
   'provider-bedrock': '#268672',
   'provider-foreground': '#ffffff',

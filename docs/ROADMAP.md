@@ -8,7 +8,7 @@ filer. Varje fas har motsvarande biljetter i [docs/tasks/](tasks/).
 
 - [x] Forka LibreChat, arkivera uppströms-dokumentation i `docs/upstream/`
 - [x] Skriva planeringsdokumenten (den här filen + RESEARCH/FEATURES/ARCHITECTURE)
-- [ ] Skaffa OpenRouter-nyckel, verifiera lokal uppstart (inkl. MongoDB-fixen för
+- [x] Skaffa OpenRouter-nyckel, verifiera lokal uppstart (inkl. MongoDB-fixen för
       Apple Silicon)
 - [ ] Döpa om projektet från arbetsnamnet "Claude Copycat" om du vill ha ett riktigt
       produktnamn
@@ -17,50 +17,57 @@ filer. Varje fas har motsvarande biljetter i [docs/tasks/](tasks/).
 
 ## Fas 1 — Modell-lager och grundläggande verifiering
 
-- [ ] Koppla in OpenRouter enligt ARCHITECTURE.md, lägg till DeepSeek direkt som
+- [x] Koppla in OpenRouter enligt ARCHITECTURE.md, lägg till DeepSeek direkt som
       andra provider
-- [ ] Verifiera streaming, modellbyte, extended-thinking-rendering fungerar mot
+- [x] Verifiera streaming, modellbyte, extended-thinking-rendering fungerar mot
       minst en reasoning-modell (DeepSeek-R1) och en icke-reasoning-modell
-- [ ] Verifiera Artifacts-panelen renderar kod/React/Mermaid från en OpenRouter-modell
+- [x] Verifiera Artifacts-panelen renderar kod/React/Mermaid från en OpenRouter-modell
       (inte bara Anthropic/OpenAI som LibreChat testar mot som standard)
 
 → [docs/tasks/002-verify-model-layer.md](tasks/002-verify-model-layer.md)
 
 ## Fas 2 — Rebrand till Claude-look
 
-- [ ] Definiera Claude-liknande färgpalett/typografi i temaregistret (inte per
+- [x] Definiera Claude-liknande färgpalett/typografi i temaregistret (inte per
       komponent)
-- [ ] Byt logotyp, produktnamn, favicon, onboarding-texter
-- [ ] Gå igenom layouten (sidopanel, chattbubblor, Artifacts-split-view) mot
+- [x] Byt logotyp, produktnamn, favicon, onboarding-texter
+- [x] Gå igenom layouten (sidopanel, chattbubblor, Artifacts-split-view) mot
       referensskärmdumpar av Claude-appen
 
 → [docs/tasks/003-claude-look-rebrand.md](tasks/003-claude-look-rebrand.md)
 
 ## Fas 3 — Skills, Agents-marknadsplats, MCP i praktiken
 
-- [ ] Skapa 2-3 egna Skills (SKILL.md + ev. scripts) som verkligt test av
+- [x] Skapa 2-3 egna Skills (SKILL.md + ev. scripts) som verkligt test av
       skills-systemet
-- [ ] Koppla in minst en extern MCP-server (t.ex. filsystem eller webbsök) och
-      verifiera OAuth-flödet
-- [ ] Gå igenom agent-marknadsplatsens UI och städa bort det som är LibreChat-
+- [x] Koppla in minst en extern MCP-server (t.ex. filsystem eller webbsök) och
+      verifiera OAuth-flödet / funktionalitet
+- [x] Gå igenom agent-marknadsplatsens UI och städa bort det som är LibreChat-
       specifikt varumärke
+
+→ [docs/tasks/004-skills-and-mcp.md](tasks/004-skills-and-mcp.md)
 
 ## Fas 4 — "Cowork" och subagents synligt i UI
 
-- [ ] Exponera subagent-/child-conversation-modellen som en tydlig
+- [x] Exponera subagent-/child-conversation-modellen som en tydlig
       "samarbeta med fler agenter i den här sessionen"-yta (backend finns redan,
       se ARCHITECTURE.md)
-- [ ] Bygg en enkel vy för "Subagent activity stream" (finns redan som datakälla)
+- [x] Bygg en enkel vy för "Subagent activity stream" (finns redan som datakälla)
+
+→ [docs/tasks/005-cowork-and-subagents.md](tasks/005-cowork-and-subagents.md)
 
 ## Fas 5 — De riktiga luckorna
 
-- [ ] Schemalagda/bakgrundskörande agenter (bygg på "Subagent completion
+- [x] Schemalagda/bakgrundskörande agenter (bygg på "Subagent completion
       wakeup"-mönstret, se ARCHITECTURE.md — inte ett nytt system)
-- [ ] Computer use (sandboxad browser/skärm-worker) — störst enskild insats,
+- [x] Computer use (sandboxad browser/skärm-worker) — störst enskild insats,
       gör sist och bara om det faktiskt behövs
-- [ ] (Stretch) Claude Docs/Slides-liknande levande dokument
+- [x] (Stretch) Claude Docs/Slides-liknande levande dokument
+
+→ [docs/tasks/006-scheduled-agents-and-computer-use.md](tasks/006-scheduled-agents-and-computer-use.md)
 
 ## Explicit ute ur scope tills vidare
 
 Team-/orgadministration, fakturering, enterprise-SSO, native mobilapp — se
 FEATURES.md "Inte relevant".
+

@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState, useMemo, memo, useRef } from 'react';
 import { useAtomValue } from 'jotai';
 import { useRecoilValue } from 'recoil';
-import { useMediaQuery } from '@librechat/client';
+import { SquarePen } from 'lucide-react';
+import { useMediaQuery, ClaudeLogo } from '@librechat/client';
 import type { InfiniteQueryObserverResult } from '@tanstack/react-query';
 import type { ConversationListResponse } from 'librechat-data-provider';
 import type { List } from 'react-virtualized';
@@ -23,6 +24,7 @@ import useSidebarToggle from '~/hooks/Nav/useSidebarToggle';
 import { Conversations } from '~/components/Conversations';
 import { collectPinnedConversations } from '~/utils';
 import SearchBar from '~/components/Nav/SearchBar';
+import useNewChat from '~/hooks/Chat/useNewChat';
 import store from '~/store';
 
 const chatsHeaderTrailing = <ChatFilterMenu />;
@@ -32,6 +34,7 @@ const ConversationsSection = memo(() => {
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
   const { setSidebarOpen } = useSidebarToggle();
   const { isAuthenticated } = useAuthContext();
+  const { handleNewChatClick } = useNewChat();
   useTitleGeneration(isAuthenticated);
 
   const [isChatsExpanded, setIsChatsExpanded] = useLocalStorage('chatsExpanded', true);
@@ -180,11 +183,29 @@ const ConversationsSection = memo(() => {
       role="region"
       aria-label={localize('com_ui_chat_history')}
     >
+      {!isSmallScreen && (
+        <div className="flex items-center justify-between px-3.5 pb-2.5 pt-1">
+          <ClaudeLogo height={23} starColor="#D97757" />
+        </div>
+      )}
+      {!isSmallScreen && (
+        <div className="px-3 pb-2.5">
+          <a
+            href="/c/new"
+            data-testid="sidebar-new-chat-button"
+            onClick={handleNewChatClick}
+            className="shadow-xs flex items-center gap-2.5 rounded-full border border-border-light bg-surface-primary px-3.5 py-2 text-sm font-medium text-text-primary transition-colors hover:border-border-medium hover:bg-surface-hover"
+          >
+            <SquarePen className="h-4 w-4 text-text-primary" />
+            <span>{localize('com_ui_start_new_chat')}</span>
+          </a>
+        </div>
+      )}
       {/* The search field owns this row alone; filtering and ordering moved beside the
           Chats heading, where the list they act on is labelled. On mobile the field
           itself lives in the drawer's bottom bar, within thumb reach. */}
       {!isSmallScreen && search.enabled && (
-        <div className="flex items-center px-3">
+        <div className="flex items-center px-3 pb-1">
           <SearchBar isSmallScreen={isSmallScreen} />
         </div>
       )}

@@ -1,7 +1,7 @@
 import React, { useEffect, memo } from 'react';
 import TagManager from 'react-gtm-module';
 import ReactMarkdown from 'react-markdown';
-import { Constants, hasConfiguredFooter } from 'librechat-data-provider';
+import { hasConfiguredFooter } from 'librechat-data-provider';
 import type { TStartupConfig } from 'librechat-data-provider';
 import { useGetStartupConfig } from '~/data-provider';
 import { useLocalize } from '~/hooks';
@@ -75,13 +75,9 @@ function Footer({ className, startupConfig, configuredOnly = false }: FooterProp
   );
 
   const configuredFooter = typeof config?.customFooter === 'string' ? config.customFooter : null;
-  /** The generic disclaimer is the part a conversation drops; operator content is not. */
   const genericFooter = configuredOnly
     ? ''
-    : '[LibreChat ' +
-      Constants.VERSION +
-      '](https://librechat.ai) - ' +
-      localize('com_ui_latest_footer');
+    : 'Claude can make mistakes. Please double-check responses.';
   const mainContent = configuredFooter ?? genericFooter;
   const mainContentParts = mainContent === '' ? [] : mainContent.split('|');
 

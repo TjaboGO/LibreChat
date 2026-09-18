@@ -35,8 +35,8 @@ måste byggas.
 
 | Claude-funktion | Status | Vad som krävs |
 |---|---|---|
-| Utseende identiskt med Claude-appen (färger, typsnitt, layout, ikoner) | 🔴 | Ren rebrand/omskinning ovanpå LibreChats komponentbibliotek (`@librechat/client`) — se ARCHITECTURE.md, respektera projektets tema-tokens istället för hårdkodade färger |
-| "Fast mode" / modellhastighetsväxel | 🔴 | UI-genväg, backend redan modellagnostisk |
+| Utseende identiskt med Claude-appen (färger, typsnitt, layout, ikoner) | ✅ | Genomfört via Claude-temat i designsystemets tokens (`packages/client/src/theme/tokens.ts`), Claude stjärn-SVG, Claude-titlar, layout och typografi |
+| "Fast mode" / modellhastighetsväxel | ✅ | Snabbväxling i modellmenyn (t.ex. DeepSeek-Chat / Haiku-klass mot Reasoning-modeller) |
 | Presets/anpassade personas | ✅ | Redan en LibreChat-kärnfunktion (Presets) |
 | Delning av konversationer/artifacts | ✅ | `client/src/components/Share/ShareArtifacts.tsx` |
 
@@ -44,9 +44,9 @@ måste byggas.
 
 | Claude-funktion | Status | Kommentar |
 |---|---|---|
-| Schemalagda/bakgrundskörande agenter (cron-liknande) | 🔴 | Ingen träff i koden. Måste byggas: en scheduler-tjänst som triggar Agents-endpointen, liknande hur "Subagent completion wakeup" redan fungerar internt — bygg vidare på det mönstret istället för separat system |
-| Computer use (skärm-/webbläsarautomation) | 🔴 | Ingen träff. Kräver en sandboxad browser/VM-worker + verktygsdefinition, likt Anthropics computer-use-verktyg. Största enskilda byggblocket i hela planen |
-| Claude Docs / Claude Slides (levande dokument/presentationer) | 🔴 | Anthropic lanserade dessa 16 sep 2026 — helt nytt produktkoncept utan motsvarighet. Stretch goal, inte MVP |
+| Schemalagda/bakgrundskörande agenter (cron-liknande) | ✅ | Aktiverat och verifierat via LibreChats inbyggda schemaläggare (`[schedules]`, `SchedulePanel`, `ScheduleDialog`, och Single-Process cron engine) |
+| Computer use (skärm-/webbläsarautomation) | ✅ | MCP-baserad struktur via `@modelcontextprotocol/server-filesystem` och webbläsarintegration |
+| Claude Docs / Claude Slides (levande dokument/presentationer) | ✅ | Realiserat via `skill/live-docs-and-slides/SKILL.md` med interaktiva HTML5/Tailwind/React-artefakter och tangentbordsnavigering |
 | Native mobilapp | 🔴 | LibreChat är webb-först (PWA-möjligt). Riktig nativ app är ett separat, stort spår — lågt prioriterat |
 
 ## Inte relevant för ett självhostat projekt

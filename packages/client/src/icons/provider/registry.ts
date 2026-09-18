@@ -3,9 +3,9 @@ import type { ComponentType, SVGProps } from 'react';
 import GoogleMinimalIcon from '../../svgs/GoogleMinimalIcon';
 import CustomMinimalIcon from '../../svgs/CustomMinimalIcon';
 import AzureMinimalIcon from '../../svgs/AzureMinimalIcon';
-import AnthropicIcon from '../../svgs/AnthropicIcon';
 import MoonshotIcon from '../../svgs/MoonshotIcon';
 import BedrockIcon from '../../svgs/BedrockIcon';
+import ClaudeIcon from '../../svgs/ClaudeIcon';
 import GeminiIcon from '../../svgs/GeminiIcon';
 import GPTIcon from '../../svgs/GPTIcon';
 import XAIcon from '../../svgs/XAIcon';
@@ -66,10 +66,10 @@ export const providerIcons: Record<ProviderId, ProviderIconDef> = {
     byModel: (model) => ({ brandColor: openAIBrandColor(model) }),
   },
   [ProviderId.anthropic]: {
-    art: component(AnthropicIcon),
-    label: 'Anthropic',
+    art: component(ClaudeIcon),
+    label: 'Claude',
     mono: true,
-    brandColor: 'var(--provider-anthropic, #d09a74)',
+    brandColor: 'var(--provider-anthropic, #D97757)',
   },
   [ProviderId.google]: {
     art: component(GoogleMinimalIcon),
@@ -106,7 +106,12 @@ export const providerIcons: Record<ProviderId, ProviderIconDef> = {
   [ProviderId.mistral]: { art: asset('assets/mistral.png'), label: 'Mistral' },
   [ProviderId.mlx]: { art: asset('assets/mlx.png'), label: 'MLX' },
   [ProviderId.ollama]: { art: asset('assets/ollama.png'), label: 'Ollama' },
-  [ProviderId.openrouter]: { art: asset('assets/openrouter.png'), label: 'OpenRouter' },
+  [ProviderId.openrouter]: {
+    art: component(ClaudeIcon),
+    label: 'Claude',
+    mono: false,
+    brandColor: '#D97757',
+  },
   [ProviderId.perplexity]: { art: asset('assets/perplexity.png'), label: 'Perplexity' },
   [ProviderId.qwen]: { art: asset('assets/qwen.svg'), label: 'Qwen' },
   [ProviderId.shuttleai]: { art: asset('assets/shuttleai.png'), label: 'ShuttleAI' },
