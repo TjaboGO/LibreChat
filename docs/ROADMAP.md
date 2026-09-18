@@ -83,8 +83,13 @@ rullats ut till det kontot skärmdumparna togs från.
 
 - [x] Sidopanel-nav ombyggd: `+ New`, Projects, Artifacts, Scheduled, Design,
       Customize, More — i den ordningen, ersätter dagens "Start new chat"-knapp
-- [ ] Composer: Chat/Cowork-segmentväxlare, ordräknare-popover, usage-popover,
-      `+`-meny med exakt de rader som syns i skärmdumparna
+- [x] Composer: Chat/Cowork-segmentväxlare (`ComposerModeToggle`, UI-läge
+      klart — uppgiftslista/Devices-undermeny är Fas 7). `CoworkButton`
+      omdöpt till `SubagentActivityButton` (rätt funktion, fel varumärke).
+- [ ] Ordräknare-popover, usage-popover, `+`-meny med exakt de rader som
+      syns i skärmdumparna (kräver nya kopplingar för Design system/Add
+      plugins/Research; Web search + Memory kan koppla mot befintlig
+      `useToolToggle`/`BadgeRowContext`-infrastruktur)
 - [x] Effort/Thinking-väljare (fristående composer-knapp, se
       `docs/tasks/007-chat-app-p0.md` för avvikelsen mot en nästlad
       modell-flyout). Modellväljaren själv är oförändrad — Task 002
@@ -92,7 +97,7 @@ rullats ut till det kontot skärmdumparna togs från.
 - [ ] Output-format-dropdown (Docs/Slides/Design/Artifact)
 - [ ] Settings-skal: vänster-nav grupperad i Settings/Desktop app/Customize
 - [ ] Settings — Preferences, Account, Privacy-flikar
-- [ ] Ersätt `CoworkButton` med den riktiga Cowork-modellen (se Fas 4-anteckning)
+- [x] Ersätt `CoworkButton` med den riktiga Cowork-modellen (se Fas 4-anteckning)
 
 → [docs/tasks/007-chat-app-p0.md](tasks/007-chat-app-p0.md)
 
