@@ -115,10 +115,10 @@ rullats ut till det kontot skärmdumparna togs från.
 
 ## Fas 8 — Pixelmatchning: Claude chat-appen (P2)
 
-- [ ] Chats-and-tasks-fullista med filter (All/Chat/Shared/Cowork/Archived)
-- [ ] Settings — Design systems, Plugins, Extensions/Developer-flikar
-- [ ] Chat Info-modal
-- [ ] Kontomeny (Settings/Usage/Language/Get help/osv.)
+- [x] Chats-and-tasks-fullista med filter (All/Chat/Shared/Cowork/Archived)
+- [x] Settings — Design systems, Plugins, Extensions/Developer-flikar
+- [x] Chat Info-modal
+- [x] Kontomeny (Settings/Usage/Language/Get help/osv.)
 
 → [docs/tasks/009-chat-app-p2.md](tasks/009-chat-app-p2.md)
 
