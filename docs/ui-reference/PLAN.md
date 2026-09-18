@@ -15,11 +15,11 @@ Anthropic-produkter** som råkar dela samma visuella språk:
 3. **Claude Design** — ett fristående design-canvas-verktyg (mallar, designsystem,
    Figma/GitHub-kopplingar) utan sidopanel alls.
 
-**Rekommendation:** bygg bara (1), Claude chat-appen, på riktigt. (2) och (3) är egna,
-stora produkter — att klona Claude Codes eget UI är dessutom lite självmotsägande
-eftersom du redan använder riktiga Claude Code/Orca för att bygga det här. Jag har
-lagt (2) och (3) som "explicit uteslutet" nedan snarare än att bara utelämna dem
-tyst, precis som du bad om — men det här är ett vägval jag vill att du bekräftar.
+**Beslut (bekräftat av användaren): bygg alla tre, i faser.** Fas 6–8 (chat-appen)
+går först eftersom allt annat återanvänder dess tema/komponentgrund. Fas 9
+(Claude Code-dashboard) och Fas 10 (Claude Design) är egna, mycket större
+produktytor och får sin egen detaljplanering när de faserna påbörjas — se
+[ROADMAP.md](../ROADMAP.md).
 
 ## Ground truth-regel när dokument och skärmdumpar motsäger varandra
 
@@ -76,14 +76,17 @@ Design, Customize, More), ingen separat knapp under logotypen.
 | Chat Info-modal | Saknas | Creation date/Last interacted/Total messages/Notes | P2 |
 | Kontomeny | Enkel | Settings/Usage/Language/Get help/Give feedback/View plans/Get apps/Changelog/Log out | P2 |
 
-## Explicit uteslutet (och varför)
+## Skjutet till egna faser (inte uteslutet — se ROADMAP.md Fas 9–10)
 
 - **Claude Codes eget dashboard/Routines/Folders/Prompts-Chains/repo-chips** —
-  separat produkt; att klona den ger inget extra värde när du redan har riktig
-  Claude Code via Orca.
+  separat, stor produktyta. Fas 9, med egen detaljplanering, efter att chat-appens
+  grund (tema/komponenter/Settings-skal) är klar.
 - **Claude Design-appen som helhet** (mallgalleri, designsystem, Figma-koppling) —
-  eget stort verktyg. "Design" byggs bara som ett Output-format-alternativ som
-  producerar en artifact, inte som en fristående app.
+  eget stort verktyg som kräver ett canvas/rendering-lager LibreChat saknar helt.
+  Fas 10, störst enskild insats i hela planen, byggs sist.
+
+## Explicit uteslutet (verkligen inte relevant)
+
 - **Desktop-native inställningar** (Run on startup, menyradsikon, Dock-studs,
   globala tangentbordsgenvägar, native skärmbehörigheter) — betydelselöst för en
   självhostad webbapp. Kan återupptas om ni senare Electron-paketerar appen.
@@ -92,11 +95,12 @@ Design, Customize, More), ingen separat knapp under logotypen.
 
 ## Genomförandeordning
 
-1. **P0** — Sidopanel-nav, landningssida, composer (inkl. Chat/Cowork-toggle),
-   modell/effort/thinking-väljare, Settings-skal + Preferences/Account.
-2. **P1** — Projects, Artifacts-lista, Memory-inställningar, Capabilities,
+1. **Fas 6 (P0)** — Sidopanel-nav, landningssida, composer (inkl. Chat/Cowork-
+   toggle), modell/effort/thinking-väljare, Settings-skal + Preferences/Account.
+2. **Fas 7 (P1)** — Projects, Artifacts-lista, Memory-inställningar, Capabilities,
    Skills-flik (UI ovanpå befintlig backend), Connectors-flik (UI ovanpå
    befintlig MCP-config), Cowork-ombyggnad (ersätter CoworkButton).
-3. **P2** — Chats-and-tasks-fullista, Design systems-flik, Plugins,
+3. **Fas 8 (P2)** — Chats-and-tasks-fullista, Design systems-flik, Plugins,
    Extensions/Developer, Chat Info-modal, kontomeny.
-4. **Inte alls** — se "Explicit uteslutet" ovan.
+4. **Fas 9** — Claude Codes eget dashboard (egen detaljplanering).
+5. **Fas 10** — Claude Design-appen (egen detaljplanering).
