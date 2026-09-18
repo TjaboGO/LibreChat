@@ -16,7 +16,7 @@ export default function ProjectsNavBar({ onCreate }: ProjectsNavBarProps) {
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-3 px-4 md:h-16 md:px-6">
         <div className="flex min-w-0 items-center gap-2.5">
           {isSmallScreen ? <OpenSidebar className="size-9 shrink-0" /> : null}
-          <h1 className="truncate text-balance text-lg font-semibold tracking-tight text-text-primary md:text-xl">
+          <h1 className="truncate text-balance font-serif text-lg font-semibold tracking-tight text-text-primary md:text-xl">
             {localize('com_ui_projects')}
           </h1>
         </div>

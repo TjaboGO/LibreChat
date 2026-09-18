@@ -57,6 +57,7 @@ import CodeWorkspaceMenu from './CodeWorkspaceMenu';
 import useSteering from '~/hooks/Chat/useSteering';
 import CodeApprovalMenu from './CodeApprovalMenu';
 import FileFormChat from './Files/FileFormChat';
+import CoworkTaskList from './CoworkTaskList';
 import ComposerTopBar from './ComposerTopBar';
 import EffortSelector from './EffortSelector';
 import InFlightSteers from './InFlightSteers';
@@ -950,6 +951,7 @@ const ChatForm = memo(function ChatForm({
               {TextToSpeech && automaticPlayback && <AutoPlayAudio index={index} />}
             </div>
             <ComposerQuickToggles index={index} />
+            <CoworkTaskList index={index} />
           </div>
         </div>
       </div>

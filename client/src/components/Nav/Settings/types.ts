@@ -29,6 +29,10 @@ import {
   PrivacyTab,
   BillingApiTab,
   PlaceholderTab,
+  CapabilitiesTab,
+  MemoryTab,
+  SkillsTab,
+  ConnectorsTab,
 } from '../SettingsTabs/Claude';
 import LangfuseConnection from '../SettingsTabs/Integrations/LangfuseConnection';
 import About from '../SettingsTabs/About/About';
@@ -196,19 +200,7 @@ export const TABS: TabMeta[] = [
     group: 'settings',
     labelKey: 'com_ui_settings_tab_capabilities' as TranslationKeys,
     icon: createElement(Wrench, { className: 'h-4 w-4' }),
-    Component: () =>
-      createElement(PlaceholderTab, {
-        title: 'Capabilities',
-        description:
-          'Controls tool access mode, code execution environment, and inline visualizations.',
-        phase: 'Fas 7',
-        icon: Wrench,
-        features: [
-          'Tool access mode (Tools already loaded)',
-          'Artifacts & AI-powered inline visualizers',
-          'Code execution sandbox & egress rules',
-        ],
-      }),
+    Component: CapabilitiesTab,
     sections: [
       {
         id: 'codeExecution',
@@ -221,18 +213,7 @@ export const TABS: TabMeta[] = [
     group: 'settings',
     labelKey: 'com_ui_settings_tab_memory' as TranslationKeys,
     icon: createElement(Brain, { className: 'h-4 w-4' }),
-    Component: () =>
-      createElement(PlaceholderTab, {
-        title: 'Memory',
-        description: 'Persistent context and cross-conversation recall.',
-        phase: 'Fas 7',
-        icon: Brain,
-        features: [
-          'Profile & preferences recollection',
-          'Topic and project scoped memories',
-          'Natural language memory editor & import',
-        ],
-      }),
+    Component: MemoryTab,
     sections: [{ id: 'memory', labelKey: 'com_ui_settings_section_memory' as TranslationKeys }],
   },
   {
@@ -386,18 +367,7 @@ export const TABS: TabMeta[] = [
     group: 'customize',
     labelKey: 'com_ui_settings_tab_skills' as TranslationKeys,
     icon: createElement(Sparkles, { className: 'h-4 w-4' }),
-    Component: () =>
-      createElement(PlaceholderTab, {
-        title: 'Skills',
-        description: 'Reusable agent skills and prompt packs.',
-        phase: 'Fas 7',
-        icon: Sparkles,
-        features: [
-          'SKILL.md package manager',
-          'Custom instruction bindings',
-          'Community skill discovery',
-        ],
-      }),
+    Component: SkillsTab,
     sections: [],
   },
   {
@@ -405,18 +375,7 @@ export const TABS: TabMeta[] = [
     group: 'customize',
     labelKey: 'com_ui_settings_tab_connectors' as TranslationKeys,
     icon: createElement(Plug, { className: 'h-4 w-4' }),
-    Component: () =>
-      createElement(PlaceholderTab, {
-        title: 'Connectors',
-        description: 'Model Context Protocol (MCP) server connectors.',
-        phase: 'Fas 7',
-        icon: Plug,
-        features: [
-          'Add custom MCP servers (HTTP / SSE / stdio)',
-          'Configure OAuth and request headers',
-          'Connection status and tool testing',
-        ],
-      }),
+    Component: ConnectorsTab,
     sections: [],
   },
   {

@@ -3,3 +3,7 @@ export { default as AccountTab } from './AccountTab';
 export { default as PrivacyTab } from './PrivacyTab';
 export { default as BillingApiTab } from './BillingApiTab';
 export { default as PlaceholderTab } from './PlaceholderTab';
+export { default as CapabilitiesTab } from './CapabilitiesTab';
+export { default as MemoryTab } from './MemoryTab';
+export { default as SkillsTab } from './SkillsTab';
+export { default as ConnectorsTab } from './ConnectorsTab';
