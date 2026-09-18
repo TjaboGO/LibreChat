@@ -141,10 +141,10 @@ Fristående design-canvas: mallgalleri, designsystem (Figma/GitHub-koppling),
 tabellvy för projekt. Störst enskild insats i hela planen — kräver ett
 canvas/design-rendering-lager som inte finns i LibreChat alls. Börja sist.
 
-- [ ] Detaljplan skriven
-- [ ] Mallgalleri + tom "What should we create?"-startsida
-- [ ] Designsystem-hantering
-- [ ] Canvas-renderare
+- [x] Detaljplan skriven
+- [x] Mallgalleri + tom "What should we create?"-startsida
+- [x] Designsystem-hantering
+- [x] Canvas-renderare
 
 ## Explicit ute ur scope tills vidare
 
