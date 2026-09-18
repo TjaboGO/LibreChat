@@ -146,6 +146,18 @@ canvas/design-rendering-lager som inte finns i LibreChat alls. Börja sist.
 - [x] Designsystem-hantering
 - [x] Canvas-renderare
 
+→ [docs/tasks/011-claude-design-canvas.md](tasks/011-claude-design-canvas.md)
+
+## Fas 11 — Systemintegration, Claude Code & Cowork Settings samt Polering
+
+Slutförande av återstående inställningspaneler och systemintegration:
+- [x] Settings — Claude Code-flik (`ClaudeCodeTab.tsx`) med General, Code appearance (teman och live diff-previews), Local sessions, Browser/Mobile simulators, Pull requests, och Authorization tokens-tabell
+- [x] Settings — Cowork-flik (`CoworkTab.tsx`) med Require trusted devices, Cowork files-katalog, Trusted Cowork folders, Only on this computer, Preferred browser, Allowed sites
+- [x] Fullständig navigationsintegration med rutter till `/code`, `/design`, `/chats`, `/artifacts`, `/scheduled`
+- [x] 100% gröna enhetstester och noll TypeScript-fel i hela monorepot
+
+→ [docs/tasks/012-system-integration-and-polish.md](tasks/012-system-integration-and-polish.md)
+
 ## Explicit ute ur scope tills vidare
 
 Team-/orgadministration, fakturering, enterprise-SSO, native mobilapp, samt
