@@ -192,3 +192,7 @@ scripts/activity-labels/results/
 !e2e/lighthouse/librechat.yaml
 /.lighthouse/
 /e2e/lighthouse/.test-results/
+
+# Personal reference screenshots/docs used for UI-matching research — never
+# tracked (may contain personal chat content, and they're large binaries).
+/Claude Screenshots/
