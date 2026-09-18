@@ -91,11 +91,34 @@ jest.mock('~/Providers', () => ({
   __esModule: true,
   useAssistantsMapContext: () => ({}),
   useAgentsMapContext: () => ({}),
+  useActivePanel: () => ({ active: 'conversations', setActive: jest.fn() }),
+  DEFAULT_PANEL: 'conversations',
 }));
 
 jest.mock('~/hooks/Input/useSelectMention', () => ({
   __esModule: true,
   default: () => ({ onSelectEndpoint: jest.fn(), onSelectSpec: jest.fn() }),
+}));
+
+/** The real hook pulls in useNewConvo's full recoil/react-query dependency
+ *  graph, none of which these render-only tests exercise (none click "New
+ *  chat"), so it's mocked at this specific path rather than reconstructed. */
+jest.mock('~/hooks/Chat/useNewChat', () => ({
+  __esModule: true,
+  default: () => ({
+    startNewChat: jest.fn(),
+    handleNewChatClick: jest.fn(),
+    newConversation: jest.fn(),
+  }),
+}));
+
+/** Powers the sidebar's "More" overflow menu. The real hook resolves the
+ *  full side-panel list (agents, skills, schedules, memories, MCP, ...),
+ *  which drags in endpoint config, key state, and insights-access queries
+ *  these render-only tests have no reason to exercise. */
+jest.mock('~/hooks/Nav/useUnifiedSidebarLinks', () => ({
+  __esModule: true,
+  default: () => [],
 }));
 
 jest.mock('~/components/Conversations', () => {

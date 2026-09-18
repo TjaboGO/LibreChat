@@ -26,6 +26,7 @@ jest.mock('@librechat/client', () => ({
   BirthdayIcon: () => <span data-testid="birthday-icon" />,
   TooltipAnchor: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
   SplitText: ({ text }: { text: string }) => <span>{text}</span>,
+  ClaudeIcon: () => <span data-testid="claude-icon" />,
 }));
 
 jest.mock('~/Providers', () => ({
@@ -203,6 +204,10 @@ describe('Landing temporary chat empty state', () => {
 
     expect(screen.getByText('Welcome')).toBeInTheDocument();
     expect(screen.queryByText('Temporary Chat')).not.toBeInTheDocument();
-    expect(screen.getByTestId('convo-icon')).toBeInTheDocument();
+    /** No agent/assistant is selected in this render, so Landing falls through
+     *  to the plain Claude brand mark rather than ConvoIcon (which only
+     *  renders for an agent/assistant conversation — see the "Landing agent
+     *  contact" tests above). */
+    expect(screen.getByTestId('claude-icon')).toBeInTheDocument();
   });
 });

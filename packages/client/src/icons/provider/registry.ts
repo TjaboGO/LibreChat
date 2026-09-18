@@ -106,12 +106,7 @@ export const providerIcons: Record<ProviderId, ProviderIconDef> = {
   [ProviderId.mistral]: { art: asset('assets/mistral.png'), label: 'Mistral' },
   [ProviderId.mlx]: { art: asset('assets/mlx.png'), label: 'MLX' },
   [ProviderId.ollama]: { art: asset('assets/ollama.png'), label: 'Ollama' },
-  [ProviderId.openrouter]: {
-    art: component(ClaudeIcon),
-    label: 'Claude',
-    mono: false,
-    brandColor: '#D97757',
-  },
+  [ProviderId.openrouter]: { art: asset('assets/openrouter.png'), label: 'OpenRouter' },
   [ProviderId.perplexity]: { art: asset('assets/perplexity.png'), label: 'Perplexity' },
   [ProviderId.qwen]: { art: asset('assets/qwen.svg'), label: 'Qwen' },
   [ProviderId.shuttleai]: { art: asset('assets/shuttleai.png'), label: 'ShuttleAI' },
