@@ -76,6 +76,11 @@ const loadChatsAndTasksView = () =>
     Component: m.default,
   }));
 
+const loadCodeAppView = () =>
+  import('~/components/Code/CodeAppView').then((m) => ({
+    Component: m.default,
+  }));
+
 const baseEl = document.querySelector('base');
 const baseHref = baseEl?.getAttribute('href') || '/';
 
@@ -215,6 +220,10 @@ export const router = createBrowserRouter(
             {
               path: 'chats',
               lazy: loadChatsAndTasksView,
+            },
+            {
+              path: 'code',
+              lazy: loadCodeAppView,
             },
             {
               path: 'agents',
