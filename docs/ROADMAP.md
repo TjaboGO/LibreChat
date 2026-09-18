@@ -130,10 +130,10 @@ Artifacts-sida med Prompts/Chains. Kräver egen detaljplanering när Fas 6–8 �
 klara — börja inte innan chat-appens grund (tema, komponenter, Settings-skal)
 är på plats, eftersom allt här återanvänder den grunden.
 
-- [ ] Detaljplan skriven (bryt ner i egna tasks, likt Fas 6–8)
-- [ ] Dashboard med usage-stats + heatmap
-- [ ] Routines (mappa mot befintlig scheduled-agents-backend, se Fas 5)
-- [ ] Folders + Prompts/Chains
+- [x] Detaljplan skriven (bryt ner i egna tasks, likt Fas 6–8)
+- [x] Dashboard med usage-stats + heatmap
+- [x] Routines (mappa mot befintlig scheduled-agents-backend, se Fas 5)
+- [x] Folders + Prompts/Chains
 
 ## Fas 10 — Claude Design-appen
 
