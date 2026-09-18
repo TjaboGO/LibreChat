@@ -28,7 +28,6 @@ import {
   AccountTab,
   PrivacyTab,
   BillingApiTab,
-  PlaceholderTab,
   CapabilitiesTab,
   MemoryTab,
   SkillsTab,
@@ -39,6 +38,8 @@ import {
   ExtensionsTab,
   ClaudeCodeTab,
   CoworkTab,
+  GeneralTab,
+  ChromeTab,
 } from '../SettingsTabs/Claude';
 import LangfuseConnection from '../SettingsTabs/Integrations/LangfuseConnection';
 import About from '../SettingsTabs/About/About';
@@ -251,18 +252,7 @@ export const TABS: TabMeta[] = [
     group: 'settings',
     labelKey: 'com_ui_settings_tab_chrome' as TranslationKeys,
     icon: createElement(Globe, { className: 'h-4 w-4' }),
-    Component: () =>
-      createElement(PlaceholderTab, {
-        title: 'Claude in Chrome',
-        description: 'Browser companion extension for web research.',
-        phase: 'Fas 7',
-        icon: Globe,
-        features: [
-          'Browser tab interaction and reading',
-          'Companion page context sync',
-          'Live search augmentation',
-        ],
-      }),
+    Component: ChromeTab,
     sections: [],
   },
 
@@ -272,18 +262,7 @@ export const TABS: TabMeta[] = [
     group: 'desktop',
     labelKey: 'com_ui_settings_tab_general' as TranslationKeys,
     icon: createElement(Monitor, { className: 'h-4 w-4' }),
-    Component: () =>
-      createElement(PlaceholderTab, {
-        title: 'General',
-        description: 'Desktop application configuration.',
-        phase: 'Fas 7',
-        icon: Monitor,
-        features: [
-          'Default startup workspace',
-          'Notification sounds & badge counts',
-          'Hardware acceleration and cache',
-        ],
-      }),
+    Component: GeneralTab,
     sections: [
       { id: 'appearance', labelKey: 'com_ui_settings_section_appearance' as TranslationKeys },
       { id: 'layout', labelKey: 'com_ui_settings_section_layout' as TranslationKeys },

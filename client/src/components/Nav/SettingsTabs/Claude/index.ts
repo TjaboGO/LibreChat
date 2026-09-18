@@ -13,3 +13,5 @@ export { default as DeveloperTab } from './DeveloperTab';
 export { default as ExtensionsTab } from './ExtensionsTab';
 export { default as ClaudeCodeTab } from './ClaudeCodeTab';
 export { default as CoworkTab } from './CoworkTab';
+export { default as GeneralTab } from './GeneralTab';
+export { default as ChromeTab } from './ChromeTab';
