@@ -303,6 +303,11 @@ const composerModeFamily = atomFamily<'chat' | 'cowork', string | number | null>
   default: 'chat',
 });
 
+const researchModeFamily = atomFamily<boolean, string | number | null>({
+  key: 'researchModeByIndex',
+  default: false,
+});
+
 const showPromptsPopoverFamily = atomFamily<boolean, string | number | null>({
   key: 'showPromptsPopoverByIndex',
   default: false,
@@ -823,6 +828,7 @@ export default {
   globalAudioFetchingFamily,
   showPlusPopoverFamily,
   composerModeFamily,
+  researchModeFamily,
   activePromptByIndex,
   useClearSubmissionState,
   showPromptsPopoverFamily,
