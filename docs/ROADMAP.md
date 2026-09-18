@@ -81,7 +81,7 @@ inklusive den dubbla Chat/Cowork-växlaren, eftersom Anthropics egen
 sammanslagning ("Cowork and chat are now one Claude", 16 sep) ännu inte
 rullats ut till det kontot skärmdumparna togs från.
 
-- [ ] Sidopanel-nav ombyggd: `+ New`, Projects, Artifacts, Scheduled, Design,
+- [x] Sidopanel-nav ombyggd: `+ New`, Projects, Artifacts, Scheduled, Design,
       Customize, More — i den ordningen, ersätter dagens "Start new chat"-knapp
 - [ ] Composer: Chat/Cowork-segmentväxlare, ordräknare-popover, usage-popover,
       `+`-meny med exakt de rader som syns i skärmdumparna
