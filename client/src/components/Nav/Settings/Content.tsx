@@ -36,12 +36,12 @@ export default function Content({ activeTab, query, ctx }: ContentProps) {
           <div className="divide-y divide-border-light overflow-hidden rounded-xl border border-border-light text-sm text-text-primary">
             {results.map(({ entry, label }) => {
               const Cmp = entry.Component;
-              const tabMeta = TABS.find((t) => t.id === entry.tab)!;
-              const sectionMeta = tabMeta.sections.find((s) => s.id === entry.section);
+              const tabMeta = TABS.find((t) => t.id === entry.tab);
+              const sectionMeta = tabMeta?.sections?.find((s) => s.id === entry.section);
               return (
                 <div key={entry.id} className="px-4 py-3">
                   <div className="mb-1.5 text-xs text-text-tertiary">
-                    {localize(tabMeta.labelKey)} ›{' '}
+                    {tabMeta ? localize(tabMeta.labelKey) : ''} ›{' '}
                     {sectionMeta ? localize(sectionMeta.labelKey) : label}
                   </div>
                   <Cmp />
@@ -54,9 +54,14 @@ export default function Content({ activeTab, query, ctx }: ContentProps) {
     );
   }
 
+  if (tab?.Component) {
+    const TabComponent = tab.Component;
+    return <TabComponent />;
+  }
+
   return (
     <div>
-      {tab.sections.map((section) => {
+      {(tab?.sections ?? []).map((section) => {
         const entries = registry.filter(
           (e) => e.tab === activeTab && e.section === section.id && visible(e, ctx),
         );
