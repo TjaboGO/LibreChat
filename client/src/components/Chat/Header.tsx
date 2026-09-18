@@ -9,12 +9,12 @@ import {
 } from 'librechat-data-provider';
 import { OpenSidebar, PresetsMenu, NewChat, HeaderMenu } from './Menus';
 import { TemporaryChat, TemporaryChatIndicator } from './TemporaryChat';
+import SubagentActivityButton from './Subagents/SubagentActivityButton';
 import ModelSelector from './Menus/Endpoints/ModelSelector';
 import { TraceButton, useTraceControl } from './Trace';
 import { useGetStartupConfig } from '~/data-provider';
 import ExportAndShareMenu from './ExportAndShareMenu';
 import SubagentThreadLink from './SubagentThreadLink';
-import CoworkButton from './Subagents/CoworkButton';
 import BookmarkMenu from './Menus/BookmarkMenu';
 import AddMultiConvo from './AddMultiConvo';
 import { useHasAccess } from '~/hooks';
@@ -94,7 +94,7 @@ function Header({
           <SubagentThreadLink threadId={parentConversationId} labelClassName="hidden lg:inline" />
         )}
         {!readOnly && <ModelSelector startupConfig={startupConfig} />}
-        <CoworkButton />
+        <SubagentActivityButton />
         {!readOnly && interfaceConfig.presets === true && interfaceConfig.modelSelect === true && (
           <PresetsMenu />
         )}

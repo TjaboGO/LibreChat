@@ -46,6 +46,7 @@ import PastedTextDialog from './Files/PastedTextDialog';
 import DuringRunSendButton from './DuringRunSendButton';
 import ProjectLandingChip from '../ProjectLandingChip';
 import { useGetStartupConfig } from '~/data-provider';
+import ComposerModeToggle from './ComposerModeToggle';
 import { mainTextareaId, BadgeItem } from '~/common';
 import PendingSteerChips from './PendingSteerChips';
 import PendingQuoteChips from './PendingQuoteChips';
@@ -852,6 +853,7 @@ const ChatForm = memo(function ChatForm({
                     setFilesLoading={setFilesLoading}
                   />
                 </div>
+                {isAgentsEndpoint(endpoint) && <ComposerModeToggle index={index} />}
                 <BadgeRow
                   showEphemeralBadges={
                     !!endpoint &&

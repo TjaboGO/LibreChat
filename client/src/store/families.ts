@@ -294,6 +294,15 @@ const showPlusPopoverFamily = atomFamily<boolean, string | number | null>({
   default: false,
 });
 
+/** The composer's Chat/Cowork segment (see ComposerModeToggle). A UI-only
+ *  mode for now — it changes the attach menu's contents but does not yet
+ *  drive a real autonomy setting or task list (planned for Fas 7, see
+ *  docs/ui-reference/PLAN.md). */
+const composerModeFamily = atomFamily<'chat' | 'cowork', string | number | null>({
+  key: 'composerModeByIndex',
+  default: 'chat',
+});
+
 const showPromptsPopoverFamily = atomFamily<boolean, string | number | null>({
   key: 'showPromptsPopoverByIndex',
   default: false,
@@ -813,6 +822,7 @@ export default {
   globalAudioPlayingFamily,
   globalAudioFetchingFamily,
   showPlusPopoverFamily,
+  composerModeFamily,
   activePromptByIndex,
   useClearSubmissionState,
   showPromptsPopoverFamily,

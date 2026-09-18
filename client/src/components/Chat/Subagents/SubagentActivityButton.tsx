@@ -9,7 +9,15 @@ import { useChatContext } from '~/Providers';
 import { useLocalize } from '~/hooks';
 import { cn } from '~/utils';
 
-function CoworkButton() {
+/**
+ * Live indicator for this conversation's subagent activity — renamed from
+ * "CoworkButton": nothing in the reference screenshots shows a header button
+ * called Cowork opening this panel. Real Cowork is a composer-level mode
+ * (see ComposerModeToggle) with its own task list; this stays a plain
+ * "Subagents" indicator until Fas 7 folds subagent activity into that task
+ * list properly (see docs/ui-reference/PLAN.md).
+ */
+function SubagentActivityButton() {
   const localize = useLocalize();
   const { conversation } = useChatContext();
   const conversationId = conversation?.conversationId ?? '';
@@ -67,13 +75,17 @@ function CoworkButton() {
 
   return (
     <TooltipAnchor
-      description={isPanelOpen ? 'Close Cowork panel' : 'Open Cowork activity stream'}
+      description={
+        isPanelOpen
+          ? localize('com_ui_subagents_close_panel')
+          : localize('com_ui_subagents_open_panel')
+      }
       render={
         <Button
           variant="outline"
           size="sm"
           onClick={handleClick}
-          aria-label="Cowork subagents activity stream"
+          aria-label={localize('com_ui_subagents_activity_stream')}
           className={cn(
             'flex h-9 items-center gap-1.5 rounded-xl border border-border-light px-3 py-1.5 text-xs font-medium text-text-primary transition-colors',
             isPanelOpen
@@ -82,7 +94,7 @@ function CoworkButton() {
           )}
         >
           <Users className="h-4 w-4 text-surface-submit" />
-          <span className="font-semibold">{localize('com_ui_cowork')}</span>
+          <span className="font-semibold">{localize('com_ui_subagents')}</span>
           <span
             className={cn(
               'flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold text-white',
@@ -97,4 +109,4 @@ function CoworkButton() {
   );
 }
 
-export default memo(CoworkButton);
+export default memo(SubagentActivityButton);
