@@ -37,6 +37,8 @@ import {
   PluginsTab,
   DeveloperTab,
   ExtensionsTab,
+  ClaudeCodeTab,
+  CoworkTab,
 } from '../SettingsTabs/Claude';
 import LangfuseConnection from '../SettingsTabs/Integrations/LangfuseConnection';
 import About from '../SettingsTabs/About/About';
@@ -230,41 +232,18 @@ export const TABS: TabMeta[] = [
   },
   {
     id: ClaudeSettingsTab.CLAUDE_CODE,
-    group: 'settings',
+    group: 'desktop',
     labelKey: 'com_ui_settings_tab_claude_code' as TranslationKeys,
     icon: createElement(Terminal, { className: 'h-4 w-4' }),
-    Component: () =>
-      createElement(PlaceholderTab, {
-        title: 'Claude Code',
-        description: 'Terminal routines, cloud sessions, and worktree tracking.',
-        phase: 'Fas 9',
-        icon: Terminal,
-        features: [
-          'Cloud session management',
-          'Routines & scheduled background runs',
-          'Worktree and branch context chips',
-        ],
-      }),
+    Component: ClaudeCodeTab,
     sections: [],
   },
   {
     id: ClaudeSettingsTab.COWORK,
-    group: 'settings',
+    group: 'desktop',
     labelKey: 'com_ui_settings_tab_cowork' as TranslationKeys,
     icon: createElement(FolderSync, { className: 'h-4 w-4' }),
-    Component: () =>
-      createElement(PlaceholderTab, {
-        title: 'Cowork',
-        description: 'Trusted local folders and multi-agent workspaces.',
-        phase: 'Fas 7',
-        icon: FolderSync,
-        features: [
-          'Require trusted devices',
-          'Cowork files directory configuration',
-          'Trusted Cowork folders',
-          'Preferred browser automation setup',
-        ],
-      }),
+    Component: CoworkTab,
     sections: [],
   },
   {

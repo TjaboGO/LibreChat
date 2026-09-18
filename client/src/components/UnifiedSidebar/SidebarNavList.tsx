@@ -1,15 +1,17 @@
 import { memo, useId, useMemo, useState } from 'react';
 import * as Ariakit from '@ariakit/react';
 import { DropdownPopup } from '@librechat/client';
-import { NavLink as RouterNavLink, useLocation } from 'react-router-dom';
+import { NavLink as RouterNavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   SquarePen,
   FolderKanban,
   Boxes,
   Clock,
+  Terminal,
   Palette,
   Sparkles,
   MoreHorizontal,
+  MessagesSquare,
 } from 'lucide-react';
 import type { MenuItemProps } from '~/common';
 import useUnifiedSidebarLinks from '~/hooks/Nav/useUnifiedSidebarLinks';
@@ -47,13 +49,16 @@ function RouteRow({
   label,
 }: {
   to: string;
-  icon: typeof FolderKanban;
+  icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
   label: string;
 }) {
+  const location = useLocation();
+  const isActive = location.pathname.startsWith(to);
+
   return (
     <RouterNavLink
       to={to}
-      className={({ isActive }) => cn(rowClassName, isActive && 'bg-surface-active-alt')}
+      className={cn(rowClassName, isActive && 'bg-surface-active-alt font-semibold')}
     >
       <Icon className="h-4 w-4" aria-hidden="true" />
       <span>{label}</span>
@@ -68,6 +73,7 @@ function RouteRow({
  *  rail already does; that's an existing behavior, not new here. */
 function MoreMenu() {
   const localize = useLocalize();
+  const navigate = useNavigate();
   const menuId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const { setActive } = useActivePanel();
@@ -78,9 +84,15 @@ function MoreMenu() {
     [links],
   );
 
-  const menuItems = useMemo<MenuItemProps[]>(
-    () =>
-      overflowLinks.map((link) => ({
+  const menuItems = useMemo<MenuItemProps[]>(() => {
+    const items: MenuItemProps[] = [
+      {
+        id: 'more-chats-and-tasks',
+        label: 'Chats and tasks',
+        icon: <MessagesSquare className="size-4 text-text-secondary" aria-hidden="true" />,
+        onClick: () => navigate('/chats'),
+      },
+      ...overflowLinks.map((link) => ({
         id: `more-${link.id}`,
         label: localize(link.title),
         icon: <link.icon className="size-4 text-text-secondary" aria-hidden="true" />,
@@ -92,8 +104,9 @@ function MoreMenu() {
           setActive(link.id);
         },
       })),
-    [overflowLinks, localize, setActive],
-  );
+    ];
+    return items;
+  }, [overflowLinks, localize, setActive, navigate]);
 
   if (menuItems.length === 0) {
     return null;
@@ -121,7 +134,7 @@ function MoreMenu() {
 
 /**
  * The flat, always-visible nav list above "Pinned"/"Chats and tasks" — matches
- * the real Claude sidebar's New/Projects/Artifacts/Scheduled/Design/Customize/
+ * the real Claude sidebar's New/Projects/Artifacts/Scheduled/Code/Design/Customize/
  * More order (see docs/ui-reference/PLAN.md). Route-based items navigate the
  * main content area; "More" reuses the existing panel-switching mechanism for
  * items that don't have their own page yet.
@@ -135,6 +148,7 @@ function SidebarNavList() {
       <RouteRow to="/projects" icon={FolderKanban} label={localize('com_ui_projects')} />
       <RouteRow to="/artifacts" icon={Boxes} label={localize('com_ui_artifacts')} />
       <RouteRow to="/scheduled" icon={Clock} label={localize('com_ui_scheduled')} />
+      <RouteRow to="/code" icon={Terminal} label="Code" />
       <RouteRow to="/design" icon={Palette} label={localize('com_ui_design')} />
       <RouteRow to="/skills" icon={Sparkles} label={localize('com_ui_customize')} />
       <MoreMenu />

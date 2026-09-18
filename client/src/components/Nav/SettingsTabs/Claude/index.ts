@@ -11,3 +11,5 @@ export { default as DesignSystemsTab } from './DesignSystemsTab';
 export { default as PluginsTab } from './PluginsTab';
 export { default as DeveloperTab } from './DeveloperTab';
 export { default as ExtensionsTab } from './ExtensionsTab';
+export { default as ClaudeCodeTab } from './ClaudeCodeTab';
+export { default as CoworkTab } from './CoworkTab';
