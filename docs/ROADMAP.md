@@ -102,14 +102,14 @@ rullats ut till det kontot skärmdumparna togs från.
 
 ## Fas 7 — Pixelmatchning: Claude chat-appen (P1)
 
-- [ ] Projects: lista + detaljsida (Instructions/Memory/Context/Folder/Scheduled) +
+- [x] Projects: lista + detaljsida (Instructions/Memory/Context/Folder/Scheduled) +
       "Set project instructions"-modal
-- [ ] Artifacts-lista: All/Yours/Shared, "Make something new"-kort, datumgrupperad lista
-- [ ] Settings — Memory-flik (UI ovanpå befintlig `packages/api/src/memory`-backend)
-- [ ] Settings — Capabilities-flik
-- [ ] Settings — Skills-flik (UI ovanpå befintligt skills-system)
-- [ ] Settings — Connectors-flik (UI ovanpå befintlig MCP-config)
-- [ ] Cowork-uppgiftslista + Devices-undermeny
+- [x] Artifacts-lista: All/Yours/Shared, "Make something new"-kort, datumgrupperad lista
+- [x] Settings — Memory-flik (UI ovanpå befintlig `packages/api/src/memory`-backend)
+- [x] Settings — Capabilities-flik
+- [x] Settings — Skills-flik (UI ovanpå befintligt skills-system)
+- [x] Settings — Connectors-flik (UI ovanpå befintlig MCP-config)
+- [x] Cowork-uppgiftslista + Devices-undermeny
 
 → [docs/tasks/008-chat-app-p1.md](tasks/008-chat-app-p1.md)
 
