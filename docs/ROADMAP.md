@@ -93,7 +93,7 @@ rullats ut till det kontot skärmdumparna togs från.
       `docs/tasks/007-chat-app-p0.md` för avvikelsen mot en nästlad
       modell-flyout). Modellväljaren själv är oförändrad — Task 002
       verifierade redan att modellbyte fungerar mot alla OpenRouter-modeller.
-- [ ] Ordräknare-popover, usage-popover, output-format-dropdown (Docs/Slides/Design/Artifact)
+- [x] Ordräknare-popover, usage-popover, output-format-dropdown (Docs/Slides/Design/Artifact)
 - [x] Settings-skal: vänster-nav grupperad i Settings/Desktop app/Customize
 - [x] Settings — Preferences, Account, Privacy, Billing & APIs samt placeholders för efterföljande faser
 - [x] Ersätt `CoworkButton` med den riktiga Cowork-modellen (se Fas 4-anteckning)

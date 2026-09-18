@@ -94,8 +94,17 @@ motsvarande skärmdump.
    - **Billing & APIs (`BillingApiTab.tsx`):** Anpassad för vår självhostade OpenRouter-gateway och DeepSeek direct API istället för Claude Pro: länk till `openrouter.ai/credits`, visning av token credits vid aktiverat saldo, statusindikatorer för aktiv primär OpenRouter-gateway och DeepSeek Direct-endpoint, informationsrutor för Extended Thinking (Effort-selector) och Stop-Token-skydd (`dropParams: ['stop']`), samt integrerad `ProviderKeys`-hanterare.
    - **Placeholder-skal (`PlaceholderTab.tsx`):** Modulärt skal för Capabilities, Memory, Design systems, Claude Code, Cowork, Chrome, Extensions, Developer, Skills, Connectors och Plugins inför Fas 7–9.
 
+4. **Composer Top Bar & Quick-Toggles (`ComposerTopBar.tsx`, `WordCountPopover.tsx`, `UsageLimitPopover.tsx`, `ComposerQuickToggles.tsx`, `OutputFormatDropdown.tsx`, `ProjectPickerDropdown.tsx`, `AutoApprovalDropdown.tsx`):**
+   - **Composer Top Bar:** Placerad överst i formulärkortet ovanför `TextareaHeader`. Innehåller `WordCountPopover` (visar levande `⌄ {words} words / {chars} chars` med utfällbar popover för Characters m/u mellanslag, Words, Sentences, Lines, Paragraphs och Tokens), `✦ Optimize`-promptförbättringsknapp, `UsageLimitPopover` (klockikon med dynamisk nedräkning t.ex. `34m` och popover för 5-timmars- och 7-dagarsanvändning/återställning), samt expandera/kollapsa-växlare.
+   - **Composer Quick-Toggles:** Placerad direkt under composern:
+     - **ProjectPickerDropdown:** "Project or folder"-väljare med projektsökning, Pinned-sektion, "+ New project" och "Add folder".
+     - **AutoApprovalDropdown:** "Auto"-väljare motsvarande Anthropics godkännandemeny ("Automatically approve", "Manually approve", "Skip all approvals") kopplad till Recoil (`autoApprovalFamily`).
+     - **OutputFormatDropdown:** "Output: Artifact" med val för Docs (Beta), Slides (Beta), Design (Beta) och skiljelinje till Artifact ("Let Claude pick the format") kopplad till Recoil (`outputFormatFamily`).
+   - Tester: `WordCountPopover.spec.tsx` (3/3 gröna) och `ComposerQuickToggles.spec.tsx` (4/4 gröna).
+
 ### Verifiering och tester:
 - `npm --prefix client run typecheck` (`tsc --noEmit`): 0 fel, exit code 0.
 - `npm --prefix client run test:ci -- src/components/Nav/Settings/`: Samtliga 7 testsviter och 39 enhetstester gröna.
 - `npm --prefix client run test:ci -- src/components/Chat/Input/Files/`: Samtliga 8 testsviter och 145 enhetstester gröna.
+- `npm --prefix client run test:ci -- src/components/Chat/Input/__tests__/`: Samtliga enhetstester gröna (inklusive nya WordCountPopover och ComposerQuickToggles).
 - Pre-commit hooks (`prettier`, `sort-imports`, `eslint --max-warnings=0`): Godkända utan varningar.
