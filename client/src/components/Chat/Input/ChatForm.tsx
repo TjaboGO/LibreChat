@@ -54,6 +54,7 @@ import CodeWorkspaceMenu from './CodeWorkspaceMenu';
 import useSteering from '~/hooks/Chat/useSteering';
 import CodeApprovalMenu from './CodeApprovalMenu';
 import FileFormChat from './Files/FileFormChat';
+import EffortSelector from './EffortSelector';
 import InFlightSteers from './InFlightSteers';
 import TextareaHeader from './TextareaHeader';
 import PromptsCommand from './PromptsCommand';
@@ -869,6 +870,11 @@ const ChatForm = memo(function ChatForm({
                 <CodeApprovalMenu
                   conversation={conversation}
                   addedConversation={addedConvo}
+                  setConversation={setConversation}
+                  disabled={disableInputs}
+                />
+                <EffortSelector
+                  conversation={conversation}
                   setConversation={setConversation}
                   disabled={disableInputs}
                 />
