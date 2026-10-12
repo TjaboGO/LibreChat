@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { HatGlasses } from 'lucide-react';
 import { easings } from '@react-spring/web';
 import { EModelEndpoint } from 'librechat-data-provider';
-import { BirthdayIcon, TooltipAnchor, SplitText } from '@librechat/client';
+import { BirthdayIcon, TooltipAnchor, SplitText, ClaudeIcon } from '@librechat/client';
 import { useChatContext, useAgentsMapContext, useAssistantsMapContext } from '~/Providers';
 import Description, { isHtmlDescription } from '~/components/ui/Description';
 import { useGetEndpointsQuery, useGetStartupConfig } from '~/data-provider';
@@ -20,22 +20,6 @@ const containerClassName =
  * re-rendered every grapheme span on each Landing render. */
 const greetingAnimationFrom = { opacity: 0, transform: 'translate3d(0,50px,0)' };
 const greetingAnimationTo = { opacity: 1, transform: 'translate3d(0,0,0)' };
-
-function getTextSizeClass(text: string | undefined | null) {
-  if (!text) {
-    return 'text-xl sm:text-2xl';
-  }
-
-  if (text.length < 56) {
-    return 'text-2xl sm:text-4xl';
-  }
-
-  if (text.length < 70) {
-    return 'text-xl sm:text-2xl';
-  }
-
-  return 'text-lg sm:text-base';
-}
 
 export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: boolean }) {
   const { conversation } = useChatContext();
@@ -134,31 +118,42 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
     ? localize('com_ui_temporary')
     : (resolvedWelcome ?? scheduledGreeting);
 
+  let landingIcon: JSX.Element;
+  if (isTemporary) {
+    landingIcon = (
+      <div className={containerClassName}>
+        <HatGlasses className="h-2/3 w-2/3 text-text-primary" aria-hidden="true" />
+      </div>
+    );
+  } else if (isAgent || isAssistant) {
+    landingIcon = (
+      <ConvoIcon
+        agentsMap={agentsMap}
+        assistantMap={assistantMap}
+        conversation={conversation}
+        endpointsConfig={endpointsConfig}
+        containerClassName={containerClassName}
+        context="landing"
+        className="h-2/3 w-2/3 text-text-primary"
+        size={44}
+      />
+    );
+  } else {
+    landingIcon = (
+      <div className="flex items-center justify-center">
+        <ClaudeIcon size={46} fillColor="#D97757" />
+      </div>
+    );
+  }
+
   return (
     <div
       className={`flex h-full transform-gpu flex-col items-center justify-center pb-16 transition-all duration-200 ${centerFormOnLanding ? 'max-h-full sm:max-h-0' : 'max-h-full'} ${getDynamicMargin}`}
     >
       <div ref={contentRef} className="flex flex-col items-center gap-0 p-2">
-        <div
-          className={`flex ${textHasMultipleLines ? 'flex-col' : 'flex-col md:flex-row'} items-center justify-center gap-2`}
-        >
-          <div className={`relative size-10 justify-center ${textHasMultipleLines ? 'mb-2' : ''}`}>
-            {isTemporary ? (
-              <div className={containerClassName}>
-                <HatGlasses className="h-2/3 w-2/3 text-text-primary" aria-hidden="true" />
-              </div>
-            ) : (
-              <ConvoIcon
-                agentsMap={agentsMap}
-                assistantMap={assistantMap}
-                conversation={conversation}
-                endpointsConfig={endpointsConfig}
-                containerClassName={containerClassName}
-                context="landing"
-                className="h-2/3 w-2/3 text-text-primary"
-                size={41}
-              />
-            )}
+        <div className="flex flex-col items-center justify-center gap-4">
+          <div className="relative mb-2 flex items-center justify-center">
+            {landingIcon}
             {startupConfig?.showBirthdayIcon && (
               <TooltipAnchor
                 className="absolute bottom-[27px] right-2"
@@ -174,7 +169,7 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
               <SplitText
                 key={`split-text-${name}`}
                 text={name}
-                className={`${getTextSizeClass(name)} font-medium text-text-primary`}
+                className="font-serif text-3xl font-normal tracking-tight text-text-primary sm:text-4xl"
                 delay={50}
                 textAlign="center"
                 animationFrom={greetingAnimationFrom}
@@ -189,7 +184,7 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
             <SplitText
               key={`split-text-${greetingText}${user?.name ? '-user' : ''}`}
               text={greetingText}
-              className={`${getTextSizeClass(greetingText)} font-medium text-text-primary`}
+              className="font-serif text-3xl font-normal tracking-tight text-text-primary sm:text-4xl"
               delay={50}
               textAlign="center"
               animationFrom={greetingAnimationFrom}

@@ -1,18 +1,82 @@
 import { createElement } from 'react';
-import { MessageSquare, Info } from 'lucide-react';
+import { DataIcon, SpeechIcon } from '@librechat/client';
 import { SettingsTabValues } from 'librechat-data-provider';
-import { GearIcon, DataIcon, UserIcon, SpeechIcon } from '@librechat/client';
+import {
+  SlidersHorizontal,
+  User,
+  ShieldCheck,
+  CreditCard,
+  Wrench,
+  Brain,
+  Palette,
+  Terminal,
+  FolderSync,
+  Globe,
+  Monitor,
+  Puzzle,
+  Code2,
+  Sparkles,
+  Plug,
+  Package,
+  Info,
+  MessageSquare,
+} from 'lucide-react';
 import type { ComponentType, ReactNode } from 'react';
 import type { TranslationKeys } from '~/hooks';
+import {
+  PreferencesTab,
+  AccountTab,
+  PrivacyTab,
+  BillingApiTab,
+  CapabilitiesTab,
+  MemoryTab,
+  SkillsTab,
+  ConnectorsTab,
+  DesignSystemsTab,
+  PluginsTab,
+  DeveloperTab,
+  ExtensionsTab,
+  ClaudeCodeTab,
+  CoworkTab,
+  GeneralTab,
+  ChromeTab,
+} from '../SettingsTabs/Claude';
+import LangfuseConnection from '../SettingsTabs/Integrations/LangfuseConnection';
+import About from '../SettingsTabs/About/About';
+
+export type SettingsGroup = 'settings' | 'desktop' | 'customize';
+
+export enum ClaudeSettingsTab {
+  PREFERENCES = 'preferences',
+  ACCOUNT = 'account',
+  PRIVACY = 'privacy',
+  BILLING = 'billing',
+  CAPABILITIES = 'capabilities',
+  MEMORY = 'memory',
+  DESIGN_SYSTEMS = 'design_systems',
+  CLAUDE_CODE = 'claude_code',
+  COWORK = 'cowork',
+  CHROME = 'chrome',
+  GENERAL = 'general',
+  EXTENSIONS = 'extensions',
+  DEVELOPER = 'developer',
+  SKILLS = 'skills',
+  CONNECTORS = 'connectors',
+  PLUGINS = 'plugins',
+  ABOUT = 'about',
+  LANGFUSE = 'langfuse',
+}
 
 export type SettingsTab =
+  | ClaudeSettingsTab
   | SettingsTabValues.GENERAL
   | SettingsTabValues.CHAT
   | SettingsTabValues.SPEECH
   | SettingsTabValues.LANGFUSE
   | SettingsTabValues.DATA
   | SettingsTabValues.ACCOUNT
-  | SettingsTabValues.ABOUT;
+  | SettingsTabValues.ABOUT
+  | string;
 
 export type SectionId =
   | 'appearance'
@@ -74,9 +138,11 @@ export interface SectionMeta {
 
 export interface TabMeta {
   id: SettingsTab;
+  group?: SettingsGroup;
   labelKey: TranslationKeys;
   icon: ReactNode;
   sections: SectionMeta[];
+  Component?: ComponentType;
   show?: (ctx: SettingsContextValue) => boolean;
 }
 
@@ -92,79 +158,227 @@ function createLangfuseIcon(className: string): ReactNode {
 }
 
 export const TABS: TabMeta[] = [
+  // --- GROUP 1: SETTINGS ---
   {
-    id: SettingsTabValues.GENERAL,
-    labelKey: 'com_nav_setting_general',
-    icon: createElement(GearIcon),
+    id: ClaudeSettingsTab.PREFERENCES,
+    group: 'settings',
+    labelKey: 'com_ui_settings_tab_preferences' as TranslationKeys,
+    icon: createElement(SlidersHorizontal, { className: 'h-4 w-4' }),
+    Component: PreferencesTab,
     sections: [
-      { id: 'appearance', labelKey: 'com_ui_settings_section_appearance' },
-      { id: 'layout', labelKey: 'com_ui_settings_section_layout' },
-      { id: 'accessibility', labelKey: 'com_ui_settings_section_accessibility' },
-      { id: 'admin', labelKey: 'com_ui_settings_section_admin' },
+      { id: 'appearance', labelKey: 'com_ui_settings_section_appearance' as TranslationKeys },
     ],
   },
   {
-    id: SettingsTabValues.CHAT,
-    labelKey: 'com_nav_setting_chat',
-    icon: createElement(MessageSquare, { className: 'icon-sm', 'aria-hidden': true }),
+    id: ClaudeSettingsTab.ACCOUNT,
+    group: 'settings',
+    labelKey: 'com_ui_settings_tab_account' as TranslationKeys,
+    icon: createElement(User, { className: 'h-4 w-4' }),
+    Component: AccountTab,
     sections: [
-      { id: 'sending', labelKey: 'com_ui_settings_section_sending' },
-      { id: 'commands', labelKey: 'com_ui_settings_section_commands' },
-      { id: 'messages', labelKey: 'com_ui_settings_section_messages' },
-      { id: 'conversations', labelKey: 'com_ui_settings_section_conversations' },
-      { id: 'prompts', labelKey: 'com_ui_settings_section_prompts' },
+      { id: 'profile', labelKey: 'com_ui_settings_section_profile' as TranslationKeys },
+      { id: 'security', labelKey: 'com_ui_settings_section_security' as TranslationKeys },
+      { id: 'billing', labelKey: 'com_ui_settings_section_billing' as TranslationKeys },
+      {
+        id: 'danger',
+        labelKey: 'com_ui_settings_section_danger_zone' as TranslationKeys,
+        danger: true,
+      },
     ],
   },
   {
-    id: SettingsTabValues.SPEECH,
-    labelKey: 'com_nav_setting_speech',
-    icon: createElement(SpeechIcon, { className: 'icon-sm' }),
+    id: ClaudeSettingsTab.PRIVACY,
+    group: 'settings',
+    labelKey: 'com_ui_settings_tab_privacy' as TranslationKeys,
+    icon: createElement(ShieldCheck, { className: 'h-4 w-4' }),
+    Component: PrivacyTab,
+    sections: [{ id: 'security', labelKey: 'com_ui_settings_section_security' as TranslationKeys }],
+  },
+  {
+    id: ClaudeSettingsTab.BILLING,
+    group: 'settings',
+    labelKey: 'com_ui_settings_tab_billing' as TranslationKeys,
+    icon: createElement(CreditCard, { className: 'h-4 w-4' }),
+    Component: BillingApiTab,
+    sections: [{ id: 'billing', labelKey: 'com_ui_settings_section_billing' as TranslationKeys }],
+  },
+  {
+    id: ClaudeSettingsTab.CAPABILITIES,
+    group: 'settings',
+    labelKey: 'com_ui_settings_tab_capabilities' as TranslationKeys,
+    icon: createElement(Wrench, { className: 'h-4 w-4' }),
+    Component: CapabilitiesTab,
     sections: [
-      { id: 'stt', labelKey: 'com_ui_settings_section_stt' },
-      { id: 'tts', labelKey: 'com_ui_settings_section_tts' },
+      {
+        id: 'codeExecution',
+        labelKey: 'com_ui_settings_section_code_execution' as TranslationKeys,
+      },
     ],
   },
   {
-    id: SettingsTabValues.LANGFUSE,
-    labelKey: 'com_ui_settings_tab_langfuse',
+    id: ClaudeSettingsTab.MEMORY,
+    group: 'settings',
+    labelKey: 'com_ui_settings_tab_memory' as TranslationKeys,
+    icon: createElement(Brain, { className: 'h-4 w-4' }),
+    Component: MemoryTab,
+    sections: [{ id: 'memory', labelKey: 'com_ui_settings_section_memory' as TranslationKeys }],
+  },
+  {
+    id: ClaudeSettingsTab.DESIGN_SYSTEMS,
+    group: 'settings',
+    labelKey: 'com_ui_settings_tab_design_systems' as TranslationKeys,
+    icon: createElement(Palette, { className: 'h-4 w-4' }),
+    Component: DesignSystemsTab,
+    sections: [],
+  },
+  {
+    id: ClaudeSettingsTab.CLAUDE_CODE,
+    group: 'desktop',
+    labelKey: 'com_ui_settings_tab_claude_code' as TranslationKeys,
+    icon: createElement(Terminal, { className: 'h-4 w-4' }),
+    Component: ClaudeCodeTab,
+    sections: [],
+  },
+  {
+    id: ClaudeSettingsTab.COWORK,
+    group: 'desktop',
+    labelKey: 'com_ui_settings_tab_cowork' as TranslationKeys,
+    icon: createElement(FolderSync, { className: 'h-4 w-4' }),
+    Component: CoworkTab,
+    sections: [],
+  },
+  {
+    id: ClaudeSettingsTab.CHROME,
+    group: 'settings',
+    labelKey: 'com_ui_settings_tab_chrome' as TranslationKeys,
+    icon: createElement(Globe, { className: 'h-4 w-4' }),
+    Component: ChromeTab,
+    sections: [],
+  },
+
+  // --- GROUP 2: DESKTOP APP ---
+  {
+    id: ClaudeSettingsTab.GENERAL,
+    group: 'desktop',
+    labelKey: 'com_ui_settings_tab_general' as TranslationKeys,
+    icon: createElement(Monitor, { className: 'h-4 w-4' }),
+    Component: GeneralTab,
+    sections: [
+      { id: 'appearance', labelKey: 'com_ui_settings_section_appearance' as TranslationKeys },
+      { id: 'layout', labelKey: 'com_ui_settings_section_layout' as TranslationKeys },
+      { id: 'accessibility', labelKey: 'com_ui_settings_section_accessibility' as TranslationKeys },
+      { id: 'admin', labelKey: 'com_ui_settings_section_admin' as TranslationKeys },
+    ],
+  },
+  {
+    id: ClaudeSettingsTab.EXTENSIONS,
+    group: 'desktop',
+    labelKey: 'com_ui_settings_tab_extensions' as TranslationKeys,
+    icon: createElement(Puzzle, { className: 'h-4 w-4' }),
+    Component: ExtensionsTab,
+    sections: [],
+  },
+  {
+    id: ClaudeSettingsTab.DEVELOPER,
+    group: 'desktop',
+    labelKey: 'com_ui_settings_tab_developer' as TranslationKeys,
+    icon: createElement(Code2, { className: 'h-4 w-4' }),
+    Component: DeveloperTab,
+    sections: [],
+  },
+  {
+    id: ClaudeSettingsTab.ABOUT,
+    group: 'desktop',
+    labelKey: 'com_nav_setting_about' as TranslationKeys,
+    icon: createElement(Info, { className: 'h-4 w-4', 'aria-hidden': true }),
+    Component: About,
+    sections: [{ id: 'about', labelKey: 'com_nav_setting_about' as TranslationKeys }],
+    show: (ctx) => ctx.aboutEnabled,
+  },
+
+  // --- GROUP 3: CUSTOMIZE ---
+  {
+    id: ClaudeSettingsTab.SKILLS,
+    group: 'customize',
+    labelKey: 'com_ui_settings_tab_skills' as TranslationKeys,
+    icon: createElement(Sparkles, { className: 'h-4 w-4' }),
+    Component: SkillsTab,
+    sections: [],
+  },
+  {
+    id: ClaudeSettingsTab.CONNECTORS,
+    group: 'customize',
+    labelKey: 'com_ui_settings_tab_connectors' as TranslationKeys,
+    icon: createElement(Plug, { className: 'h-4 w-4' }),
+    Component: ConnectorsTab,
+    sections: [],
+  },
+  {
+    id: ClaudeSettingsTab.PLUGINS,
+    group: 'customize',
+    labelKey: 'com_ui_settings_tab_plugins' as TranslationKeys,
+    icon: createElement(Package, { className: 'h-4 w-4' }),
+    Component: PluginsTab,
+    sections: [],
+  },
+  {
+    id: ClaudeSettingsTab.LANGFUSE,
+    group: 'customize',
+    labelKey: 'com_ui_settings_tab_langfuse' as TranslationKeys,
     icon: createLangfuseIcon('h-4 w-4'),
+    Component: LangfuseConnection,
     sections: [
       {
         id: 'langfuse',
-        labelKey: 'com_ui_settings_section_langfuse',
+        labelKey: 'com_ui_settings_section_langfuse' as TranslationKeys,
         icon: createLangfuseIcon('h-3.5 w-3.5'),
       },
     ],
     show: (ctx) => ctx.langfuseConnectionAccess,
   },
+
+  // --- REGISTRY / SEARCH INDEX COMPATIBILITY ---
+  {
+    id: SettingsTabValues.CHAT,
+    labelKey: 'com_nav_setting_chat' as TranslationKeys,
+    icon: createElement(MessageSquare, { className: 'h-4 w-4', 'aria-hidden': true }),
+    sections: [
+      { id: 'sending', labelKey: 'com_ui_settings_section_sending' as TranslationKeys },
+      { id: 'commands', labelKey: 'com_ui_settings_section_commands' as TranslationKeys },
+      { id: 'messages', labelKey: 'com_ui_settings_section_messages' as TranslationKeys },
+      { id: 'conversations', labelKey: 'com_ui_settings_section_conversations' as TranslationKeys },
+      { id: 'prompts', labelKey: 'com_ui_settings_section_prompts' as TranslationKeys },
+    ],
+    show: () => false,
+  },
+  {
+    id: SettingsTabValues.SPEECH,
+    labelKey: 'com_nav_setting_speech' as TranslationKeys,
+    icon: createElement(SpeechIcon, { className: 'h-4 w-4' }),
+    sections: [
+      { id: 'stt', labelKey: 'com_ui_settings_section_stt' as TranslationKeys },
+      { id: 'tts', labelKey: 'com_ui_settings_section_tts' as TranslationKeys },
+    ],
+    show: () => false,
+  },
   {
     id: SettingsTabValues.DATA,
-    labelKey: 'com_ui_settings_tab_data',
+    labelKey: 'com_ui_settings_tab_data' as TranslationKeys,
     icon: createElement(DataIcon),
     sections: [
-      { id: 'memory', labelKey: 'com_ui_settings_section_memory' },
-      { id: 'codeExecution', labelKey: 'com_ui_settings_section_code_execution' },
-      { id: 'data', labelKey: 'com_ui_settings_section_data' },
-      { id: 'apiKeys', labelKey: 'com_ui_settings_section_api_keys' },
-      { id: 'danger', labelKey: 'com_ui_settings_section_danger_zone', danger: true },
+      { id: 'memory', labelKey: 'com_ui_settings_section_memory' as TranslationKeys },
+      {
+        id: 'codeExecution',
+        labelKey: 'com_ui_settings_section_code_execution' as TranslationKeys,
+      },
+      { id: 'data', labelKey: 'com_ui_settings_section_data' as TranslationKeys },
+      { id: 'apiKeys', labelKey: 'com_ui_settings_section_api_keys' as TranslationKeys },
+      {
+        id: 'danger',
+        labelKey: 'com_ui_settings_section_danger_zone' as TranslationKeys,
+        danger: true,
+      },
     ],
-  },
-  {
-    id: SettingsTabValues.ACCOUNT,
-    labelKey: 'com_nav_setting_account',
-    icon: createElement(UserIcon),
-    sections: [
-      { id: 'profile', labelKey: 'com_ui_settings_section_profile' },
-      { id: 'security', labelKey: 'com_ui_settings_section_security' },
-      { id: 'billing', labelKey: 'com_ui_settings_section_billing' },
-      { id: 'danger', labelKey: 'com_ui_settings_section_danger_zone', danger: true },
-    ],
-  },
-  {
-    id: SettingsTabValues.ABOUT,
-    labelKey: 'com_nav_setting_about',
-    icon: createElement(Info, { className: 'icon-sm', 'aria-hidden': true }),
-    sections: [{ id: 'about', labelKey: 'com_nav_setting_about' }],
-    show: (ctx) => ctx.aboutEnabled,
+    show: () => false,
   },
 ];

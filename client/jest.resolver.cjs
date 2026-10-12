@@ -6,8 +6,11 @@
 const ESM_ONLY_ARIAKIT =
   /^@ariakit\/(react-components|react-utils|react-store|components|store|utils)(\/|$)/;
 
+/** Same problem, one package: react-vtree's `exports` map only declares `import`. */
+const ESM_ONLY_PACKAGES = /^(react-vtree)(\/|$)/;
+
 module.exports = (request, options) => {
-  if (ESM_ONLY_ARIAKIT.test(request)) {
+  if (ESM_ONLY_ARIAKIT.test(request) || ESM_ONLY_PACKAGES.test(request)) {
     return options.defaultResolver(request, {
       ...options,
       conditions: [...(options.conditions ?? []), 'import'],

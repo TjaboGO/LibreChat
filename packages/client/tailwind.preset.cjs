@@ -4,6 +4,7 @@ module.exports = {
     extend: {
       fontFamily: {
         'theme-ui': ['var(--theme-font-family, Inter, sans-serif)'],
+        serif: ['Charter', 'Bitstream Charter', 'Sitka Text', 'Cambria', 'Georgia', 'serif'],
       },
       height: {
         'theme-control': 'var(--theme-control-height, 2.25rem)',

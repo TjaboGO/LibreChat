@@ -29,3 +29,23 @@ Anthropic/OpenAI-beteendet generaliserar till alla OpenRouter-modeller.
 **Klart när:** ARCHITECTURE.md innehåller en verifierad (inte antagen) lista över
 vilka OpenRouter-modeller som fungerar för: chatt, reasoning-visning, Artifacts,
 verktygsanrop.
+
+## Resultat (2026-09-18)
+
+- **1. Extended thinking / Reasoning streaming (`deepseek/deepseek-r1`):**
+  - Wire-format inspekterat med skript mot OpenRouter API. OpenRouter skickar `delta.reasoning` (sträng med delresonemang) och `delta.reasoning_details` (`[{ type: "reasoning.text", text: "...", index: 0 }]`).
+  - Backend `@librechat/agents/llm/openrouter` och `@librechat/api/src/agents/openai/handlers.ts` fångar dessa och emitterar `ON_REASONING_DELTA`.
+  - Klientens `useStepHandler.ts` och `Reasoning.tsx` renderar resonemanget live i en fällbar tankepanel och rensar bort eventuella `<think>`-taggar.
+  - Ingen ny mappning behövdes; LibreChat hanterar redan OpenRouters format nativt.
+- **2. Artifacts-panelen:**
+  - Undersökt pipeline i `client/src/utils/artifacts.ts`, `Artifact.tsx` och `Mermaid.tsx`.
+  - LibreChat använder `remark-directive` med formen `:::artifact{identifier="..." type="..." title="..."}`.
+  - Stödjer `application/vnd.react` (Sandpack), `text/html` (iframe sandbox), `application/vnd.mermaid` och `application/vnd.code`.
+  - Dessutom lyfts alla standardkodblock med ` ```mermaid ` automatiskt in i Artifacts-panelen som en fullvärdig artefakt.
+- **3. Verktygsanrop (Function Calling) & `dropParams: ['stop']`:**
+  - Testat mot OpenRouter med `qwen/qwen-2.5-72b-instruct` och `deepseek/deepseek-chat`. Båda returnerar korrekta strukturerade funktionsanrop (`tool_calls`).
+  - `dropParams: ['stop']` verifierades som nödvändig i `librechat.yaml`. Eftersom OpenRouter agerar router mot olika underleverantörer (Together, Fireworks, DeepInfra m.fl.) som har strikt och inbördes inkompatibel validering av stop-sekvenser, förhindrar borttagning av `stop`-parametern onödiga 400 Bad Request-krascher.
+- **4. Provider-konfiguration:**
+  - Lagt till direkt DeepSeek-endpoint (`https://api.deepseek.com` med `${DEEPSEEK_API_KEY}`) bredvid OpenRouter i `librechat.yaml`.
+  - Dokumenterat allt i `docs/ARCHITECTURE.md` under "Modell-lager: Verifierat beteende (Task 002)".
+

@@ -56,7 +56,7 @@ describe('ConvoIcon', () => {
   it('renders the provider mark for a first-class endpoint', () => {
     renderIcon({ endpoint: EModelEndpoint.anthropic } as TConversation);
 
-    expect(screen.getByRole('img', { name: 'Anthropic' })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Claude' })).toBeInTheDocument();
   });
 
   it('keeps the agent avatar rather than provider art', () => {

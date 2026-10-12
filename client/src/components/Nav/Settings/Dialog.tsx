@@ -1,25 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { X, ChevronLeft } from 'lucide-react';
 import { Button, useMediaQuery } from '@librechat/client';
-import { SettingsTabValues } from 'librechat-data-provider';
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react';
 import type { TDialogProps } from '~/common';
 import type { SettingsTab } from './types';
+import { ClaudeSettingsTab, TABS } from './types';
 import { useSettingsContext } from './context';
 import { useLocalize } from '~/hooks';
 import Sidebar from './Sidebar';
 import Content from './Content';
-import { TABS } from './types';
 import { cn } from '~/utils';
 
-export default function SettingsDialog({ open, onOpenChange }: TDialogProps) {
+export default function SettingsDialog({
+  open,
+  onOpenChange,
+  initialTab,
+}: TDialogProps & { initialTab?: SettingsTab }) {
   const localize = useLocalize();
   const ctx = useSettingsContext();
   const isSmallScreen = useMediaQuery('(max-width: 767px)');
-  const [activeTab, setActiveTab] = useState<SettingsTab>(SettingsTabValues.GENERAL);
+  const [activeTab, setActiveTab] = useState<SettingsTab>(
+    initialTab ?? ClaudeSettingsTab.PREFERENCES,
+  );
   const [query, setQuery] = useState('');
   const [mobileDetail, setMobileDetail] = useState(false);
+
+  useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
 
   const searching = query.trim().length > 0;
   const inDetail = isSmallScreen && mobileDetail && !searching;
@@ -29,7 +40,7 @@ export default function SettingsDialog({ open, onOpenChange }: TDialogProps) {
   const visibleTabs = TABS.filter((t) => !t.show || t.show(ctx));
   const effectiveTab = visibleTabs.some((t) => t.id === activeTab)
     ? activeTab
-    : SettingsTabValues.GENERAL;
+    : (visibleTabs[0]?.id ?? ClaudeSettingsTab.PREFERENCES);
   const activeMeta = TABS.find((t) => t.id === effectiveTab);
 
   const selectTab = (tab: SettingsTab) => {

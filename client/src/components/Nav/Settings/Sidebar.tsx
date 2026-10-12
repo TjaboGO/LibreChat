@@ -1,6 +1,7 @@
 import * as Tabs from '@radix-ui/react-tabs';
 import { Search, X, ChevronRight } from 'lucide-react';
-import type { SettingsContextValue, SettingsTab } from './types';
+import type { SettingsContextValue, SettingsTab, SettingsGroup } from './types';
+import type { TranslationKeys } from '~/hooks';
 import { useLocalize } from '~/hooks';
 import { TABS } from './types';
 import { cn } from '~/utils';
@@ -13,6 +14,12 @@ interface SidebarProps {
   showChevron?: boolean;
   hideTabs?: boolean;
 }
+
+const GROUPS: { id: SettingsGroup; labelKey?: TranslationKeys }[] = [
+  { id: 'settings' },
+  { id: 'desktop', labelKey: 'com_ui_settings_group_desktop' as TranslationKeys },
+  { id: 'customize', labelKey: 'com_ui_settings_group_customize' as TranslationKeys },
+];
 
 export default function Sidebar({
   ctx,
@@ -61,30 +68,45 @@ export default function Sidebar({
       {!hideTabs && (
         <Tabs.List
           aria-label={localize('com_nav_settings')}
-          className="flex flex-col gap-1 overflow-visible"
+          className="flex flex-col gap-2 overflow-visible"
         >
-          {tabs.map((tab) => (
-            <Tabs.Trigger
-              key={tab.id}
-              value={tab.id}
-              onClick={() => onSelectTab(tab.id)}
-              className={cn(
-                'flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text-primary md:py-2',
-                'radix-state-active:bg-surface-tertiary radix-state-active:text-text-primary',
-              )}
-            >
-              <span className="flex items-center gap-2">
-                {tab.icon}
-                <span className="whitespace-nowrap">{localize(tab.labelKey)}</span>
-              </span>
-              {showChevron && (
-                <ChevronRight
-                  className="h-4 w-4 flex-shrink-0 text-text-tertiary"
-                  aria-hidden="true"
-                />
-              )}
-            </Tabs.Trigger>
-          ))}
+          {GROUPS.map((group) => {
+            const groupTabs = tabs.filter((t) => (t.group ?? 'settings') === group.id);
+            if (groupTabs.length === 0) {
+              return null;
+            }
+            return (
+              <div key={group.id} className="flex flex-col gap-0.5">
+                {group.labelKey && (
+                  <div className="px-3 pb-1 pt-2.5 text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">
+                    {localize(group.labelKey)}
+                  </div>
+                )}
+                {groupTabs.map((tab) => (
+                  <Tabs.Trigger
+                    key={tab.id}
+                    value={tab.id}
+                    onClick={() => onSelectTab(tab.id)}
+                    className={cn(
+                      'flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text-primary md:py-1.5',
+                      'radix-state-active:bg-surface-tertiary radix-state-active:text-text-primary',
+                    )}
+                  >
+                    <span className="flex items-center gap-2">
+                      {tab.icon}
+                      <span className="whitespace-nowrap">{localize(tab.labelKey)}</span>
+                    </span>
+                    {showChevron && (
+                      <ChevronRight
+                        className="h-4 w-4 flex-shrink-0 text-text-tertiary"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </Tabs.Trigger>
+                ))}
+              </div>
+            );
+          })}
         </Tabs.List>
       )}
     </div>

@@ -56,6 +56,31 @@ const loadProjectWorkspace = () =>
     Component: m.ProjectWorkspace,
   }));
 
+const loadArtifactsListView = () =>
+  import('~/components/Artifacts/ArtifactsListPage').then((m) => ({
+    Component: m.default,
+  }));
+
+const loadScheduledView = () =>
+  import('~/components/Scheduled/ScheduledView').then((m) => ({
+    Component: m.default,
+  }));
+
+const loadDesignView = () =>
+  import('~/components/Design/DesignView').then((m) => ({
+    Component: m.default,
+  }));
+
+const loadChatsAndTasksView = () =>
+  import('~/components/Chats/ChatsAndTasksPage').then((m) => ({
+    Component: m.default,
+  }));
+
+const loadCodeAppView = () =>
+  import('~/components/Code/CodeAppView').then((m) => ({
+    Component: m.default,
+  }));
+
 const baseEl = document.querySelector('base');
 const baseHref = baseEl?.getAttribute('href') || '/';
 
@@ -179,6 +204,26 @@ export const router = createBrowserRouter(
             {
               path: 'projects/:projectId',
               lazy: loadProjectWorkspace,
+            },
+            {
+              path: 'artifacts',
+              lazy: loadArtifactsListView,
+            },
+            {
+              path: 'scheduled',
+              lazy: loadScheduledView,
+            },
+            {
+              path: 'design',
+              lazy: loadDesignView,
+            },
+            {
+              path: 'chats',
+              lazy: loadChatsAndTasksView,
+            },
+            {
+              path: 'code',
+              lazy: loadCodeAppView,
             },
             {
               path: 'agents',

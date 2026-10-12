@@ -361,7 +361,7 @@ describe('theme registry', () => {
 
   it('resolves provider brand tokens and lets a theme override them', () => {
     const defaults = resolveTheme(libreChatTheme, 'light');
-    expect(defaults.brands['provider-anthropic']).toBe('#d09a74');
+    expect(defaults.brands['provider-anthropic']).toBe('#D97757');
     expect(defaults.brands['provider-openai']).toBe(defaultBrands['provider-openai']);
 
     const custom = resolveTheme(

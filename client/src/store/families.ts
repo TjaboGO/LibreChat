@@ -294,6 +294,33 @@ const showPlusPopoverFamily = atomFamily<boolean, string | number | null>({
   default: false,
 });
 
+/** The composer's Chat/Cowork segment (see ComposerModeToggle). A UI-only
+ *  mode for now — it changes the attach menu's contents but does not yet
+ *  drive a real autonomy setting or task list (planned for Fas 7, see
+ *  docs/ui-reference/PLAN.md). */
+export type OutputFormat = 'artifact' | 'docs' | 'slides' | 'design';
+export type AutoApprovalOption = 'auto' | 'manual' | 'skip';
+
+export const autoApprovalFamily = atomFamily<AutoApprovalOption, string | number | null>({
+  key: 'autoApprovalByIndex',
+  default: 'auto',
+});
+
+export const outputFormatFamily = atomFamily<OutputFormat, string | number | null>({
+  key: 'outputFormatByIndex',
+  default: 'artifact',
+});
+
+export const composerModeFamily = atomFamily<'chat' | 'cowork', string | number | null>({
+  key: 'composerModeByIndex',
+  default: 'chat',
+});
+
+export const researchModeFamily = atomFamily<boolean, string | number | null>({
+  key: 'researchModeByIndex',
+  default: false,
+});
+
 const showPromptsPopoverFamily = atomFamily<boolean, string | number | null>({
   key: 'showPromptsPopoverByIndex',
   default: false,
@@ -813,6 +840,10 @@ export default {
   globalAudioPlayingFamily,
   globalAudioFetchingFamily,
   showPlusPopoverFamily,
+  composerModeFamily,
+  researchModeFamily,
+  outputFormatFamily,
+  autoApprovalFamily,
   activePromptByIndex,
   useClearSubmissionState,
   showPromptsPopoverFamily,

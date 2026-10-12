@@ -46,7 +46,55 @@ manuellt när nyckeln är på plats, inte något att anta fungerar.
 **DeepSeek direkt (utan OpenRouter):** går också via ett eget `endpoints.custom`-block
 mot `https://api.deepseek.com` om du vill undvika OpenRouters marginal för just den
 modellen — samma mönster, ny post i listan. Ingen anledning att välja bort det ena
-för det andra; lägg till båda.
+för det andra; lägg till båda (tillagt i `librechat.yaml`).
+
+## Modell-lager: Verifierat beteende (Task 002)
+
+Efter live-tester mot OpenRouter och genomgång av pipeline-koden i LibreChat är följande bekräftat:
+
+### 1. Extended-thinking / Reasoning streaming
+- **Wire-format från OpenRouter:**
+  - OpenRouter streamar reasoning-tokens på två sätt i samma SSE-chunk (`choices[0].delta`):
+    1. `delta.reasoning`: Sträng med resonemangstext i realtid.
+    2. `delta.reasoning_details`: Array av objekt, t.ex. `[{ type: "reasoning.text", text: "...", index: 0 }]`.
+  - När tankeprocessen är klar streamas det egentliga svaret via normala `delta.content`.
+- **Backend-mappning (`@librechat/agents` & `@librechat/api`):**
+  - LibreChat har en dedikerad handler `ChatOpenRouter` (`packages/agents/src/llm/openrouter.ts`) och `packages/api/src/agents/openai/handlers.ts` som fångar `reasoning_details` och `reasoning`, sätter `additional_kwargs.reasoning` och skickar händelsen `ON_REASONING_DELTA`.
+- **Klient-rendering:**
+  - Klientens SSE-lyssnare `useStepHandler.ts` tar emot `ON_REASONING_DELTA` och skapar delar av typen `think`.
+  - `StreamingThoughtPeek` och `Reasoning.tsx` renderar dessa som en hopfällbar tankepanel. Modeller som bäddar in `<think>`-taggar i `delta.content` filtreras dessutom automatiskt.
+  - **Slutsats:** Ingen anpassad mappningskod krävdes; LibreChats inbyggda OpenRouter-stöd matchar OpenRouters wire-format exakt.
+
+### 2. Artifacts-pipeline
+- **Mönstermatchning & direktiv:**
+  - LibreChat använder markdown-containerelement via `remark-directive`:
+    ```markdown
+    :::artifact{identifier="my-app" type="application/vnd.react" title="Min App"}
+    export default function App() { ... }
+    :::
+    ```
+  - Stödda typer:
+    - `application/vnd.react`: Renderas interaktivt via Sandpack (React + TypeScript).
+    - `text/html`: Renderas i en sandlådad iframe.
+    - `application/vnd.mermaid`: Renderas interaktivt med Mermaid.js.
+    - `application/vnd.code`: Renderas med syntax highlight / Monaco-redigerare.
+  - Dessutom fångas vanliga kodblock med ` ```mermaid ` automatiskt och lyfts in som interaktiva artefakter i split-vyn (`MERMAID_ARTIFACT_TYPE = 'application/vnd.mermaid'`).
+- **Prompting:** För fulla React/HTML-artefakter instrueras OpenRouter-modeller via systemprompts att använda `:::artifact`-direktiv.
+
+### 3. Verktygsanrop (Function Calling) & `dropParams: ['stop']`
+- **Verifierade modeller:**
+  - `qwen/qwen-2.5-72b-instruct`: Returnerar strukturerade JSON-funktionsanrop på OpenAI-format (`tool_calls` med `function.name` och serialiserade `arguments`).
+  - `deepseek/deepseek-chat`: Returnerar strukturerade funktionsanrop identiskt och pålitligt.
+- **`dropParams: ['stop']`:**
+  - Ska behållas i `librechat.yaml`. OpenRouter agerar proxy mot hundratals olika inferensservrar (Together, Fireworks, DeepInfra, vLLM etc.). Olika backends har inkompatibel validering av stop-sekvenser (vissa förväntar strängar, andra heltals-token-IDs, och vissa returnerar HTTP 400 Bad Request om standard-stop-tokens skickas med). Att droppa `stop` förhindrar 400-fel.
+
+### 4. Providers-översikt
+| Modell / Provider | Chatt | Streaming | Extended Thinking | Tool Calling | Artifacts |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| `deepseek/deepseek-r1` (OpenRouter) | Ja | Ja | Ja (`delta.reasoning`) | Varierar | Ja (Mermaid/kod) |
+| `deepseek/deepseek-chat` (OpenRouter) | Ja | Ja | N/A | Ja (pålitlig) | Ja |
+| `qwen/qwen-2.5-72b-instruct` (OpenRouter) | Ja | Ja | N/A | Ja (mycket bra) | Ja |
+| `DeepSeek` direkt (`api.deepseek.com`) | Ja | Ja | Ja (`deepseek-reasoner`) | Ja (`deepseek-chat`) | Ja |
 
 ## MongoDB på Apple Silicon
 

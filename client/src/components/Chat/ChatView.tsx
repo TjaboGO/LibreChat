@@ -136,10 +136,14 @@ function ChatView({ index = 0, project }: { index?: number; project?: TChatProje
     content = <Landing centerFormOnLanding={centerFormOnLanding} />;
   }
 
-  const chatFormPlaceholder =
-    isProjectLandingPage && project
-      ? localize('com_ui_new_chat_in_project', { name: project.name })
-      : undefined;
+  let chatFormPlaceholder: string;
+  if (isProjectLandingPage && project) {
+    chatFormPlaceholder = localize('com_ui_new_chat_in_project', { name: project.name });
+  } else if (isLandingPage) {
+    chatFormPlaceholder = 'How can Claude help you today?';
+  } else {
+    chatFormPlaceholder = 'Reply to Claude...';
+  }
 
   // Recoil conversation can lag the route during navigation; only announce a
   // title that belongs to the conversation currently in the URL.

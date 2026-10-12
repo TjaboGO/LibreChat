@@ -6,7 +6,24 @@ Vi bidrar INTE tillbaka uppströms — ingen anledning att följa LibreChats
 branch-mot-`dev`-policy för egna commits, men deras tekniska konventioner
 (modulgränser, typecheck, temasystem) gäller fortfarande eftersom vi delar kodbas.
 
-**Läs i den här ordningen innan du skriver kod:**
+**Innan du läser något annat: kolla efter en avbruten föregående session.**
+Claude Code och Orca/Antigravity jobbar båda i samma worktree, och en session kan
+avbrytas abrupt (t.ex. en usage limit) utan att hinna committa. Kör alltid detta
+allra först:
+
+```bash
+git status
+git log --oneline -5
+```
+
+Om `git status` visar okommitterade ändringar: **rör dem inte blint.** Läs igenom
+diffen (`git diff`), avgör om det är ett halvfärdigt arbete värt att slutföra
+eller trasigt skräp värt att kasta, och committa eller återställ *innan* du börjar
+på något nytt — annars blandas ditt arbete ihop med en annan agents. Om du själv
+riskerar att bli avbruten utan förvarning (osäker budget/tid kvar): committa
+hellre en fungerande delbit tidigt än att sitta på en stor okommitterad ändring.
+
+**Läs sedan i den här ordningen innan du skriver kod:**
 
 1. [docs/ROADMAP.md](docs/ROADMAP.md) — vilken fas är vi i, vad är nästa uppgift.
 2. Motsvarande fil i [docs/tasks/](docs/tasks/) för den specifika uppgiften du fått.

@@ -1,0 +1,17 @@
+export { default as PreferencesTab } from './PreferencesTab';
+export { default as AccountTab } from './AccountTab';
+export { default as PrivacyTab } from './PrivacyTab';
+export { default as BillingApiTab } from './BillingApiTab';
+export { default as PlaceholderTab } from './PlaceholderTab';
+export { default as CapabilitiesTab } from './CapabilitiesTab';
+export { default as MemoryTab } from './MemoryTab';
+export { default as SkillsTab } from './SkillsTab';
+export { default as ConnectorsTab } from './ConnectorsTab';
+export { default as DesignSystemsTab } from './DesignSystemsTab';
+export { default as PluginsTab } from './PluginsTab';
+export { default as DeveloperTab } from './DeveloperTab';
+export { default as ExtensionsTab } from './ExtensionsTab';
+export { default as ClaudeCodeTab } from './ClaudeCodeTab';
+export { default as CoworkTab } from './CoworkTab';
+export { default as GeneralTab } from './GeneralTab';
+export { default as ChromeTab } from './ChromeTab';
