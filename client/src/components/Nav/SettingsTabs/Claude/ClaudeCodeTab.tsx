@@ -1,7 +1,7 @@
 /* eslint-disable i18next/no-literal-string */
 import React, { useState, useMemo } from 'react';
 import { Switch } from '@librechat/client';
-import { dataService } from 'librechat-data-provider';
+import { request } from 'librechat-data-provider';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ShieldAlert, ChevronLeft, ChevronRight, Globe, Trash2, X } from 'lucide-react';
 import { cn } from '~/utils';
@@ -85,11 +85,25 @@ export default function ClaudeCodeTab() {
 
   // 6. Authorization tokens & pagination
   const queryClient = useQueryClient();
-  const { data: apiKeysData } = useQuery(['apiKeys'], () => dataService.getApiKeys(), {
-    refetchOnWindowFocus: false,
-  });
+  const { data: apiKeysData } = useQuery(
+    ['apiKeys'],
+    () =>
+      request.get<
+        Array<{
+          id?: string;
+          _id?: string;
+          name?: string;
+          device?: string;
+          createdAt?: string;
+          scopes?: string[];
+        }>
+      >('/api/api-keys'),
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
-  const revokeMutation = useMutation((id: string) => dataService.deleteApiKey(id), {
+  const revokeMutation = useMutation((id: string) => request.delete(`/api/api-keys/${id}`), {
     onSuccess: () => {
       queryClient.invalidateQueries(['apiKeys']);
     },

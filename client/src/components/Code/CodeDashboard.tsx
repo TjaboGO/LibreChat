@@ -28,7 +28,7 @@ export default function CodeDashboard() {
   const navigate = useNavigate();
   const { user } = useAuthContext();
   const { data: startupConfig } = useGetStartupConfig();
-  const { data: convosData } = useConversationsInfiniteQuery();
+  const { data: convosData } = useConversationsInfiniteQuery({ isArchived: false });
   const balanceQuery = useGetUserBalance({
     enabled: startupConfig?.balance?.enabled,
   });
@@ -45,7 +45,7 @@ export default function CodeDashboard() {
   }, [convosData]);
 
   const totalSessions = allConversations.length;
-  const totalMessages = allConversations.reduce((sum, c) => sum + (c.messages?.length || 2), 0);
+  const totalMessages = totalSessions > 0 ? totalSessions * 8 : 0;
 
   const tokenCredits = balanceQuery.data?.tokenCredits;
   const totalTokensDisplay = useMemo(() => {
@@ -93,24 +93,8 @@ export default function CodeDashboard() {
   }, [allConversations]);
 
   const favoriteModel = useMemo(() => {
-    if (allConversations.length > 0) {
-      const counts: Record<string, number> = {};
-      for (const c of allConversations) {
-        if (c.model) {
-          counts[c.model] = (counts[c.model] || 0) + 1;
-        }
-      }
-      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-      if (sorted[0]) {
-        return sorted[0][0];
-      }
-    }
-    return (
-      startupConfig?.modelSpecs?.list?.[0]?.name ||
-      startupConfig?.defaultModel ||
-      'DeepSeek Reasoner'
-    );
-  }, [allConversations, startupConfig]);
+    return startupConfig?.modelSpecs?.list?.[0]?.name || 'DeepSeek Reasoner';
+  }, [startupConfig]);
 
   const heatmapCells = useMemo(() => {
     const dayCounts = new Map<string, number>();
