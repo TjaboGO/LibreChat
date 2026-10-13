@@ -38,6 +38,7 @@ import {
   PendingToolApprovalButton,
   PendingToolApprovalPanel,
 } from '~/components/Chat/approval/Review';
+import { outputFormatFamily, type OutputFormat } from '~/store/families';
 import PendingManualSkillsChips from './PendingManualSkillsChips';
 import usePastedTextEdit from '~/hooks/Files/usePastedTextEdit';
 import useAskAnswerMode from '~/hooks/Input/useAskAnswerMode';
@@ -142,6 +143,14 @@ const focusOwningTargetSelector = [
   '[role="alertdialog"]',
 ].join(', ');
 
+const FORMAT_DIRECTIVES: Record<Exclude<OutputFormat, 'artifact'>, string> = {
+  docs: '\n\n[Format Directive: Please format the response as a structured, publication-ready document with clear sections, headers, and professional layout.]',
+  slides:
+    '\n\n[Format Directive: Please format the response as a presentation slide deck with clearly defined slides, bullet points, and speaker notes.]',
+  design:
+    '\n\n[Format Directive: Please format the response as a design system and UI specification with layout structure, component hierarchy, and styling tokens.]',
+};
+
 const ChatForm = memo(function ChatForm({
   index,
   placeholder,
@@ -176,6 +185,7 @@ const ChatForm = memo(function ChatForm({
   const automaticPlayback = useRecoilValue(store.automaticPlayback);
   const maximizeChatSpace = useRecoilValue(store.maximizeChatSpace);
   const isTemporary = useRecoilValue(store.isTemporary);
+  const outputFormat = useRecoilValue(outputFormatFamily(index));
 
   const [badges, setBadges] = useRecoilState(store.chatBadges);
   const [isEditingBadges, setIsEditingBadges] = useRecoilState(store.isEditingBadges);
@@ -625,17 +635,25 @@ const ChatForm = memo(function ChatForm({
    *  queued follow-up about to start), then an ordinary send: the same route
    *  for typed, dictated, and shortcut-bound submissions. */
   const submitComposerText = useCallback(
-    (data: { text: string }): false | void =>
-      submitFromComposer(
+    (data: { text: string }): false | void => {
+      let textToSend = data.text;
+      if (outputFormat && outputFormat !== 'artifact') {
+        const directive = FORMAT_DIRECTIVES[outputFormat as keyof typeof FORMAT_DIRECTIVES];
+        if (directive && !textToSend.includes('[Format Directive:')) {
+          textToSend = `${textToSend.trim()}${directive}`;
+        }
+      }
+      return submitFromComposer(
         {
           answerMode,
           steering,
           submitMessage,
           reset: () => methods.reset(),
         },
-        data,
-      ),
-    [answerMode, steering, submitMessage, methods],
+        { text: textToSend },
+      );
+    },
+    [answerMode, steering, submitMessage, methods, outputFormat],
   );
 
   return (
