@@ -82,11 +82,11 @@ Before declaring a browsing task finished (`success=true`):
 | **Navigate** | `browser_navigate({ url: "https://..." })` | Resets page state |
 | **Inspect State** | `browser_snapshot()` | Returns accessibility tree with element `ref`s |
 | **Find Text** | `browser_find({ query: "..." })` | Fast snippet locator |
-| **Click Element** | `browser_click({ ref: "e12" })` | Targets accessible ref |
+| **Click Element** | `browser_click({ target: "e12" })` | Targets accessible ref |
 | **Coordinate Click** | `browser_mouse_click_xy({ x: 640, y: 360 })` | Fallback for canvas / SVG |
-| **Type Text** | `browser_type({ ref: "e5", text: "...", submit: false })` | Simulates keyboard typing |
-| **Batch Form** | `browser_fill_form({ fields: [...] })` | Fills multiple inputs |
-| **Select Dropdown** | `browser_select_option({ ref: "e8", values: ["opt1"] })` | Selects `<option>` |
+| **Type Text** | `browser_type({ target: "e5", text: "...", submit: false })` | Simulates keyboard typing |
+| **Batch Form** | `browser_fill_form({ fields: [{ target: "e5", name: "...", type: "textbox", value: "..." }] })` | Fills multiple inputs |
+| **Select Dropdown** | `browser_select_option({ target: "e8", values: ["opt1"] })` | Selects `<option>` |
 | **Scroll** | `browser_mouse_wheel({ deltaY: 500 })` | Positive = down, Negative = up |
 | **Press Key** | `browser_press_key({ key: "Enter" })` | Keyboard hotkey |
 | **Screenshot** | `browser_take_screenshot()` | Visual verification |

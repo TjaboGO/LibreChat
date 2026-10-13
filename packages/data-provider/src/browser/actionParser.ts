@@ -344,12 +344,12 @@ export function convertUITarsActionToPlaywright(
           description: `Click at coordinates (${scaled.x}, ${scaled.y})`,
         };
       }
-      const ref = (args.ref as string) || (args.element as string);
-      if (ref) {
+      const target = (args.target as string) || (args.ref as string) || (args.element as string);
+      if (target) {
         return {
           tool: 'browser_click',
-          parameters: { ref },
-          description: `Click element ${ref}`,
+          parameters: { target },
+          description: `Click element ${target}`,
         };
       }
       break;
@@ -359,17 +359,17 @@ export function convertUITarsActionToPlaywright(
       const rawContent = (args.content ?? args.text ?? '') as string;
       const hasNewline = rawContent.endsWith('\n');
       const cleanContent = hasNewline ? rawContent.slice(0, -1) : rawContent;
-      const ref = (args.ref as string) || (args.element as string);
+      const target = (args.target as string) || (args.ref as string) || (args.element as string);
 
-      if (ref) {
+      if (target) {
         return {
           tool: 'browser_type',
           parameters: {
-            ref,
+            target,
             text: cleanContent,
             submit: hasNewline,
           },
-          description: `Type text into element ${ref}`,
+          description: `Type text into element ${target}`,
         };
       }
       return {

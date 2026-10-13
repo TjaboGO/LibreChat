@@ -176,6 +176,16 @@ Slutförande av återstående inställningspaneler och systemintegration:
 
 → [docs/tasks/013-backend-wiring.md](tasks/013-backend-wiring.md)
 
+## Fas 14 — Verklig Computer Use: Browser Operator
+
+- [x] Playwright MCP aktiverat i `librechat.yaml` (`@playwright/mcp` med `--headless` och `--caps=vision,pdf`)
+- [x] Repo-extraktioner genomförda i `docs/refs/ui-tars-EXTRACTION.md` och `docs/refs/browser-use-EXTRACTION.md` med licensattribuering (Apache-2.0 / MIT)
+- [x] Multimodal action-parser och koordinat-grounding implementerad i `packages/data-provider/src/browser/actionParser.ts` med 22 gröna unit-tester
+- [x] `skill/browser-operator/SKILL.md` skapad med Reflection-Plan-Act-loop, HITL-säkerhetsgate och full MCP-verktygsmappning
+- [x] Verifierad mot sandlådewebbplats utan mock (`scripts/demo-browser-operator.ts` kör mötesbokning end-to-end via Playwright MCP)
+
+→ [docs/tasks/014-browser-operator.md](tasks/014-browser-operator.md)
+
 ## Explicit ute ur scope tills vidare
 
 Team-/orgadministration, fakturering, enterprise-SSO, native mobilapp, samt
