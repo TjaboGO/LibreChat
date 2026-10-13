@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { Clock } from 'lucide-react';
 import * as Popover from '@radix-ui/react-popover';
+import { useGetUserBalance, useGetStartupConfig } from '~/data-provider';
+import { useAuthContext } from '~/hooks/AuthContext';
 import { useLocalize } from '~/hooks';
 import { cn } from '~/utils';
 
@@ -14,24 +16,59 @@ interface UsageLimitPopoverProps {
 }
 
 export default function UsageLimitPopover({
-  countdownText = '34m',
-  fiveHourUsage = 'Normal',
-  resetsIn = '34 min',
-  sevenDayUsage = 'Active',
-  sevenDayResets = 'In 3 days',
+  countdownText: propCountdownText,
+  fiveHourUsage: propFiveHourUsage,
+  resetsIn: propResetsIn,
+  sevenDayUsage: propSevenDayUsage,
+  sevenDayResets: propSevenDayResets,
 }: UsageLimitPopoverProps) {
   const localize = useLocalize();
   const [open, setOpen] = useState(false);
+  const { isAuthenticated } = useAuthContext();
+  const { data: startupConfig } = useGetStartupConfig();
+  const balanceQuery = useGetUserBalance({
+    enabled: !!isAuthenticated && startupConfig?.balance?.enabled,
+  });
+
+  const balance = balanceQuery.data;
+  const isBalanceEnabled = startupConfig?.balance?.enabled;
+
+  const countdownText =
+    propCountdownText ??
+    (isBalanceEnabled && balance != null
+      ? `${Math.round(balance.tokenCredits / 1000)}k`
+      : 'Active');
+
+  let defaultFiveHourUsage = 'Active';
+  if (isBalanceEnabled && balance != null) {
+    defaultFiveHourUsage = balance.tokenCredits > 50000 ? 'Normal' : 'Low';
+  }
+  const fiveHourUsage = propFiveHourUsage ?? defaultFiveHourUsage;
+
+  let defaultResetsIn = 'Direct billing';
+  if (isBalanceEnabled && balance?.autoRefillEnabled) {
+    defaultResetsIn = `${balance.refillIntervalValue ?? 1} ${balance.refillIntervalUnit ?? 'day'}`;
+  }
+  const resetsIn = propResetsIn ?? defaultResetsIn;
+
+  let defaultSevenDayUsage = 'Pay-per-token';
+  if (isBalanceEnabled && balance != null) {
+    defaultSevenDayUsage = `${new Intl.NumberFormat().format(Math.round(balance.tokenCredits))} tokens`;
+  }
+  const sevenDayUsage = propSevenDayUsage ?? defaultSevenDayUsage;
+
+  let defaultSevenDayResets = 'OpenRouter';
+  if (isBalanceEnabled) {
+    defaultSevenDayResets = balance?.autoRefillEnabled ? 'Active refill' : 'Manual';
+  }
+  const sevenDayResets = propSevenDayResets ?? defaultSevenDayResets;
 
   const metrics = [
-    { label: localize('com_ui_five_hour_usage'), value: fiveHourUsage },
-    { label: localize('com_ui_resets_in'), value: resetsIn },
-    { label: localize('com_ui_seven_day_usage'), value: sevenDayUsage },
-    { label: localize('com_ui_seven_day_resets'), value: sevenDayResets },
-    {
-      label: localize('com_ui_refreshed'),
-      value: localize('com_ui_refreshed') ? 'Just now' : 'Just now',
-    },
+    { label: localize('com_ui_five_hour_usage') || '5-hour usage', value: fiveHourUsage },
+    { label: localize('com_ui_resets_in') || 'Resets in', value: resetsIn },
+    { label: localize('com_ui_seven_day_usage') || 'Available quota', value: sevenDayUsage },
+    { label: localize('com_ui_seven_day_resets') || 'Gateway mode', value: sevenDayResets },
+    { label: localize('com_ui_refreshed') || 'Refreshed', value: 'Just now' },
   ];
 
   return (
