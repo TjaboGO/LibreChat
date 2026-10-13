@@ -220,8 +220,8 @@ MASTER-PLAN säger vad som faktiskt fungerar och hur mock ska bli verkligt."*
 
 ## Checklista per fas (kortversion)
 
-- [ ] **Fas 12** — appen startbar, GAP-AUDIT.md skriven, mock flyttade/borttagna
-- [ ] **Fas 13** — Cowork/Memory/Usage/ClaudeCode-tabbac mot riktiga endpoints
+- [x] **Fas 12** — appen startbar, GAP-AUDIT.md skriven, mock flyttade/borttagna
+- [x] **Fas 13** — Cowork/Memory/Usage/ClaudeCode-tabbac mot riktiga endpoints
 - [ ] **Fas 14** — Playwright MCP aktivt; browser-operator-skill från ui-tars+browser-use-mönster; HITL-gate; riktig demo
 - [ ] **Fas 15** — Design Canvas→artifact-pipeline; Docs/Slides-export
 - [ ] **Fas 16** — nya Claude-skärmdumpar → enhetlig composer + Plans-panel

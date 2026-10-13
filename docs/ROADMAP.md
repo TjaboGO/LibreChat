@@ -166,6 +166,16 @@ Slutförande av återstående inställningspaneler och systemintegration:
 
 → [docs/tasks/GAP-AUDIT.md](tasks/GAP-AUDIT.md)
 
+## Fas 13 — Backend-wiring: Gör det befintliga verkligt
+
+- [x] `MemoryTab.tsx` och dess modaler kopplade till `/api/memories` via React Query; `INITIAL_MEMORIES` borttaget
+- [x] `/api/cowork/tasks` implementerad och kopplad till `scheduleSchema`, `ScheduleRun` och subagent-trådar; `CoworkTaskList` läser `useCoworkTasksQuery`, `DEFAULT_COWORK_TASKS` borttaget
+- [x] `UsageLimitPopover.tsx` kopplad till verkligt tokensaldo och kvotinställningar via `useGetUserBalance`
+- [x] `OutputFormatDropdown.tsx` / `outputFormatFamily` kopplad till promptgenerering i `ChatForm.tsx` (docs/slides/design-direktiv)
+- [x] `ClaudeCodeTab.tsx` och `CodeDashboard.tsx`: `MOCK_TOKENS` borttaget och ersatt med `/api/api-keys`; statistik och heatmap beräknas dynamiskt från faktiska konversationer
+
+→ [docs/tasks/013-backend-wiring.md](tasks/013-backend-wiring.md)
+
 ## Explicit ute ur scope tills vidare
 
 Team-/orgadministration, fakturering, enterprise-SSO, native mobilapp, samt
