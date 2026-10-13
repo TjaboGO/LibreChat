@@ -1,17 +1,12 @@
 /* eslint-disable i18next/no-literal-string */
-import React, { useState } from 'react';
+import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { Clock, CheckSquare, Zap } from 'lucide-react';
+import { useCoworkTasksQuery, useClearCoworkTasksMutation, type CoworkTask } from '~/data-provider';
 import { composerModeFamily } from '~/store/families';
 import { cn } from '~/utils';
 
-export interface CoworkTask {
-  id: string;
-  title: string;
-  type: 'scheduled' | 'task';
-  status: 'running' | 'queued' | 'completed';
-  timeAgo: string;
-}
+export type { CoworkTask };
 
 function getStatusDotClass(status: CoworkTask['status']) {
   if (status === 'running') {
@@ -23,37 +18,15 @@ function getStatusDotClass(status: CoworkTask['status']) {
   return 'bg-amber-500';
 }
 
-const DEFAULT_COWORK_TASKS: CoworkTask[] = [
-  {
-    id: 'task-1',
-    title: 'Monitor test flakiness across client test suites',
-    type: 'scheduled',
-    status: 'running',
-    timeAgo: '12 minutes ago',
-  },
-  {
-    id: 'task-2',
-    title: 'Rebase local worktree with origin/main changes',
-    type: 'task',
-    status: 'queued',
-    timeAgo: '1 hour ago',
-  },
-  {
-    id: 'task-3',
-    title: 'Sync documentation roadmap and verify TypeScript types',
-    type: 'task',
-    status: 'queued',
-    timeAgo: '3 hours ago',
-  },
-];
-
 interface CoworkTaskListProps {
   index?: string | number | null;
 }
 
 export default function CoworkTaskList({ index = null }: CoworkTaskListProps) {
   const composerMode = useRecoilValue(composerModeFamily(index));
-  const [tasks, setTasks] = useState<CoworkTask[]>(DEFAULT_COWORK_TASKS);
+  const { data } = useCoworkTasksQuery();
+  const clearActiveMutation = useClearCoworkTasksMutation();
+  const tasks = data?.tasks ?? [];
 
   // Only render in Cowork mode when tasks exist
   if (composerMode !== 'cowork' || tasks.length === 0) {
@@ -61,7 +34,8 @@ export default function CoworkTaskList({ index = null }: CoworkTaskListProps) {
   }
 
   const handleClearActive = () => {
-    setTasks([]);
+    const taskIds = tasks.map((t) => t.id);
+    clearActiveMutation.mutate(taskIds);
   };
 
   return (
