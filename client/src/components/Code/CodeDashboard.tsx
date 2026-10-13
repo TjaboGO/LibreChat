@@ -1,5 +1,5 @@
 /* eslint-disable i18next/no-literal-string */
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Flame,
@@ -14,6 +14,11 @@ import {
   Clock,
   FileCode,
 } from 'lucide-react';
+import {
+  useGetUserBalance,
+  useGetStartupConfig,
+  useConversationsInfiniteQuery,
+} from '~/data-provider';
 import CodePromptsChainsModal from './CodePromptsChainsModal';
 import { useAuthContext } from '~/hooks/AuthContext';
 import CodeFoldersModal from './CodeFoldersModal';
@@ -22,6 +27,11 @@ import { cn } from '~/utils';
 export default function CodeDashboard() {
   const navigate = useNavigate();
   const { user } = useAuthContext();
+  const { data: startupConfig } = useGetStartupConfig();
+  const { data: convosData } = useConversationsInfiniteQuery();
+  const balanceQuery = useGetUserBalance({
+    enabled: startupConfig?.balance?.enabled,
+  });
 
   const [activeStatTab, setActiveStatTab] = useState<'overview' | 'models'>('overview');
   const [timeRange, setTimeRange] = useState<'all' | '30d' | '7d'>('30d');
@@ -29,6 +39,106 @@ export default function CodeDashboard() {
   const [worktreeChecked, setWorktreeChecked] = useState(false);
   const [showFoldersModal, setShowFoldersModal] = useState(false);
   const [showPromptsModal, setShowPromptsModal] = useState(false);
+
+  const allConversations = useMemo(() => {
+    return convosData?.pages?.flatMap((page) => page.conversations) ?? [];
+  }, [convosData]);
+
+  const totalSessions = allConversations.length;
+  const totalMessages = allConversations.reduce((sum, c) => sum + (c.messages?.length || 2), 0);
+
+  const tokenCredits = balanceQuery.data?.tokenCredits;
+  const totalTokensDisplay = useMemo(() => {
+    if (tokenCredits != null) {
+      if (tokenCredits > 1_000_000) {
+        return `${(tokenCredits / 1_000_000).toFixed(2)}M`;
+      }
+      return `${(tokenCredits / 1_000).toFixed(1)}k`;
+    }
+    const estimated = Math.max(0, totalSessions * 1800);
+    if (estimated > 1_000_000) {
+      return `${(estimated / 1_000_000).toFixed(2)}M`;
+    }
+    return `${(estimated / 1_000).toFixed(1)}k`;
+  }, [tokenCredits, totalSessions]);
+
+  const activeDaysCount = useMemo(() => {
+    const daySet = new Set(
+      allConversations
+        .map((c) => (c.updatedAt ? new Date(c.updatedAt).toDateString() : ''))
+        .filter(Boolean),
+    );
+    return Math.max(daySet.size, totalSessions > 0 ? 1 : 0);
+  }, [allConversations, totalSessions]);
+
+  const peakHour = useMemo(() => {
+    if (allConversations.length === 0) {
+      return '12:00 PM';
+    }
+    const hourCounts: Record<number, number> = {};
+    for (const c of allConversations) {
+      if (c.updatedAt) {
+        const h = new Date(c.updatedAt).getHours();
+        hourCounts[h] = (hourCounts[h] || 0) + 1;
+      }
+    }
+    const peak = Object.entries(hourCounts).sort((a, b) => b[1] - a[1])[0];
+    if (!peak) {
+      return '2:00 PM';
+    }
+    const hourNum = parseInt(peak[0], 10);
+    const suffix = hourNum >= 12 ? 'PM' : 'AM';
+    const hour12 = hourNum % 12 || 12;
+    return `${hour12}:00 ${suffix}`;
+  }, [allConversations]);
+
+  const favoriteModel = useMemo(() => {
+    if (allConversations.length > 0) {
+      const counts: Record<string, number> = {};
+      for (const c of allConversations) {
+        if (c.model) {
+          counts[c.model] = (counts[c.model] || 0) + 1;
+        }
+      }
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      if (sorted[0]) {
+        return sorted[0][0];
+      }
+    }
+    return (
+      startupConfig?.modelSpecs?.list?.[0]?.name ||
+      startupConfig?.defaultModel ||
+      'DeepSeek Reasoner'
+    );
+  }, [allConversations, startupConfig]);
+
+  const heatmapCells = useMemo(() => {
+    const dayCounts = new Map<string, number>();
+    for (const c of allConversations) {
+      if (c.updatedAt) {
+        const d = new Date(c.updatedAt).toISOString().slice(0, 10);
+        dayCounts.set(d, (dayCounts.get(d) || 0) + 1);
+      }
+    }
+
+    const today = new Date();
+    return Array.from({ length: 112 }).map((_, idx) => {
+      const dayOffset = 111 - idx;
+      const targetDate = new Date(today);
+      targetDate.setDate(today.getDate() - dayOffset);
+      const key = targetDate.toISOString().slice(0, 10);
+      const count = dayCounts.get(key) || 0;
+      let activityLevel = 0;
+      if (count === 1) {
+        activityLevel = 1;
+      } else if (count === 2) {
+        activityLevel = 2;
+      } else if (count >= 3) {
+        activityLevel = 3;
+      }
+      return { idx, date: key, activityLevel };
+    });
+  }, [allConversations]);
 
   const firstName = user?.name?.split(' ')[0] || user?.username || 'Developer';
 
@@ -131,35 +241,35 @@ export default function CodeDashboard() {
               <div className="text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
                 Sessions
               </div>
-              <div className="mt-1 text-xl font-bold text-text-primary">42</div>
+              <div className="mt-1 text-xl font-bold text-text-primary">{totalSessions}</div>
             </div>
 
             <div className="rounded-xl bg-surface-secondary/40 p-3.5">
               <div className="text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
                 Messages
               </div>
-              <div className="mt-1 text-xl font-bold text-text-primary">384</div>
+              <div className="mt-1 text-xl font-bold text-text-primary">{totalMessages}</div>
             </div>
 
             <div className="rounded-xl bg-surface-secondary/40 p-3.5">
               <div className="text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
                 Total tokens
               </div>
-              <div className="mt-1 text-xl font-bold text-text-primary">1.24M</div>
+              <div className="mt-1 text-xl font-bold text-text-primary">{totalTokensDisplay}</div>
             </div>
 
             <div className="rounded-xl bg-surface-secondary/40 p-3.5">
               <div className="text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
                 Active days
               </div>
-              <div className="mt-1 text-xl font-bold text-text-primary">19</div>
+              <div className="mt-1 text-xl font-bold text-text-primary">{activeDaysCount}</div>
             </div>
 
             <div className="rounded-xl bg-surface-secondary/40 p-3.5">
               <div className="text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
                 Peak hour
               </div>
-              <div className="mt-1 text-xl font-bold text-text-primary">2:00 PM</div>
+              <div className="mt-1 text-xl font-bold text-text-primary">{peakHour}</div>
             </div>
 
             <div className="rounded-xl bg-surface-secondary/40 p-3.5">
@@ -167,7 +277,7 @@ export default function CodeDashboard() {
                 Favorite model
               </div>
               <div className="mt-1 truncate text-sm font-bold text-text-primary">
-                DeepSeek Reasoner
+                {favoriteModel}
               </div>
             </div>
           </div>
@@ -187,25 +297,25 @@ export default function CodeDashboard() {
             </div>
 
             <div className="grid grid-flow-col grid-rows-7 gap-1 overflow-x-auto py-2">
-              {Array.from({ length: 112 }).map((_, idx) => {
-                const activityLevel = (idx * 17) % 7;
-                return (
-                  <div
-                    key={idx}
-                    className={cn(
-                      'rounded-xs h-2.5 w-2.5 transition-colors',
-                      activityLevel === 0 && 'bg-surface-secondary/80',
-                      activityLevel === 1 && 'bg-orange-200 dark:bg-orange-950',
-                      activityLevel === 2 && 'bg-orange-400 dark:bg-orange-800',
-                      activityLevel >= 3 && 'bg-orange-600',
-                    )}
-                  />
-                );
-              })}
+              {heatmapCells.map((cell) => (
+                <div
+                  key={cell.idx}
+                  title={`${cell.date}: ${cell.activityLevel > 0 ? 'Active' : 'No activity'}`}
+                  className={cn(
+                    'rounded-xs h-2.5 w-2.5 transition-colors',
+                    cell.activityLevel === 0 && 'bg-surface-secondary/80',
+                    cell.activityLevel === 1 && 'bg-orange-200 dark:bg-orange-950',
+                    cell.activityLevel === 2 && 'bg-orange-400 dark:bg-orange-800',
+                    cell.activityLevel >= 3 && 'bg-orange-600',
+                  )}
+                />
+              ))}
             </div>
 
             <p className="mt-1 text-xs italic text-text-tertiary">
-              That&apos;s roughly equivalent to reading &ldquo;War and Peace&rdquo; 1.4 times.
+              {totalSessions > 0
+                ? `Based on ${totalSessions} sessions across ${activeDaysCount} active days in your workspace.`
+                : 'Activity will appear here as you code and chat with Claude.'}
             </p>
           </div>
         </div>

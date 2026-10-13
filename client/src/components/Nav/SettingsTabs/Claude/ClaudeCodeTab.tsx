@@ -1,6 +1,8 @@
 /* eslint-disable i18next/no-literal-string */
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Switch } from '@librechat/client';
+import { dataService } from 'librechat-data-provider';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ShieldAlert, ChevronLeft, ChevronRight, Globe, Trash2, X } from 'lucide-react';
 import { cn } from '~/utils';
 
@@ -12,57 +14,25 @@ interface TokenItem {
   scopes: string[];
 }
 
-const MOCK_TOKENS: TokenItem[] = [
-  {
-    id: 'tok-1',
-    application: 'Claude Code',
-    device: 'MacBook Pro',
-    connectedAgo: 'Connected 2 hours ago',
-    scopes: [
-      'user:file_upload',
-      'user:inference',
-      'user:plugins',
-      'user:profile',
-      'user:sessions:claude_code',
-      'user:mcp_servers',
-    ],
-  },
-  {
-    id: 'tok-2',
-    application: 'Claude Code',
-    device: 'iMac Studio (Office)',
-    connectedAgo: 'Connected yesterday',
-    scopes: ['user:file_upload', 'user:inference', 'user:sessions:claude_code'],
-  },
-  {
-    id: 'tok-3',
-    application: 'Claude Code',
-    device: 'VS Code Extension',
-    connectedAgo: 'Connected 2 days ago',
-    scopes: ['user:inference', 'user:sessions:claude_code'],
-  },
-  {
-    id: 'tok-4',
-    application: 'Claude Code',
-    device: 'Linux Workstation',
-    connectedAgo: 'Connected 5 days ago',
-    scopes: ['user:file_upload', 'user:inference', 'user:sessions:claude_code', 'user:mcp_servers'],
-  },
-  {
-    id: 'tok-5',
-    application: 'Claude Code',
-    device: 'CI Runner',
-    connectedAgo: 'Connected 1 week ago',
-    scopes: ['user:inference'],
-  },
-  {
-    id: 'tok-6',
-    application: 'Claude Code',
-    device: 'MacBook Air',
-    connectedAgo: 'Connected 2 weeks ago',
-    scopes: ['user:file_upload', 'user:inference'],
-  },
-];
+function formatTimeAgo(date?: string | Date) {
+  if (!date) {
+    return 'Recently';
+  }
+  const diffMs = Date.now() - new Date(date).getTime();
+  const diffMinutes = Math.floor(diffMs / 60000);
+  if (diffMinutes < 1) {
+    return 'Just now';
+  }
+  if (diffMinutes < 60) {
+    return `${diffMinutes}m ago`;
+  }
+  const diffHours = Math.floor(diffMinutes / 60);
+  if (diffHours < 24) {
+    return `${diffHours}h ago`;
+  }
+  const diffDays = Math.floor(diffHours / 24);
+  return `${diffDays}d ago`;
+}
 
 export default function ClaudeCodeTab() {
   // 1. General
@@ -114,10 +84,33 @@ export default function ClaudeCodeTab() {
   const [autoArchivePr, setAutoArchivePr] = useState(false);
 
   // 6. Authorization tokens & pagination
-  const [tokens, setTokens] = useState<TokenItem[]>(MOCK_TOKENS);
+  const queryClient = useQueryClient();
+  const { data: apiKeysData } = useQuery(['apiKeys'], () => dataService.getApiKeys(), {
+    refetchOnWindowFocus: false,
+  });
+
+  const revokeMutation = useMutation((id: string) => dataService.deleteApiKey(id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['apiKeys']);
+    },
+  });
+
+  const tokens: TokenItem[] = useMemo(() => {
+    if (!apiKeysData || !Array.isArray(apiKeysData)) {
+      return [];
+    }
+    return apiKeysData.map((k: any) => ({
+      id: k.id || k._id,
+      application: k.name || 'Claude Code',
+      device: k.device || 'Authorized Client',
+      connectedAgo: k.createdAt ? `Connected ${formatTimeAgo(k.createdAt)}` : 'Active',
+      scopes: k.scopes || ['user:inference', 'user:sessions:claude_code'],
+    }));
+  }, [apiKeysData]);
+
   const [tokenPage, setTokenPage] = useState(1);
   const pageSize = 4;
-  const totalPages = Math.ceil(tokens.length / pageSize);
+  const totalPages = Math.max(1, Math.ceil(tokens.length / pageSize));
   const paginatedTokens = tokens.slice((tokenPage - 1) * pageSize, tokenPage * pageSize);
 
   const [isDeleteSessionsModalOpen, setIsDeleteSessionsModalOpen] = useState(false);
@@ -127,7 +120,7 @@ export default function ClaudeCodeTab() {
   );
 
   const handleRevokeToken = (id: string) => {
-    setTokens(tokens.filter((t) => t.id !== id));
+    revokeMutation.mutate(id);
   };
 
   const handleAddSite = () => {
@@ -808,6 +801,12 @@ export default function ClaudeCodeTab() {
           </div>
 
           <div className="divide-y divide-border-light/60">
+            {tokens.length === 0 && (
+              <div className="p-6 text-center text-xs text-text-tertiary">
+                No active authorization tokens. Use Claude Code CLI or generate an agent token to
+                connect.
+              </div>
+            )}
             {paginatedTokens.map((t) => (
               <div key={t.id} className="flex items-start justify-between p-3.5">
                 <div>
