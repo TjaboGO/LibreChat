@@ -10,6 +10,9 @@ export interface MemoryEntry {
   summary: string;
   details: string[];
   updatedAt: string;
+  rawKey?: string;
+  agentId?: string;
+  rawValue?: string;
 }
 
 interface MemoryDetailViewProps {

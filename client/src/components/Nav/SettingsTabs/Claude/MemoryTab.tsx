@@ -1,77 +1,149 @@
 /* eslint-disable i18next/no-literal-string */
-import React, { useState } from 'react';
-import { Switch } from '@librechat/client';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Switch, Spinner } from '@librechat/client';
 import { ChevronDown, ChevronRight, Pencil, Trash2, ArrowUp } from 'lucide-react';
+import type { TUserMemory } from 'librechat-data-provider';
+import {
+  useMemoriesQuery,
+  useCreateMemoryMutation,
+  useUpdateMemoryMutation,
+  useDeleteMemoryMutation,
+  useUpdateMemoryPreferencesMutation,
+  useGetUserQuery,
+} from '~/data-provider';
 import MemoryDetailView, { type MemoryEntry } from './MemoryDetailView';
 import ImportMemoryModal from './ImportMemoryModal';
 
-const INITIAL_MEMORIES: MemoryEntry[] = [
-  {
-    id: 'mem-1',
-    category: 'you',
-    label: 'Preferences',
-    summary: 'Prefers concise responses, TypeScript code, and dark theme references.',
-    details: [
-      'Always use functional React components with hooks.',
-      'Prefer Tailwind CSS tokens over arbitrary hex colors.',
-      'Prefers Scandinavian style design aesthetics and minimal UI.',
-    ],
-    updatedAt: '2 days ago',
-  },
-  {
-    id: 'mem-2',
-    category: 'you',
-    label: 'Profile',
-    summary: 'Software engineer building a Claude clone on OpenRouter.',
-    details: [
-      'Experienced in full-stack TypeScript, React, and Node.js.',
-      'Active contributor to open-source agent tooling.',
-    ],
-    updatedAt: 'Sep 14',
-  },
-  {
-    id: 'mem-3',
-    category: 'topics',
-    label: 'Model Context Protocol',
-    summary: 'Working with stdio and SSE transports for tool integrations.',
-    details: [
-      'Configured local MCP servers for filesystem and git operations.',
-      'Using JSON-RPC 2.0 specs for tool definitions.',
-    ],
-    updatedAt: 'Sep 17',
-  },
-  {
-    id: 'mem-4',
-    category: 'projects',
-    projectName: 'Claude Copycat',
-    label: 'Architecture & Rules',
-    summary: 'Local fork of LibreChat connecting to OpenRouter DeepSeek models.',
-    details: [
-      'Respects AGENTS.md workflow conventions.',
-      'Never commit broken types or hardcoded credentials.',
-    ],
-    updatedAt: 'Yesterday',
-  },
-];
+function formatMemoryDate(dateStr?: string): string {
+  if (!dateStr) {
+    return 'Recently';
+  }
+  try {
+    const d = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    if (diffMinutes < 2) {
+      return 'Just now';
+    }
+    if (diffMinutes < 60) {
+      return `${diffMinutes}m ago`;
+    }
+    if (diffHours < 24) {
+      return `${diffHours}h ago`;
+    }
+    if (diffDays === 1) {
+      return 'Yesterday';
+    }
+    if (diffDays < 7) {
+      return `${diffDays} days ago`;
+    }
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  } catch {
+    return dateStr;
+  }
+}
+
+function generateMemoryKey(text: string): string {
+  const slug = text
+    .toLowerCase()
+    .replace(/[^a-z]/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .slice(0, 24);
+  const randomSuffix =
+    Math.random()
+      .toString(36)
+      .replace(/[^a-z]/g, '')
+      .slice(0, 5) || 'note';
+  const key = slug ? `${slug}_${randomSuffix}` : `note_${randomSuffix}`;
+  return key.replace(/[^a-z_]/g, '') || 'user_note';
+}
+
+function mapUserMemoryToEntry(mem: TUserMemory): MemoryEntry {
+  const isAgent = Boolean(mem.agentId);
+  const key = mem.key || '';
+  let category: 'you' | 'topics' | 'projects' = 'you';
+  if (isAgent || key.startsWith('project_') || key.startsWith('proj_')) {
+    category = 'projects';
+  } else if (key.startsWith('topic_') || key.startsWith('topic')) {
+    category = 'topics';
+  }
+
+  const label =
+    key
+      .replace(/^(topic_|project_|proj_|user_)/, '')
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase()) || 'Memory';
+
+  const lines = mem.value
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean);
+  const summary = mem.summary || lines[0] || mem.value;
+  const details = lines.length > 0 ? lines : [mem.value];
+
+  return {
+    id: mem._id || mem.key,
+    rawKey: mem.key,
+    agentId: mem.agentId,
+    rawValue: mem.value,
+    category,
+    projectName: mem.agentName || (isAgent ? 'Agent Project' : undefined),
+    label,
+    summary,
+    details,
+    updatedAt: formatMemoryDate(mem.updated_at),
+  };
+}
 
 export default function MemoryTab() {
-  // Toggles
+  const { data: userData } = useGetUserQuery();
+  const { data: memData, isLoading } = useMemoriesQuery();
+  const createMemoryMutation = useCreateMemoryMutation();
+  const updateMemoryMutation = useUpdateMemoryMutation();
+  const deleteMemoryMutation = useDeleteMemoryMutation();
+  const updateMemoryPreferencesMutation = useUpdateMemoryPreferencesMutation();
+
+  // Settings Toggles
   const [searchChats, setSearchChats] = useState(true);
   const [generateMemory, setGenerateMemory] = useState(true);
   const [sensitiveTopics, setSensitiveTopics] = useState(true);
 
+  // Sync personalization preferences
+  useEffect(() => {
+    if (userData?.personalization?.memories !== undefined) {
+      setGenerateMemory(userData.personalization.memories);
+    }
+  }, [userData?.personalization?.memories]);
+
   // Modals & Active Detail
   const [importModalOpen, setImportModalOpen] = useState(false);
-  const [activeEntry, setActiveEntry] = useState<MemoryEntry | null>(null);
+  const [activeEntryId, setActiveEntryId] = useState<string | null>(null);
 
-  // Memories & Project Collapsible State
-  const [memories, setMemories] = useState<MemoryEntry[]>(INITIAL_MEMORIES);
-  const [expandedProjects, setExpandedProjects] = useState<Record<string, boolean>>({
-    'Claude Copycat': true,
-  });
+  // Expanded projects in UI
+  const [expandedProjects, setExpandedProjects] = useState<Record<string, boolean>>({});
 
   // Natural language command input
   const [commandText, setCommandText] = useState('');
+
+  const memories: MemoryEntry[] = useMemo(() => {
+    return (memData?.memories ?? []).map(mapUserMemoryToEntry);
+  }, [memData?.memories]);
+
+  const activeEntry = useMemo(() => {
+    if (!activeEntryId) {
+      return null;
+    }
+    return memories.find((m) => m.id === activeEntryId) ?? null;
+  }, [activeEntryId, memories]);
+
+  const handleToggleGenerateMemory = (checked: boolean) => {
+    setGenerateMemory(checked);
+    updateMemoryPreferencesMutation.mutate({ memories: checked });
+  };
 
   const toggleProject = (projectName: string) => {
     setExpandedProjects((prev) => ({
@@ -81,65 +153,65 @@ export default function MemoryTab() {
   };
 
   const handleDelete = (id: string) => {
-    setMemories((prev) => prev.filter((m) => m.id !== id));
-    if (activeEntry?.id === id) {
-      setActiveEntry(null);
+    const entry = memories.find((m) => m.id === id);
+    if (!entry) {
+      return;
+    }
+    deleteMemoryMutation.mutate({
+      key: entry.rawKey,
+      id: entry.id,
+      agentId: entry.agentId,
+    });
+    if (activeEntryId === id) {
+      setActiveEntryId(null);
     }
   };
 
   const handleUpdateDetails = (id: string, newInstruction: string) => {
-    setMemories((prev) =>
-      prev.map((m) => {
-        if (m.id === id) {
-          return {
-            ...m,
-            details: [...m.details, newInstruction],
-            updatedAt: 'Just now',
-          };
-        }
-        return m;
-      }),
-    );
+    const entry = memories.find((m) => m.id === id);
+    if (!entry) {
+      return;
+    }
+    const updatedValue = entry.rawValue ? `${entry.rawValue}\n${newInstruction}` : newInstruction;
+    updateMemoryMutation.mutate({
+      id: entry.id,
+      key: entry.rawKey,
+      value: updatedValue,
+      agentId: entry.agentId,
+    });
   };
 
   const handleAddMemoryFromCommand = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!commandText.trim()) {
+    const text = commandText.trim();
+    if (!text) {
       return;
     }
-    const newEntry: MemoryEntry = {
-      id: `mem-${Date.now()}`,
-      category: 'you',
-      label: 'Custom note',
-      summary: commandText.trim(),
-      details: [commandText.trim()],
-      updatedAt: 'Just now',
-    };
-    setMemories((prev) => [newEntry, ...prev]);
+    const key = generateMemoryKey(text);
+    createMemoryMutation.mutate({
+      key,
+      value: text,
+    });
     setCommandText('');
   };
 
   const handleImportMemory = (importedText: string) => {
-    const lines = importedText
-      .split('\n')
-      .map((l) => l.trim())
-      .filter(Boolean);
-    const newEntry: MemoryEntry = {
-      id: `mem-${Date.now()}`,
-      category: 'topics',
-      label: 'Imported memory',
-      summary: lines[0] || 'Imported memory details',
-      details: lines.length > 1 ? lines : ['Imported context details.'],
-      updatedAt: 'Just now',
-    };
-    setMemories((prev) => [newEntry, ...prev]);
+    const trimmed = importedText.trim();
+    if (!trimmed) {
+      return;
+    }
+    const key = generateMemoryKey('imported_memory');
+    createMemoryMutation.mutate({
+      key,
+      value: trimmed,
+    });
   };
 
   if (activeEntry) {
     return (
       <MemoryDetailView
         entry={activeEntry}
-        onBack={() => setActiveEntry(null)}
+        onBack={() => setActiveEntryId(null)}
         onDelete={handleDelete}
         onUpdateDetails={handleUpdateDetails}
       />
@@ -201,7 +273,7 @@ export default function MemoryTab() {
             </div>
             <Switch
               checked={generateMemory}
-              onCheckedChange={setGenerateMemory}
+              onCheckedChange={handleToggleGenerateMemory}
               aria-label="Generate memory from chats"
             />
           </div>
@@ -254,6 +326,22 @@ export default function MemoryTab() {
 
       {/* SECTION: Stored Memory Entries */}
       <div className="flex flex-col gap-6 py-6">
+        {isLoading && (
+          <div className="flex items-center justify-center py-10">
+            <Spinner className="size-6 text-text-tertiary" />
+          </div>
+        )}
+
+        {!isLoading && memories.length === 0 && (
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border-light/60 py-10 text-center">
+            <div className="text-xs font-medium text-text-secondary">No memories stored yet</div>
+            <p className="mt-1 max-w-sm text-xs text-text-tertiary">
+              Claude can remember personal preferences, projects, and key topics across
+              conversations. Type an instruction below or start an import to add memory.
+            </p>
+          </div>
+        )}
+
         {/* YOU */}
         {youMemories.length > 0 && (
           <div>
@@ -264,7 +352,7 @@ export default function MemoryTab() {
               {youMemories.map((entry) => (
                 <div
                   key={entry.id}
-                  onClick={() => setActiveEntry(entry)}
+                  onClick={() => setActiveEntryId(entry.id)}
                   className="group flex cursor-pointer items-center justify-between px-3.5 py-2.5 transition-colors hover:bg-surface-secondary/60"
                 >
                   <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -282,7 +370,7 @@ export default function MemoryTab() {
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setActiveEntry(entry);
+                          setActiveEntryId(entry.id);
                         }}
                         className="rounded p-1 text-text-tertiary hover:bg-surface-secondary hover:text-text-primary"
                         aria-label="Edit memory"
@@ -318,7 +406,7 @@ export default function MemoryTab() {
               {topicMemories.map((entry) => (
                 <div
                   key={entry.id}
-                  onClick={() => setActiveEntry(entry)}
+                  onClick={() => setActiveEntryId(entry.id)}
                   className="group flex cursor-pointer items-center justify-between px-3.5 py-2.5 transition-colors hover:bg-surface-secondary/60"
                 >
                   <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -336,7 +424,7 @@ export default function MemoryTab() {
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setActiveEntry(entry);
+                          setActiveEntryId(entry.id);
                         }}
                         className="rounded p-1 text-text-tertiary hover:bg-surface-secondary hover:text-text-primary"
                         aria-label="Edit memory"
@@ -397,7 +485,7 @@ export default function MemoryTab() {
                         {items.map((entry) => (
                           <div
                             key={entry.id}
-                            onClick={() => setActiveEntry(entry)}
+                            onClick={() => setActiveEntryId(entry.id)}
                             className="group flex cursor-pointer items-center justify-between px-3.5 py-2.5 transition-colors hover:bg-surface-secondary/60"
                           >
                             <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -417,7 +505,7 @@ export default function MemoryTab() {
                                   type="button"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    setActiveEntry(entry);
+                                    setActiveEntryId(entry.id);
                                   }}
                                   className="rounded p-1 text-text-tertiary hover:bg-surface-secondary hover:text-text-primary"
                                   aria-label="Edit memory"
