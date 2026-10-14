@@ -37,6 +37,22 @@ export interface MRPThoughtStructure {
   rawThought?: string;
 }
 
+export interface PlanStepItem {
+  id: string;
+  title: string;
+  description?: string;
+  completed: boolean;
+  category: 'completed' | 'pending';
+}
+
+export interface StructuredPlan {
+  title?: string;
+  completedSteps: PlanStepItem[];
+  pendingSteps: PlanStepItem[];
+  hasPlan: boolean;
+  summary?: string;
+}
+
 export interface PlaywrightActionMapping {
   tool: string;
   parameters: Record<string, unknown>;
@@ -263,6 +279,139 @@ export function parseMRPLoop(text: string): MRPThoughtStructure {
   }
 
   return result;
+}
+
+function splitTitleAndDescription(content: string): { title: string; description?: string } {
+  const boldMatch = content.match(/^\*\*([^*]+)\*\*[:.]?\s*([\s\S]*)$/);
+  if (boldMatch) {
+    return {
+      title: boldMatch[1].trim(),
+      description: boldMatch[2].trim() || undefined,
+    };
+  }
+
+  const colonMatch = content.match(/^([^:]{3,50}):\s+(.+)$/);
+  if (colonMatch) {
+    return {
+      title: colonMatch[1].trim(),
+      description: colonMatch[2].trim(),
+    };
+  }
+
+  return {
+    title: content,
+  };
+}
+
+/**
+ * Parses agent execution plans and progress checklists.
+ * Handles:
+ * - Swedish & English sections: "Gjort och testat lokalt:" / "Kvar att göra:"
+ * - Markdown task lists: `- [x] ...` / `- [ ] ...`
+ * - XML <plan> tags
+ * - MRP thought blocks
+ */
+export function parsePlanChecklist(text: string): StructuredPlan {
+  if (!text || typeof text !== 'string') {
+    return { completedSteps: [], pendingSteps: [], hasPlan: false };
+  }
+
+  const completedSteps: PlanStepItem[] = [];
+  const pendingSteps: PlanStepItem[] = [];
+
+  const planTagMatch = text.match(/<plan>([\s\S]+?)<\/plan>/i);
+  const targetText = planTagMatch ? planTagMatch[1] : text;
+
+  const lines = targetText.split(/\r?\n/);
+  let currentSection: 'none' | 'completed' | 'pending' = 'none';
+  let stepIndex = 0;
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      continue;
+    }
+
+    if (
+      /^(?:###?\s*)?(?:gjort\s+och\s+testat(?:\s+lokalt)?|completed\s+and\s+tested|completed\s+steps|klar(?:a)?|done):?/i.test(
+        line,
+      )
+    ) {
+      currentSection = 'completed';
+      continue;
+    }
+
+    if (
+      /^(?:###?\s*)?(?:kvar\s+att\s+g(?:ö|o)ra|remaining\s+(?:tasks|steps)|to\s*do|next\s+steps):?/i.test(
+        line,
+      )
+    ) {
+      currentSection = 'pending';
+      continue;
+    }
+
+    const checkboxMatch = line.match(/^[-*+]\s*\[([ xX])\]\s*(.*)$/);
+    if (checkboxMatch) {
+      const isDone = checkboxMatch[1].toLowerCase() === 'x';
+      const itemContent = checkboxMatch[2].trim();
+      const { title, description } = splitTitleAndDescription(itemContent);
+      stepIndex++;
+      const step: PlanStepItem = {
+        id: `step-${stepIndex}`,
+        title,
+        description,
+        completed: isDone,
+        category: isDone ? 'completed' : 'pending',
+      };
+      if (isDone) {
+        completedSteps.push(step);
+      } else {
+        pendingSteps.push(step);
+      }
+      continue;
+    }
+
+    if (currentSection !== 'none') {
+      const itemMatch = line.match(/^(?:[-*+]|\d+[.)])\s+(.*)$/);
+      if (itemMatch) {
+        const itemContent = itemMatch[1].trim();
+        const { title, description } = splitTitleAndDescription(itemContent);
+        stepIndex++;
+        const step: PlanStepItem = {
+          id: `step-${stepIndex}`,
+          title,
+          description,
+          completed: currentSection === 'completed',
+          category: currentSection,
+        };
+        if (currentSection === 'completed') {
+          completedSteps.push(step);
+        } else {
+          pendingSteps.push(step);
+        }
+      }
+    }
+  }
+
+  let summary: string | undefined;
+  const firstHeaderIndex = targetText.search(
+    /(?:gjort\s+och\s+testat|completed\s+and\s+tested|kvar\s+att\s+g(?:ö|o)ra|to\s*do)/i,
+  );
+  if (firstHeaderIndex > 0) {
+    const preamble = targetText.slice(0, firstHeaderIndex).trim();
+    if (preamble) {
+      summary = preamble;
+    }
+  }
+
+  const hasPlan = completedSteps.length > 0 || pendingSteps.length > 0;
+
+  return {
+    completedSteps,
+    pendingSteps,
+    hasPlan,
+    summary,
+  };
 }
 
 /**

@@ -8,6 +8,7 @@ import {
   parseUITarsAction,
   convertUITarsActionToPlaywright,
   parseIndexedElementTree,
+  parsePlanChecklist,
 } from '../src/browser/actionParser';
 
 describe('Browser Action Parser & UI-TARS Grounding', () => {
@@ -203,6 +204,61 @@ Action: type(content='Gabriel\\n')`;
 
       expect(elements[4].index).toBe(5);
       expect(elements[4].isScrollable).toBe(true);
+    });
+  });
+
+  describe('parsePlanChecklist', () => {
+    it('parses real agent progress checklists matching Claude screenshot 17.07.04', () => {
+      const text = `Användningsgränsen är nådd, så jag stannar här.
+
+Gjort och testat lokalt:
+* **BestSecret-flik**: Jag hämtade dina 128 gillade herrartiklar från BestSecret.
+* **På/av-knapp**: "Jag har BestSecret-konto: Ja/Nej".
+* **Storlekar på alla plagg och skor**: 225 av 262 varor har storlek.
+
+Kvar att göra:
+1. **Granska storlekarna**. De är uppskattade från plaggen.
+2. **Commit och push till GitHub**. Inget är committat eller pushat än.
+3. **Publicera om Artifact-länken**. Den behöver 128 nya bilder.
+
+Skriv "fortsätt" när du vill att jag tar nästa steg.`;
+
+      const plan = parsePlanChecklist(text);
+      expect(plan.hasPlan).toBe(true);
+      expect(plan.summary).toContain('Användningsgränsen är nådd');
+      expect(plan.completedSteps).toHaveLength(3);
+      expect(plan.completedSteps[0].title).toBe('BestSecret-flik');
+      expect(plan.completedSteps[0].completed).toBe(true);
+      expect(plan.completedSteps[0].category).toBe('completed');
+      expect(plan.completedSteps[1].title).toBe('På/av-knapp');
+
+      expect(plan.pendingSteps).toHaveLength(3);
+      expect(plan.pendingSteps[0].title).toBe('Granska storlekarna');
+      expect(plan.pendingSteps[0].completed).toBe(false);
+      expect(plan.pendingSteps[0].category).toBe('pending');
+      expect(plan.pendingSteps[1].title).toBe('Commit och push till GitHub');
+    });
+
+    it('parses markdown checkbox task lists', () => {
+      const text = `
+- [x] Download images and verify locally
+- [x] Add toggle switch in header
+- [ ] Review sizing calculation
+- [ ] Push changes to GitHub
+`;
+      const plan = parsePlanChecklist(text);
+      expect(plan.hasPlan).toBe(true);
+      expect(plan.completedSteps).toHaveLength(2);
+      expect(plan.pendingSteps).toHaveLength(2);
+      expect(plan.completedSteps[0].title).toBe('Download images and verify locally');
+      expect(plan.pendingSteps[1].title).toBe('Push changes to GitHub');
+    });
+
+    it('handles empty or non-plan text gracefully', () => {
+      const plan = parsePlanChecklist('Just a regular assistant message without plans.');
+      expect(plan.hasPlan).toBe(false);
+      expect(plan.completedSteps).toHaveLength(0);
+      expect(plan.pendingSteps).toHaveLength(0);
     });
   });
 });

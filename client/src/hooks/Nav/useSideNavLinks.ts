@@ -9,6 +9,7 @@ import {
   CalendarClock,
   ArrowRightToLine,
   SlidersHorizontal,
+  ListTodo,
 } from 'lucide-react';
 import {
   Permissions,
@@ -34,6 +35,7 @@ import { SchedulePanel } from '~/components/SidePanel/Schedules';
 import Parameters from '~/components/SidePanel/Parameters/Panel';
 import { MemoryPanel } from '~/components/SidePanel/Memories';
 import FilesPanel from '~/components/SidePanel/Files/Panel';
+import { PlansPanel } from '~/components/SidePanel/Plans';
 import { PromptsAccordion } from '~/components/Prompts';
 import { SkillsAccordion } from '~/components/Skills';
 
@@ -145,6 +147,14 @@ export default function useSideNavLinks({
         Component: SkillsAccordion,
       });
     }
+
+    links.push({
+      title: 'com_ui_plans',
+      label: '',
+      icon: ListTodo,
+      id: 'plans',
+      Component: PlansPanel,
+    });
 
     // Scheduled chats are EXPERIMENTAL and default-OFF: the server enables them only
     // when an admin opts in explicitly, so ABSENT config means disabled here too.
