@@ -50,10 +50,10 @@ export default function WordCountPopover({ text }: WordCountPopoverProps) {
         <button
           type="button"
           className={cn(
-            'flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium transition-colors',
+            'shadow-2xs flex items-center gap-1 rounded-full border border-border-light/70 bg-surface-primary/90 px-2.5 py-1 text-xs font-medium text-text-secondary transition-colors',
             open
-              ? 'bg-surface-tertiary text-text-primary'
-              : 'text-text-tertiary hover:bg-surface-secondary hover:text-text-secondary',
+              ? 'bg-surface-secondary text-text-primary'
+              : 'hover:bg-surface-secondary hover:text-text-primary',
           )}
           aria-label={open ? 'Close word count breakdown' : 'Open word count breakdown'}
         >
