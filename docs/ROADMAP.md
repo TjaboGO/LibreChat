@@ -186,6 +186,17 @@ Slutförande av återstående inställningspaneler och systemintegration:
 
 → [docs/tasks/014-browser-operator.md](tasks/014-browser-operator.md)
 
+## Fas 15 — Djupa luckor: Design Canvas & Aggregering
+
+- [x] Design Canvas kopplad till artifacts-pipelinen (`:::artifact` och `store.artifactsState`), Sandpack React runner och sandboxed iframe för HTML-artefakter; "Acme Corp"-placeholder borttagen
+- [x] Dynamisk lager- och tokenextraktion (`designExtractor.ts`) inspirerad av UI-TARS AST-parsing och Browser-Use element-indexering med 5 gröna enhetstester
+- [x] Multi-viewport preview (Desktop/Tablet/Mobile), versionshistorik och direkt export till `.tsx` / `.html`-filer samt urklipp
+- [x] Utökad `skill/live-docs-and-slides/SKILL.md` med `@media print`-regler och PDF-export via Playwright print-capability (`browser_pdf_save`)
+- [x] Verifierad PDF-generering end-to-end (125 KB presentationsdokument genererat utan mock)
+- [x] Arkitekturskiss för `browser-use` som separat isolerad container-service dokumenterad i `docs/tasks/015-design-aggregation.md`
+
+→ [docs/tasks/015-design-aggregation.md](tasks/015-design-aggregation.md)
+
 ## Explicit ute ur scope tills vidare
 
 Team-/orgadministration, fakturering, enterprise-SSO, native mobilapp, samt
