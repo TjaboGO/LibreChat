@@ -1,6 +1,7 @@
 /* eslint-disable i18next/no-literal-string */
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Avatar } from '@librechat/client';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   Sparkles,
   Paperclip,
@@ -27,6 +28,7 @@ import {
 import { useAuthContext } from '~/hooks/AuthContext';
 import DesignSystemModal from './DesignSystemModal';
 import { cn } from '~/utils';
+import store from '~/store';
 
 interface TemplateTile {
   id: string;
@@ -71,6 +73,9 @@ export default function DesignLandingPage({ onOpenProject }: DesignLandingPagePr
   const [searchQuery, setSearchQuery] = useState('');
   const [showSystemModal, setShowSystemModal] = useState(false);
 
+  const artifactsRecord = useRecoilValue(store.artifactsState);
+  const setCurrentArtifactId = useSetRecoilState(store.currentArtifactId);
+
   const [projects] = useState<DesignProjectItem[]>([
     {
       id: 'dp-1',
@@ -102,6 +107,24 @@ export default function DesignLandingPage({ onOpenProject }: DesignLandingPagePr
     },
   ]);
 
+  const allProjects = useMemo<DesignProjectItem[]>(() => {
+    const liveItems: DesignProjectItem[] = [];
+    if (artifactsRecord) {
+      Object.entries(artifactsRecord).forEach(([id, art]) => {
+        if (art && (art.title || art.identifier)) {
+          liveItems.push({
+            id,
+            name: art.title || art.identifier || 'Untitled Artifact',
+            lastViewed: 'Just now',
+            owner: user?.name || 'You',
+            access: 'Live Artifact',
+          });
+        }
+      });
+    }
+    return [...liveItems, ...projects];
+  }, [artifactsRecord, projects, user?.name]);
+
   const handleCreate = (e?: React.FormEvent) => {
     if (e) {
       e.preventDefault();
@@ -112,7 +135,7 @@ export default function DesignLandingPage({ onOpenProject }: DesignLandingPagePr
     onOpenProject(title, designSystem);
   };
 
-  const filteredProjects = projects.filter((p) =>
+  const filteredProjects = allProjects.filter((p) =>
     p.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
@@ -316,7 +339,12 @@ export default function DesignLandingPage({ onOpenProject }: DesignLandingPagePr
               {filteredProjects.map((proj) => (
                 <div
                   key={proj.id}
-                  onClick={() => onOpenProject(proj.name, designSystem)}
+                  onClick={() => {
+                    if (artifactsRecord && artifactsRecord[proj.id]) {
+                      setCurrentArtifactId(proj.id);
+                    }
+                    onOpenProject(proj.name, designSystem);
+                  }}
                   className="grid cursor-pointer grid-cols-12 items-center px-4 py-3 text-xs transition-colors hover:bg-surface-secondary/40"
                 >
                   <div className="col-span-5 flex items-center gap-2.5">

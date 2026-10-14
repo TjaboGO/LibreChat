@@ -144,11 +144,11 @@ const focusOwningTargetSelector = [
 ].join(', ');
 
 const FORMAT_DIRECTIVES: Record<Exclude<OutputFormat, 'artifact'>, string> = {
-  docs: '\n\n[Format Directive: Please format the response as a structured, publication-ready document with clear sections, headers, and professional layout.]',
+  docs: '\n\n[Format Directive: Output a live interactive document artifact using :::artifact{identifier="live-document" type="text/html" title="Interactive Document"} ... :::, formatted with sticky navigation, reading progress, callouts, and clean @media print styles per the live-docs-and-slides skill.]',
   slides:
-    '\n\n[Format Directive: Please format the response as a presentation slide deck with clearly defined slides, bullet points, and speaker notes.]',
+    '\n\n[Format Directive: Output an interactive presentation slide deck artifact using :::artifact{identifier="interactive-presentation" type="text/html" title="Interactive Slides"} ... :::, formatted with keyboard navigation, slide counter, and clean @media print styles for PDF export per the live-docs-and-slides skill.]',
   design:
-    '\n\n[Format Directive: Please format the response as a design system and UI specification with layout structure, component hierarchy, and styling tokens.]',
+    '\n\n[Format Directive: Output an interactive React or HTML UI design artifact using :::artifact{identifier="design-canvas" type="application/vnd.react" title="Interactive Design"} ... :::. Provide a full responsive layout with modern Tailwind CSS styling, explicit component hierarchy (Header, Hero, Feature Showcase, Call-to-Action, Footer), and clear design tokens for the Design Canvas.]',
 };
 
 const ChatForm = memo(function ChatForm({

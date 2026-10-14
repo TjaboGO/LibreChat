@@ -1,9 +1,10 @@
 import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import copy from 'copy-to-clipboard';
 import * as Tabs from '@radix-ui/react-tabs';
+import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState, useResetRecoilState } from 'recoil';
 import { Button, Spinner, useMediaQuery, Radio } from '@librechat/client';
-import { Code, Maximize2, Minimize2, Play, RefreshCw, X } from 'lucide-react';
+import { Code, Maximize2, Minimize2, Play, RefreshCw, X, Palette } from 'lucide-react';
 import type { SandpackPreviewRef } from '@codesandbox/sandpack-react';
 import type { ProcessedMermaidSvg } from '~/utils/diagram/export';
 import { TOOL_ARTIFACT_TYPES, isCodeOnlyArtifact, isPreviewOnlyArtifact } from '~/utils/artifacts';
@@ -118,6 +119,7 @@ export default function Artifacts() {
     orderedArtifactIds,
     setCurrentArtifactId,
   } = useArtifacts();
+  const navigate = useNavigate();
 
   const restoreArtifactTriggerFocus = useCallback(() => {
     const opener = openerRef.current;
@@ -505,6 +507,16 @@ export default function Artifacts() {
               ) : (
                 <DownloadArtifact artifact={currentArtifact} />
               )}
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-9 w-9"
+                onClick={() => navigate('/design')}
+                aria-label="Open in Design Canvas"
+                title="Open in Design Canvas"
+              >
+                <Palette size={16} aria-hidden="true" />
+              </Button>
               <Button
                 size="icon"
                 variant="ghost"
