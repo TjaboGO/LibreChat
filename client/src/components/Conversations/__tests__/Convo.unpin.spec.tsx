@@ -41,6 +41,7 @@ jest.mock('~/data-provider', () => ({
       pinCalls.push({ variables, options });
     },
   }),
+  useCoworkTasksQuery: () => ({ data: { tasks: [] } }),
 }));
 
 jest.mock('react-router-dom', () => ({

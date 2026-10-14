@@ -4,6 +4,7 @@ import type { UseQueryOptions, QueryObserverResult } from '@tanstack/react-query
 
 export interface CoworkTask {
   id: string;
+  conversationId?: string;
   title: string;
   type: 'scheduled' | 'task';
   status: 'running' | 'queued' | 'completed';

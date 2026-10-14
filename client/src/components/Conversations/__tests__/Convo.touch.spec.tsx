@@ -26,6 +26,7 @@ jest.mock('~/data-provider', () => ({
   useGetStartupConfig: () => ({ data: { sharedLinksEnabled: false } }),
   useUpdateConversationMutation: () => ({ mutateAsync: jest.fn() }),
   usePinConversationMutation: () => ({ mutate: jest.fn() }),
+  useCoworkTasksQuery: () => ({ data: { tasks: [] } }),
 }));
 
 jest.mock('react-router-dom', () => ({

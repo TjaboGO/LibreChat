@@ -66,6 +66,7 @@ router.get('/tasks', async (req, res) => {
 
       tasks.push({
         id: taskId,
+        conversationId: run.conversationId || schedule?.conversationId || undefined,
         title: schedule?.name || schedule?.prompt || run.prompt || 'Scheduled agent execution',
         type: 'scheduled',
         status: 'running',
@@ -96,6 +97,7 @@ router.get('/tasks', async (req, res) => {
 
       tasks.push({
         id: taskId,
+        conversationId: schedule.conversationId || undefined,
         title: schedule.name || schedule.prompt || 'Scheduled agent',
         type: 'scheduled',
         status: schedule.enabled ? 'queued' : 'completed',
@@ -112,7 +114,8 @@ router.get('/tasks', async (req, res) => {
 
       tasks.push({
         id: taskId,
-        title: 'Background subagent task',
+        conversationId: lease.conversationId || undefined,
+        title: lease.subagentName ? `Subagent: ${lease.subagentName}` : 'Background subagent task',
         type: 'task',
         status: 'running',
         timeAgo: 'Recently',
@@ -139,7 +142,7 @@ router.get('/tasks', async (req, res) => {
  */
 router.post('/tasks', (req, res) => {
   const userId = req.user.id;
-  const { title, type = 'task' } = req.body || {};
+  const { title, type = 'task', conversationId } = req.body || {};
   if (!title || typeof title !== 'string') {
     return res.status(400).json({ error: 'Title is required' });
   }
@@ -152,6 +155,7 @@ router.post('/tasks', (req, res) => {
 
   const newTask = {
     id: `adhoc-${Date.now()}`,
+    conversationId: conversationId || undefined,
     title: title.trim(),
     type: type === 'scheduled' ? 'scheduled' : 'task',
     status: 'running',

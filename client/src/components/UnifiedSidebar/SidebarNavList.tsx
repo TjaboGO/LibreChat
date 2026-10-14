@@ -16,6 +16,7 @@ import {
 import type { MenuItemProps } from '~/common';
 import useUnifiedSidebarLinks from '~/hooks/Nav/useUnifiedSidebarLinks';
 import { useActivePanel, DEFAULT_PANEL } from '~/Providers';
+import { useCoworkTasksQuery } from '~/data-provider';
 import useNewChat from '~/hooks/Chat/useNewChat';
 import { useLocalize } from '~/hooks';
 import { cn } from '~/utils';
@@ -47,10 +48,12 @@ function RouteRow({
   to,
   icon: Icon,
   label,
+  showDot = false,
 }: {
   to: string;
   icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
   label: string;
+  showDot?: boolean;
 }) {
   const location = useLocation();
   const isActive = location.pathname.startsWith(to);
@@ -61,7 +64,15 @@ function RouteRow({
       className={cn(rowClassName, isActive && 'bg-surface-active-alt font-semibold')}
     >
       <Icon className="h-4 w-4" aria-hidden="true" />
-      <span>{label}</span>
+      <span className="relative flex items-center">
+        <span>{label}</span>
+        {showDot && (
+          <span
+            className="ml-1.5 h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500"
+            title="Active background runs"
+          />
+        )}
+      </span>
     </RouterNavLink>
   );
 }
@@ -141,13 +152,23 @@ function MoreMenu() {
  */
 function SidebarNavList() {
   const localize = useLocalize();
+  const { data: coworkData } = useCoworkTasksQuery();
+  const hasActiveTasks = useMemo(
+    () => (coworkData?.tasks ?? []).some((t) => t.status === 'running' || t.status === 'queued'),
+    [coworkData],
+  );
 
   return (
     <div className="flex flex-col gap-0.5 px-2 pb-2.5">
       <NewChatRow />
       <RouteRow to="/projects" icon={FolderKanban} label={localize('com_ui_projects')} />
       <RouteRow to="/artifacts" icon={Boxes} label={localize('com_ui_artifacts')} />
-      <RouteRow to="/scheduled" icon={Clock} label={localize('com_ui_scheduled')} />
+      <RouteRow
+        to="/scheduled"
+        icon={Clock}
+        label={localize('com_ui_scheduled')}
+        showDot={hasActiveTasks}
+      />
       <RouteRow to="/code" icon={Terminal} label="Code" />
       <RouteRow to="/design" icon={Palette} label={localize('com_ui_design')} />
       <RouteRow to="/skills" icon={Sparkles} label={localize('com_ui_customize')} />

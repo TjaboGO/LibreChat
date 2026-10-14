@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useDrag } from 'react-dnd';
-import { Link2 } from 'lucide-react';
 import { useRecoilValue } from 'recoil';
+import { Link2, Clock } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { Constants } from 'librechat-data-provider';
 import { Spinner, useToastContext, useMediaQuery } from '@librechat/client';
@@ -11,6 +11,7 @@ import {
   useGetStartupConfig,
   usePinConversationMutation,
   useUpdateConversationMutation,
+  useCoworkTasksQuery,
 } from '~/data-provider';
 import { useNavigateToConvo, useLocalize, useShiftKey } from '~/hooks';
 import ConversationEndpointIcon from './ConversationEndpointIcon';
@@ -66,6 +67,26 @@ function Conversation({
   const isSharedBadgeVisible = conversation.isShared === true && sharedLinksEnabled;
   const isShiftHeld = useShiftKey();
   const { conversationId, title = '' } = conversation;
+  const { data: coworkData } = useCoworkTasksQuery();
+  const hasActiveTask = useMemo(() => {
+    if (!coworkData?.tasks || coworkData.tasks.length === 0) {
+      return false;
+    }
+    const currentTitle = (title || '').toLowerCase().trim();
+    return coworkData.tasks.some((t) => {
+      const isRunningOrQueued = t.status === 'running' || t.status === 'queued';
+      if (!isRunningOrQueued) {
+        return false;
+      }
+      if (t.conversationId && conversationId && t.conversationId === conversationId) {
+        return true;
+      }
+      if (currentTitle && t.title && t.title.toLowerCase().includes(currentTitle)) {
+        return true;
+      }
+      return false;
+    });
+  }, [coworkData?.tasks, conversationId, title]);
 
   const [titleInput, setTitleInput] = useState(title || '');
   const [renaming, setRenamingState] = useState(false);
@@ -359,6 +380,16 @@ function Conversation({
         >
           <ConversationEndpointIcon conversation={conversation} size={20} context="menu-item" />
         </ConvoLink>
+      )}
+      {hasActiveTask && (
+        <div
+          className="relative mr-1.5 flex shrink-0 items-center justify-center text-text-secondary"
+          title="Active background run"
+          data-testid="convo-task-active-badge"
+        >
+          <Clock className="h-3.5 w-3.5 text-text-tertiary" aria-hidden="true" />
+          <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500 ring-1 ring-surface-primary" />
+        </div>
       )}
       {isSharedBadgeVisible && (
         <Link2 className="icon-sm mr-1 shrink-0 text-text-secondary" aria-hidden="true" />
