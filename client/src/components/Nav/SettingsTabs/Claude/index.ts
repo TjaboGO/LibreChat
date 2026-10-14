@@ -15,3 +15,4 @@ export { default as ClaudeCodeTab } from './ClaudeCodeTab';
 export { default as CoworkTab } from './CoworkTab';
 export { default as GeneralTab } from './GeneralTab';
 export { default as ChromeTab } from './ChromeTab';
+export { default as TimeAndFocusTab } from './TimeAndFocusTab';

@@ -20,6 +20,7 @@ import {
   Package,
   Info,
   MessageSquare,
+  Moon,
 } from 'lucide-react';
 import type { ComponentType, ReactNode } from 'react';
 import type { TranslationKeys } from '~/hooks';
@@ -40,6 +41,7 @@ import {
   CoworkTab,
   GeneralTab,
   ChromeTab,
+  TimeAndFocusTab,
 } from '../SettingsTabs/Claude';
 import LangfuseConnection from '../SettingsTabs/Integrations/LangfuseConnection';
 import About from '../SettingsTabs/About/About';
@@ -65,6 +67,7 @@ export enum ClaudeSettingsTab {
   PLUGINS = 'plugins',
   ABOUT = 'about',
   LANGFUSE = 'langfuse',
+  TIME_AND_FOCUS = 'time_and_focus',
 }
 
 export type SettingsTab =
@@ -229,6 +232,14 @@ export const TABS: TabMeta[] = [
     labelKey: 'com_ui_settings_tab_design_systems' as TranslationKeys,
     icon: createElement(Palette, { className: 'h-4 w-4' }),
     Component: DesignSystemsTab,
+    sections: [],
+  },
+  {
+    id: ClaudeSettingsTab.TIME_AND_FOCUS,
+    group: 'settings',
+    labelKey: 'com_ui_settings_tab_time_and_focus' as TranslationKeys,
+    icon: createElement(Moon, { className: 'h-4 w-4' }),
+    Component: TimeAndFocusTab,
     sections: [],
   },
   {
