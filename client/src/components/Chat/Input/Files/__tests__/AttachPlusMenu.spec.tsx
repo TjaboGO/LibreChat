@@ -72,41 +72,36 @@ describe('AttachPlusMenu', () => {
     expect(button).toBeInTheDocument();
   });
 
-  it('opens menu in Chat mode showing all expected items', () => {
+  it('opens unified menu showing all expected items', () => {
     renderAttachPlusMenu('chat');
     const button = screen.getByRole('button', { name: /add content and tools/i });
     fireEvent.click(button);
 
-    expect(screen.getByText('Add files or photos')).toBeInTheDocument();
-    expect(screen.getByText('Take a screenshot')).toBeInTheDocument();
-    expect(screen.getByText('Add to project')).toBeInTheDocument();
+    expect(screen.getAllByText('Add files or photos')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Take a screenshot')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Add to project')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Record a skill')[0]).toBeInTheDocument();
     expect(screen.getAllByText('Skills')[0]).toBeInTheDocument();
     expect(screen.getAllByText('Connectors')[0]).toBeInTheDocument();
-    expect(screen.getByText('Design system')).toBeInTheDocument();
-    expect(screen.getByText('Add plugins')).toBeInTheDocument();
-    expect(screen.getByText('Research')).toBeInTheDocument();
-    expect(screen.getByText('Web search')).toBeInTheDocument();
-    expect(screen.getByText('Memory')).toBeInTheDocument();
+    expect(screen.getAllByText('Design system')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Add plugins')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Research')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Web search')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Memory')[0]).toBeInTheDocument();
   });
 
-  it('in Cowork mode, shows Devices and hides Chat-specific items', () => {
-    renderAttachPlusMenu('cowork');
+  it('clicking Record a skill opens the record skill modal', () => {
+    renderAttachPlusMenu();
     const button = screen.getByRole('button', { name: /add content and tools/i });
     fireEvent.click(button);
 
-    expect(screen.getByText('Add files or photos')).toBeInTheDocument();
-    expect(screen.getByText('Take a screenshot')).toBeInTheDocument();
-    expect(screen.getAllByText('Skills')[0]).toBeInTheDocument();
-    expect(screen.getAllByText('Connectors')[0]).toBeInTheDocument();
-    expect(screen.getByText('Design system')).toBeInTheDocument();
-    expect(screen.getByText('Add plugins')).toBeInTheDocument();
-    expect(screen.getByText('Devices')).toBeInTheDocument();
-    expect(screen.getByText('Memory')).toBeInTheDocument();
+    const recordItem = screen.getByText('Record a skill');
+    fireEvent.click(recordItem);
 
-    // Not present in Cowork mode
-    expect(screen.queryByText('Add to project')).not.toBeInTheDocument();
-    expect(screen.queryByText('Research')).not.toBeInTheDocument();
-    expect(screen.queryByText('Web search')).not.toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(
+      screen.getByText(/Your screen, clicks, typing, and voice are recorded/i),
+    ).toBeInTheDocument();
   });
 
   it('clicking Web search triggers webSearch toggle callback', () => {

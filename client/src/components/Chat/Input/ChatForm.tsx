@@ -43,13 +43,13 @@ import PendingManualSkillsChips from './PendingManualSkillsChips';
 import usePastedTextEdit from '~/hooks/Files/usePastedTextEdit';
 import useAskAnswerMode from '~/hooks/Input/useAskAnswerMode';
 import AskUserQuestionPopover from './AskUserQuestionPopover';
+import PermissionModePopover from './PermissionModePopover';
 import InterruptSteerButton from './InterruptSteerButton';
 import ComposerQuickToggles from './ComposerQuickToggles';
 import PastedTextDialog from './Files/PastedTextDialog';
 import DuringRunSendButton from './DuringRunSendButton';
 import ProjectLandingChip from '../ProjectLandingChip';
 import { useGetStartupConfig } from '~/data-provider';
-import ComposerModeToggle from './ComposerModeToggle';
 import { mainTextareaId, BadgeItem } from '~/common';
 import PendingSteerChips from './PendingSteerChips';
 import PendingQuoteChips from './PendingQuoteChips';
@@ -582,6 +582,15 @@ const ChatForm = memo(function ChatForm({
 
   const isMoreThanThreeRows = visualRowCount > 3;
 
+  const handleOptimizePrompt = useCallback(() => {
+    const current = methods.getValues('text')?.trim();
+    if (!current) {
+      return;
+    }
+    const optimized = `Please address the following clearly with step-by-step reasoning and structured output:\n\n${current}`;
+    methods.setValue('text', optimized, { shouldDirty: true });
+  }, [methods]);
+
   /** One button slot while a run is generating: with composer text the send
    *  button takes over (Enter steers/queues; hover reveals all actions);
    *  clearing the text restores Stop. */
@@ -768,6 +777,7 @@ const ChatForm = memo(function ChatForm({
                 text={textValue ?? ''}
                 isCollapsed={isCollapsed}
                 onToggleCollapse={() => setIsCollapsed((prev) => !prev)}
+                onOptimizePrompt={handleOptimizePrompt}
               />
               <TextareaHeader addedConvo={addedConvo} setAddedConvo={setAddedConvo} />
               <PendingManualSkillsChips conversationId={conversationId} />
@@ -887,7 +897,14 @@ const ChatForm = memo(function ChatForm({
                       setFilesLoading={setFilesLoading}
                     />
                   </div>
-                  {isAgentsEndpoint(endpoint) && <ComposerModeToggle index={index} />}
+                  {isAgentsEndpoint(endpoint) && (
+                    <PermissionModePopover
+                      index={index}
+                      conversation={conversation}
+                      setConversation={setConversation}
+                      disabled={disableInputs}
+                    />
+                  )}
                   <BadgeRow
                     showEphemeralBadges={
                       !!endpoint &&

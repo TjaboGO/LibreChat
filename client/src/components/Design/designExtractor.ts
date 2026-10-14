@@ -177,6 +177,7 @@ export function extractTokensFromCode(code: string): {
 
     if (!seenColors.has(colorKey) && palette.length < 8) {
       seenColors.add(colorKey);
+      const isPrimary = palette.length === 0;
       let label = 'Accent';
       if (isPrimary) {
         label = 'Primary';

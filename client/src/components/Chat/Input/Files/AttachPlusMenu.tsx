@@ -1,7 +1,7 @@
 /* eslint-disable i18next/no-literal-string */
-import React, { useRef, useMemo, useCallback } from 'react';
+import React, { useRef, useMemo, useCallback, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import * as Ariakit from '@ariakit/react';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { FileUpload, TooltipAnchor } from '@librechat/client';
 import {
   Plus,
@@ -15,8 +15,7 @@ import {
   Compass,
   Globe,
   Brain,
-  Laptop,
-  Server,
+  Video,
   ChevronRight,
   Check,
 } from 'lucide-react';
@@ -24,6 +23,7 @@ import type { TConversation } from 'librechat-data-provider';
 import type { ExtendedFile, FileSetter } from '~/common';
 import { useFileHandlingNoChatContext, useLocalize } from '~/hooks';
 import { useBadgeRowContext } from '~/Providers/BadgeRowContext';
+import RecordSkillModal from '../RecordSkillModal';
 import { cn } from '~/utils';
 import store from '~/store';
 
@@ -56,8 +56,8 @@ export default function AttachPlusMenu({
   const inputRef = useRef<HTMLInputElement>(null);
   const isUploadDisabled = (disabled || disableInputs) ?? false;
 
-  const mode = useRecoilValue(store.composerModeFamily(index));
   const [researchMode, setResearchMode] = useRecoilState(store.researchModeFamily(index));
+  const [recordSkillOpen, setRecordSkillOpen] = useState(false);
 
   const menuStore = Ariakit.useMenuStore({ placement: 'top-start' });
   const isOpen = menuStore.useState('open');
@@ -66,7 +66,6 @@ export default function AttachPlusMenu({
   const skillsSubmenu = Ariakit.useMenuStore({ placement: 'right-start' });
   const connectorsSubmenu = Ariakit.useMenuStore({ placement: 'right-start' });
   const designSubmenu = Ariakit.useMenuStore({ placement: 'right-start' });
-  const devicesSubmenu = Ariakit.useMenuStore({ placement: 'right-start' });
 
   const badgeContext = useBadgeRowContext();
   const isWebSearchEnabled = Boolean(badgeContext?.webSearch?.toggleState);
@@ -225,40 +224,63 @@ export default function AttachPlusMenu({
               </span>
             </Ariakit.MenuItem>
 
-            {/* Row 3 (Chat mode only): Add to project */}
-            {mode === 'chat' && (
-              <Ariakit.MenuProvider store={projectSubmenu}>
+            {/* Row 2: Add to project */}
+            <Ariakit.MenuProvider store={projectSubmenu}>
+              <Ariakit.MenuItem
+                render={
+                  <Ariakit.MenuButton className="flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm font-medium text-text-primary outline-none transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover">
+                    <span className="flex items-center gap-2.5">
+                      <FolderPlus className="h-4 w-4 shrink-0 text-text-secondary" />
+                      <span>{localize('com_ui_add_to_project')}</span>
+                    </span>
+                    <ChevronRight className="h-4 w-4 text-text-tertiary" />
+                  </Ariakit.MenuButton>
+                }
+              />
+              <Ariakit.Menu
+                portal={true}
+                gutter={6}
+                className="z-50 flex min-w-[200px] flex-col rounded-2xl border border-border-light bg-surface-primary p-1.5 shadow-xl outline-none"
+              >
                 <Ariakit.MenuItem
-                  render={
-                    <Ariakit.MenuButton className="flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm font-medium text-text-primary outline-none transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover">
-                      <span className="flex items-center gap-2.5">
-                        <FolderPlus className="h-4 w-4 shrink-0 text-text-secondary" />
-                        <span>{localize('com_ui_add_to_project')}</span>
-                      </span>
-                      <ChevronRight className="h-4 w-4 text-text-tertiary" />
-                    </Ariakit.MenuButton>
-                  }
-                />
-                <Ariakit.Menu
-                  portal={true}
-                  gutter={6}
-                  className="z-50 flex min-w-[200px] flex-col rounded-2xl border border-border-light bg-surface-primary p-1.5 shadow-xl outline-none"
+                  onClick={() => menuStore.hide()}
+                  className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
                 >
-                  <Ariakit.MenuItem
-                    onClick={() => menuStore.hide()}
-                    className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
-                  >
-                    {localize('com_ui_current_project')}
-                  </Ariakit.MenuItem>
-                  <Ariakit.MenuItem
-                    onClick={() => menuStore.hide()}
-                    className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
-                  >
-                    {localize('com_ui_create_new_project')}
-                  </Ariakit.MenuItem>
-                </Ariakit.Menu>
-              </Ariakit.MenuProvider>
-            )}
+                  {localize('com_ui_current_project')}
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
+                  onClick={() => menuStore.hide()}
+                  className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  {localize('com_ui_create_new_project')}
+                </Ariakit.MenuItem>
+              </Ariakit.Menu>
+            </Ariakit.MenuProvider>
+
+            {/* Row 3: Take a screenshot */}
+            <Ariakit.MenuItem
+              onClick={handleTakeScreenshot}
+              className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm font-medium text-text-primary outline-none transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover"
+            >
+              <span className="flex items-center gap-2.5">
+                <Camera className="h-4 w-4 shrink-0 text-text-secondary" />
+                <span>{localize('com_ui_take_screenshot')}</span>
+              </span>
+            </Ariakit.MenuItem>
+
+            {/* Row 4: Record a skill */}
+            <Ariakit.MenuItem
+              onClick={() => {
+                menuStore.hide();
+                setRecordSkillOpen(true);
+              }}
+              className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm font-medium text-text-primary outline-none transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover"
+            >
+              <span className="flex items-center gap-2.5">
+                <Video className="h-4 w-4 shrink-0 text-text-secondary" />
+                <span>Record a skill</span>
+              </span>
+            </Ariakit.MenuItem>
 
             <div className="my-1 border-t border-border-light" />
 
@@ -392,92 +414,35 @@ export default function AttachPlusMenu({
               </span>
             </Ariakit.MenuItem>
 
-            {/* Cowork mode only: Devices row and submenu */}
-            {mode === 'cowork' && (
-              <Ariakit.MenuProvider store={devicesSubmenu}>
-                <Ariakit.MenuItem
-                  render={
-                    <Ariakit.MenuButton className="flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm font-medium text-text-primary outline-none transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover">
-                      <span className="flex items-center gap-2.5">
-                        <Laptop className="h-4 w-4 shrink-0 text-text-secondary" />
-                        <span>{localize('com_ui_devices')}</span>
-                      </span>
-                      <ChevronRight className="h-4 w-4 text-text-tertiary" />
-                    </Ariakit.MenuButton>
-                  }
-                />
-                <Ariakit.Menu
-                  portal={true}
-                  gutter={6}
-                  className="z-50 flex min-w-[240px] flex-col rounded-2xl border border-border-light bg-surface-primary p-2 shadow-xl outline-none"
-                >
-                  <div className="px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-text-secondary">
-                    {localize('com_ui_run_tasks_on')}
-                  </div>
-                  <Ariakit.MenuItem
-                    onClick={() => menuStore.hide()}
-                    className="flex cursor-pointer items-start gap-2.5 rounded-xl p-2 hover:bg-surface-hover"
-                  >
-                    <Laptop className="mt-0.5 h-4 w-4 shrink-0 text-text-primary" />
-                    <div className="flex flex-col text-left">
-                      <span className="text-sm font-medium text-text-primary">
-                        {localize('com_ui_this_device')}
-                      </span>
-                      <span className="text-xs text-text-tertiary">Local workspace · Active</span>
-                    </div>
-                  </Ariakit.MenuItem>
-                  <Ariakit.MenuItem
-                    onClick={() => menuStore.hide()}
-                    className="flex cursor-pointer items-start gap-2.5 rounded-xl p-2 hover:bg-surface-hover"
-                  >
-                    <Server className="mt-0.5 h-4 w-4 shrink-0 text-text-secondary" />
-                    <div className="flex flex-col text-left">
-                      <span className="text-sm font-medium text-text-primary">
-                        {localize('com_ui_local_sandbox')}
-                      </span>
-                      <span className="text-xs text-text-tertiary">Docker runtime · Ready</span>
-                    </div>
-                  </Ariakit.MenuItem>
-                </Ariakit.Menu>
-              </Ariakit.MenuProvider>
-            )}
+            <div className="my-1 border-t border-border-light" />
 
-            {/* Chat mode only: Divider then Research & Web search */}
-            {mode === 'chat' && (
-              <>
-                <div className="my-1 border-t border-border-light" />
+            {/* Research row */}
+            <Ariakit.MenuItem
+              onClick={toggleResearch}
+              className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm font-medium text-text-primary outline-none transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover"
+            >
+              <span className="flex items-center gap-2.5">
+                <Compass className="h-4 w-4 shrink-0 text-text-secondary" />
+                <span>{localize('com_ui_research')}</span>
+              </span>
+              {researchMode && <Check className="ml-auto h-4 w-4 stroke-[2.5] text-text-primary" />}
+            </Ariakit.MenuItem>
 
-                {/* Research row */}
-                <Ariakit.MenuItem
-                  onClick={toggleResearch}
-                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm font-medium text-text-primary outline-none transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover"
-                >
-                  <span className="flex items-center gap-2.5">
-                    <Compass className="h-4 w-4 shrink-0 text-text-secondary" />
-                    <span>{localize('com_ui_research')}</span>
-                  </span>
-                  {researchMode && (
-                    <Check className="ml-auto h-4 w-4 stroke-[2.5] text-text-primary" />
-                  )}
-                </Ariakit.MenuItem>
+            {/* Web search row */}
+            <Ariakit.MenuItem
+              onClick={toggleWebSearch}
+              className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm font-medium text-text-primary outline-none transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover"
+            >
+              <span className="flex items-center gap-2.5">
+                <Globe className="h-4 w-4 shrink-0 text-text-secondary" />
+                <span>{localize('com_ui_web_search')}</span>
+              </span>
+              {isWebSearchEnabled && (
+                <Check className="ml-auto h-4 w-4 stroke-[2.5] text-text-primary" />
+              )}
+            </Ariakit.MenuItem>
 
-                {/* Web search row */}
-                <Ariakit.MenuItem
-                  onClick={toggleWebSearch}
-                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm font-medium text-text-primary outline-none transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover"
-                >
-                  <span className="flex items-center gap-2.5">
-                    <Globe className="h-4 w-4 shrink-0 text-text-secondary" />
-                    <span>{localize('com_ui_web_search')}</span>
-                  </span>
-                  {isWebSearchEnabled && (
-                    <Check className="ml-auto h-4 w-4 stroke-[2.5] text-text-primary" />
-                  )}
-                </Ariakit.MenuItem>
-              </>
-            )}
-
-            {/* Memory row (both modes) */}
+            {/* Memory row */}
             <Ariakit.MenuItem
               onClick={toggleMemory}
               className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm font-medium text-text-primary outline-none transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover"
@@ -493,6 +458,7 @@ export default function AttachPlusMenu({
           </Ariakit.Menu>
         </Ariakit.MenuProvider>
       </FileUpload>
+      <RecordSkillModal open={recordSkillOpen} onOpenChange={setRecordSkillOpen} />
     </>
   );
 }

@@ -316,6 +316,13 @@ export const composerModeFamily = atomFamily<'chat' | 'cowork', string | number 
   default: 'chat',
 });
 
+export type PermissionMode = 'auto' | 'manual';
+
+export const permissionModeFamily = atomFamily<PermissionMode, string | number | null>({
+  key: 'permissionModeByIndex',
+  default: 'auto',
+});
+
 export const researchModeFamily = atomFamily<boolean, string | number | null>({
   key: 'researchModeByIndex',
   default: false,
@@ -841,6 +848,7 @@ export default {
   globalAudioFetchingFamily,
   showPlusPopoverFamily,
   composerModeFamily,
+  permissionModeFamily,
   researchModeFamily,
   outputFormatFamily,
   autoApprovalFamily,
