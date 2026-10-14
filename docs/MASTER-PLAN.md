@@ -224,5 +224,5 @@ MASTER-PLAN säger vad som faktiskt fungerar och hur mock ska bli verkligt."*
 - [x] **Fas 13** — Cowork/Memory/Usage/ClaudeCode-tabbac mot riktiga endpoints
 - [x] **Fas 14** — Playwright MCP aktivt; browser-operator-skill från ui-tars+browser-use-mönster; HITL-gate; riktig demo
 - [x] **Fas 15** — Design Canvas→artifact-pipeline; Docs/Slides-export
-- [ ] **Fas 16** — nya Claude-skärmdumpar → enhetlig composer + Plans-panel
+- [x] **Fas 16** — nya Claude-skärmdumpar → enhetlig composer + Plans-panel + Time & focus
 - [ ] **Fas 17** — e2e-grönt, upstream-syncat, docs korrigerade

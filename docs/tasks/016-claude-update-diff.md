@@ -68,3 +68,34 @@ Based on the 76 ground-truth screenshots in `docs/ui-reference/` (`Skärmavbild 
   1. Implement `client/src/components/Settings/Claude/TimeAndFocus.tsx`.
   2. Add tab entry to `SettingsTabs.tsx` under the General settings group.
   3. Store preferences in user profile state.
+
+---
+
+## Resultat och Genomförande (Fas 16)
+
+Samtliga HIGH-prioriterade diffar mellan kodbasen och batch-5 skärmdumparna har genomförts och verifierats med riktig data:
+
+1. **Enhetlig Composer & Permission Mode Popover (DIFF-01 & DIFF-02, DIFF-08)**:
+   - `ComposerModeToggle.tsx` har fasats ur från `ChatForm.tsx`.
+   - Implementerade `PermissionModePopover.tsx` i promptboxens fotrad (`Auto` vs `Manual`), lagrat i Recoil family `permissionModeFamily`.
+   - Skapade `RecordSkillModal.tsx` matchande skärmdump `17.06.07.png`.
+   - Rätade ut `AttachPlusMenu.tsx` så att alla val (`Record a skill`, `Research`, `Web search`, `Memory`, `Skills`, `Connectors`) visas enhetligt utan lägesbifurkation.
+
+2. **Aktiv bakgrundsjobb-indikator i Nav & Samtalsträd (DIFF-04)**:
+   - Kopplade `Convo.tsx` och `SidebarNavList.tsx` till `/api/cowork/tasks` via `useCoworkTasksQuery()`.
+   - Samtal med pågående körningar visar klockglyf med pulserande blå prick (`⏱ •`, `data-testid="convo-task-active-badge"`).
+
+3. **Plans & Checklist Panel (DIFF-05)**:
+   - Utökade `packages/data-provider/src/browser/actionParser.ts` med `parsePlanChecklist()` och typade steg (`PlanStepItem`, `StructuredPlan`), testat mot skärmdump `17.07.04.png`.
+   - Implementerade `PlansPanel.tsx` under `client/src/components/SidePanel/Plans/` och kopplade in fliken i `useSideNavLinks.ts` med ikon `ListTodo`.
+   - Panelen visar realtidsframsteg, "Gjort och testat lokalt", "Kvar att göra", och interaktiv avbockning.
+
+4. **Time & Focus Inställningsflik (DIFF-06)**:
+   - Skapade `TimeAndFocusTab.tsx` och registrerade i `ClaudeSettingsTab.TIME_AND_FOCUS` i `Settings/types.ts`.
+   - Innehåller paus-påminnelser (intervall och längd) samt lugna timmar med 7 dagsknappar (`S M T W T F S`) och tidsväljare, persisterade i `localStorage`.
+
+5. **Verifiering**:
+   - Alla nya komponenter har dedikerade unit tests (`Convo.badge.spec.tsx`, `PermissionModePopover.spec.tsx`, `PlansPanel.spec.tsx`, `TimeAndFocusTab.spec.tsx`).
+   - `packages/data-provider` tester (25/25) gröna.
+   - Client `tsc --noEmit` passerar med 0 fel.
+   - Pre-commit lint-staged (sort-imports, eslint, prettier) 100% grönt.

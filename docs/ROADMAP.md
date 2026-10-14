@@ -197,6 +197,18 @@ Slutförande av återstående inställningspaneler och systemintegration:
 
 → [docs/tasks/015-design-aggregation.md](tasks/015-design-aggregation.md)
 
+## Fas 16 — Anpassning till nya Claude-uppdateringen ("Cowork and chat are now one Claude")
+
+- [x] Katalogisering och systematisk analys av 76 batch-5 skärmdumpar i `docs/ui-reference/batch-5-screenshots.md`
+- [x] Detaljerad diff-analys i `docs/tasks/016-claude-update-diff.md`
+- [x] Enhetlig promptbox: segmenterad `ComposerModeToggle` borttagen, ersatt med `PermissionModePopover` (`Auto` vs `Manual`), prompt-optimerare och `RecordSkillModal`
+- [x] Aktiv bakgrundsjobb-indikator (`⏱ •`) på samtal och sidonavigering kopplad till verkliga `/api/cowork/tasks`
+- [x] Plans & Checklist-panel (`PlansPanel.tsx` under SidePanel) driven av `parsePlanChecklist` i `actionParser.ts` med realtidsuppdatering och interaktiv avbockning
+- [x] Inställningar: "Time and focus"-flik (`TimeAndFocusTab.tsx`) med paus-påminnelser och 7-dagars lugna timmar (`S M T W T F S`)
+- [x] Fullständig verifiering med dedikerade tester och noll TypeScript/ESLint-fel
+
+→ [docs/tasks/016-claude-update-diff.md](tasks/016-claude-update-diff.md)
+
 ## Explicit ute ur scope tills vidare
 
 Team-/orgadministration, fakturering, enterprise-SSO, native mobilapp, samt

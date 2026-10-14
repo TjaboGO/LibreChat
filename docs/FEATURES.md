@@ -49,6 +49,17 @@ måste byggas.
 | Claude Docs / Claude Slides (levande dokument/presentationer) | ✅ | Realiserat via `skill/live-docs-and-slides/SKILL.md` med interaktiva HTML5/Tailwind/React-artefakter och tangentbordsnavigering |
 | Native mobilapp | 🔴 | LibreChat är webb-först (PWA-möjligt). Riktig nativ app är ett separat, stort spår — lågt prioriterat |
 
+## P4 — Nya Claude-uppdateringen ("Cowork and chat are now one Claude")
+
+| Claude-funktion | Status | Var i koden / kommentar |
+|---|---|---|
+| Enhetlig Composer | ✅ | `client/src/components/Chat/Input/ChatForm.tsx` — `ComposerModeToggle` borttagen, alla körningar går i samma promptbox |
+| Permission Mode Popover | ✅ | `client/src/components/Chat/Input/PermissionModePopover.tsx` (`Auto` vs `Manual`), persisterat i Recoil family |
+| Bakgrundskörnings-indikator | ✅ | `Convo.tsx` & `SidebarNavList.tsx` — klockglyf med pulserande blå prick (`⏱ •`) vid aktiva körningar mot `/api/cowork/tasks` |
+| Plans & Checklist-panel | ✅ | `packages/data-provider/src/browser/actionParser.ts` (`parsePlanChecklist`) + `client/src/components/SidePanel/Plans/PlansPanel.tsx` |
+| Time & focus (lugna timmar & pauser) | ✅ | `client/src/components/Nav/SettingsTabs/Claude/TimeAndFocusTab.tsx` — inställningsflik med 7-dagarsknappar och pausintervall |
+| Record a skill-modal | ✅ | `client/src/components/Chat/Input/RecordSkillModal.tsx` kopplad till plusmenyn i composern |
+
 ## Inte relevant för ett självhostat projekt
 
 Team-/orgadministration, fakturering, enterprise-SSO-nivåer m.m. finns i LibreChat men
