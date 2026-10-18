@@ -1,7 +1,7 @@
 /* eslint-disable i18next/no-literal-string */
 import React, { useRef, useMemo, useCallback, useState } from 'react';
-import { useRecoilState } from 'recoil';
 import * as Ariakit from '@ariakit/react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { FileUpload, TooltipAnchor } from '@librechat/client';
 import {
   Plus,
@@ -18,6 +18,7 @@ import {
   Video,
   ChevronRight,
   Check,
+  Lightbulb,
 } from 'lucide-react';
 import type { TConversation } from 'librechat-data-provider';
 import type { ExtendedFile, FileSetter } from '~/common';
@@ -70,6 +71,19 @@ export default function AttachPlusMenu({
   const badgeContext = useBadgeRowContext();
   const isWebSearchEnabled = Boolean(badgeContext?.webSearch?.toggleState);
   const isMemoryEnabled = Boolean(badgeContext?.memory?.toggleState);
+
+  const conversationId = conversation?.conversationId ?? 'new';
+  const setPendingManualSkills = useSetRecoilState(
+    store.pendingManualSkillsByConvoId(conversationId),
+  );
+
+  const handleSelectSkill = useCallback(
+    (skillName: string) => {
+      menuStore.hide();
+      setPendingManualSkills((prev) => (prev.includes(skillName) ? prev : [...prev, skillName]));
+    },
+    [menuStore, setPendingManualSkills],
+  );
 
   const { handleFileChange } = useFileHandlingNoChatContext(undefined, {
     files,
@@ -306,16 +320,34 @@ export default function AttachPlusMenu({
                   {localize('com_ui_skills')}
                 </div>
                 <Ariakit.MenuItem
-                  onClick={() => menuStore.hide()}
+                  onClick={() => handleSelectSkill('socratic-brainstorm')}
+                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  <span className="flex items-center gap-2">
+                    <Lightbulb className="h-4 w-4 text-amber-500" />
+                    <span>Socratic Brainstorm</span>
+                  </span>
+                  <span className="rounded bg-amber-500/10 px-1 py-0.5 text-[9px] font-semibold text-amber-600 dark:text-amber-400">
+                    Anti-Sycophancy
+                  </span>
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
+                  onClick={() => handleSelectSkill('live-docs-and-slides')}
                   className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
                 >
                   Live Docs & Slides
                 </Ariakit.MenuItem>
                 <Ariakit.MenuItem
-                  onClick={() => menuStore.hide()}
+                  onClick={() => handleSelectSkill('artifacts-designer')}
                   className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
                 >
-                  Mermaid Charting
+                  Artifacts Designer
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
+                  onClick={() => handleSelectSkill('code-analyzer')}
+                  className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  Code Analyzer
                 </Ariakit.MenuItem>
                 <div className="my-1 border-t border-border-light" />
                 <Ariakit.MenuItem
