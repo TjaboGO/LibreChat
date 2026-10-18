@@ -189,7 +189,7 @@ type ArtifactMutationVars = {
   updated: string;
 };
 
-function getMonacoLanguage(type?: string, language?: string): string {
+export function getMonacoLanguage(type?: string, language?: string): string {
   if (language && LANG_MAP[language]) {
     return LANG_MAP[language];
   }

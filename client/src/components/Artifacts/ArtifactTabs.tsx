@@ -8,6 +8,7 @@ import { MermaidRenderer } from '~/components/Messages/Content/Mermaid/Mermaid';
 import { MERMAID_ARTIFACT_TYPE, type Artifact } from '~/common/artifacts';
 import { ArtifactCodeEditor } from './ArtifactCodeEditor';
 import { useCodeState } from '~/Providers/EditorContext';
+import ArtifactDiffEditor from './ArtifactDiffEditor';
 import { useLocalize } from '~/hooks';
 
 const SandboxArtifactTabs = lazy(() => import('./SandboxArtifactTabs'));
@@ -88,6 +89,15 @@ function MermaidArtifactTabs({
         >
           {content}
         </MermaidRenderer>
+      </Tabs.Content>
+
+      <Tabs.Content
+        value="diff"
+        id="artifacts-diff"
+        className="h-full w-full flex-grow overflow-hidden"
+        tabIndex={-1}
+      >
+        <ArtifactDiffEditor artifact={artifact} readOnly={isReadOnly} />
       </Tabs.Content>
     </div>
   );

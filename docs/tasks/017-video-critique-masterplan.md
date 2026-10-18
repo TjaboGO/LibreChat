@@ -230,8 +230,32 @@ När denna plan är genomförd:
    - Sorterade imports i berörda filer via `npm run sort-imports`.
 
 ### Vad som återstår (Nästa steg i Fas 17)
-- **Del 2 (Kodning):** In-app visual diffs i Artifacts med `SplitDiffViewer` och ett-klicks applicering.
 - **Del 3 (Automationer):** Deterministiska triggers och visuell exekveringslogg i `PlansPanel.tsx`.
 - **Del 4 (Bildstudio):** Nano Banana 2 och in-painting kontroller i Artifacts.
 - **Del 5 (Lärande):** Klickbara Perplexity citationsbadges `[1]` och källutdragspanel.
 - **Del 6 (Webbplatsbygge):** Higgsfield MCP website generator och live Sandpack preview.
+
+---
+
+## 7. Genomfört Arbete: Del 2 (Cursor-liknande Diff Editor i Artifacts)
+
+### Vad som faktiskt gjordes
+1. **Skapad `ArtifactDiffEditor.tsx` (`client/src/components/Artifacts/ArtifactDiffEditor.tsx`):**
+   - Byggd ovanpå `@monaco-editor/react` `DiffEditor` med stöd för mörkt/ljust tema och språksyntaxavkänning.
+   - Cursor-inspirerad verktygsrad:
+     - Färgkodade tillägg/borttagningsräknare (`+X` grönt / `-Y` rött).
+     - Växling mellan **Split** (side-by-side) och **Unified** (inline) vy.
+     - **Copy Patch**-knapp med standardiserad `diff`-header för urklipp.
+     - **Revert**-knapp för att återställa ändringar till föregående version.
+     - **Accept Diff**-knapp som omedelbart sparar och persisterar den godkända koden via `useEditArtifact`.
+   - Versionsjämförelse: Jämför automatiskt mot föregående version av artefakten i `store.artifactsState`, eller mot osparad kod i `EditorContext`.
+2. **Integration i Artifacts-vyer:**
+   - Exporterade `getMonacoLanguage` från `ArtifactCodeEditor.tsx`.
+   - Integrerade `diff`-flik i `SandboxArtifactTabs.tsx` och `MermaidArtifactTabs` i `ArtifactTabs.tsx`.
+   - Uppdaterade `Artifacts.tsx`:
+     - Lade till `GitCompare`-ikon och `diff`-flik i `allTabOptions`.
+     - Anpassade tab-begränsningen så att kod-artefakter (`.py`, `.ts`, etc.) visar både källkod och diff (`[filnamn, Diff]`), medan interaktiva artefakter (HTML/React/Mermaid) visar alla tre lägen (`Code`, `Preview`, `Diff`).
+3. **Kvalitetssäkring och verifiering:**
+   - 28/28 tester gröna (`Artifacts.test.tsx`, `ArtifactTabs.test.tsx`, `ArtifactCodeEditor.test.tsx`).
+   - `npx tsc --noEmit` i `client/` ger 0 typfel.
+   - Körde `npm run sort-imports` på alla ändrade filer.

@@ -214,7 +214,7 @@ Slutförande av återstående inställningspaneler och systemintegration:
 Systematisk integration av styrkorna från marknadens bästa verktyg (Cursor, Perplexity, Make.com, Claude, Nano Banana 2, Higgsfield) och eliminering av svagheterna i ChatGPT, Gemini, Apple Shortcuts och Lovable:
 - [x] Detaljerad video-breakdown och komparativ "Varför"-analys dokumenterad i `docs/tasks/017-video-critique-masterplan.md`
 - [x] Brainstorming: Sokratisk idéutveckling utan sycophancy via `skill/socratic-brainstorm/`
-- [ ] Coding: In-app visual diffs i Artifacts samt utökad repo-medvetenhet via Filesystem MCP
+- [x] Coding: In-app visual diffs i Artifacts (Monaco DiffEditor med Accept/Revert/Copy) samt utökad repo-medvetenhet
 - [ ] Automations: Deterministiska triggers och visuell exekveringslogg kopplad till `/api/cowork/tasks`
 - [ ] Image generation: Integrera Nano Banana 2 / Google Imagen 3 och conversational in-painting i Artifacts
 - [ ] Learning: Källhänvisningar i realtid med klickbara citationsbadges `[1]` och utdragspanel

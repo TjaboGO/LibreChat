@@ -14,6 +14,11 @@ jest.mock('@librechat/client', () => ({
     query === '(prefers-reduced-motion: reduce)' ? mockPrefersReducedMotion : mockIsMobile,
 }));
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => jest.fn(),
+}));
+
 jest.mock('~/Providers', () => ({
   useMutationState: () => ({ isMutating: false }),
   useShareContext: () => ({ isSharedConvo: false }),

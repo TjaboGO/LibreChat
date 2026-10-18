@@ -7,6 +7,7 @@ import { useGetSharedStartupConfig, useGetStartupConfig } from '~/data-provider'
 import useArtifactProps from '~/hooks/Artifacts/useArtifactProps';
 import { ArtifactCodeEditor } from './ArtifactCodeEditor';
 import { useCodeState } from '~/Providers/EditorContext';
+import ArtifactDiffEditor from './ArtifactDiffEditor';
 import { ArtifactPreview } from './ArtifactPreview';
 import { useShareContext } from '~/Providers';
 
@@ -73,6 +74,15 @@ export default function SandboxArtifactTabs({
           currentCode={hasCurrentArtifactCode ? currentCode : undefined}
           startupConfig={resolvedStartupConfig}
         />
+      </Tabs.Content>
+
+      <Tabs.Content
+        value="diff"
+        id="artifacts-diff"
+        className="h-full w-full flex-grow overflow-hidden"
+        tabIndex={-1}
+      >
+        <ArtifactDiffEditor artifact={artifact} readOnly={isSharedConvo === true} />
       </Tabs.Content>
     </div>
   );

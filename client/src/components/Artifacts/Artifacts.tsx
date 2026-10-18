@@ -4,7 +4,7 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState, useResetRecoilState } from 'recoil';
 import { Button, Spinner, useMediaQuery, Radio } from '@librechat/client';
-import { Code, Maximize2, Minimize2, Play, RefreshCw, X, Palette } from 'lucide-react';
+import { Code, Maximize2, Minimize2, Play, RefreshCw, X, Palette, GitCompare } from 'lucide-react';
 import type { SandpackPreviewRef } from '@codesandbox/sandpack-react';
 import type { ProcessedMermaidSvg } from '~/utils/diagram/export';
 import { TOOL_ARTIFACT_TYPES, isCodeOnlyArtifact, isPreviewOnlyArtifact } from '~/utils/artifacts';
@@ -63,6 +63,11 @@ export default function Artifacts() {
         value: 'preview',
         label: localize('com_ui_preview'),
         icon: <Play className="size-4" />,
+      },
+      {
+        value: 'diff',
+        label: 'Diff',
+        icon: <GitCompare className="size-4" />,
       },
     ],
     [localize],
@@ -187,28 +192,42 @@ export default function Artifacts() {
 
   /* Office artifacts have no source view, and source-code artifacts have
    * no useful rendered preview. Filter each down to the only meaningful
-   * tab and label that tab with the file name instead of generic
-   * "Code" / "Preview" choices. */
+   * tab(s) and label the code/preview tab with the file name instead of generic
+   * "Code" / "Preview" choices. Code-only artifacts expose both Code and Diff. */
   const isPreviewOnly = isPreviewOnlyArtifact(currentArtifact?.type);
   const isCodeOnly = isCodeOnlyArtifact(currentArtifact?.type);
-  let constrainedTab: 'preview' | 'code' | null = null;
-  if (isPreviewOnly) {
-    constrainedTab = 'preview';
-  } else if (isCodeOnly) {
-    constrainedTab = 'code';
-  }
-  const displayedTab = constrainedTab ?? activeTab;
+
+  const displayedTab = useMemo(() => {
+    if (isPreviewOnly) {
+      return 'preview';
+    }
+    if (isCodeOnly) {
+      return activeTab === 'diff' ? 'diff' : 'code';
+    }
+    return activeTab;
+  }, [activeTab, isCodeOnly, isPreviewOnly]);
+
   const tabOptions = useMemo(() => {
-    if (constrainedTab == null) {
-      return allTabOptions;
+    if (isPreviewOnly) {
+      const filename = displayFilename(currentArtifact?.title);
+      const tab = allTabOptions.find((opt) => opt.value === 'preview');
+      if (!tab) {
+        return allTabOptions;
+      }
+      return [filename ? { ...tab, label: filename } : tab];
     }
-    const filename = displayFilename(currentArtifact?.title);
-    const tab = allTabOptions.find((opt) => opt.value === constrainedTab);
-    if (!tab) {
-      return allTabOptions;
+    if (isCodeOnly) {
+      const filename = displayFilename(currentArtifact?.title);
+      const codeTab = allTabOptions.find((opt) => opt.value === 'code');
+      const diffTab = allTabOptions.find((opt) => opt.value === 'diff');
+      return [
+        filename && codeTab ? { ...codeTab, label: filename } : (codeTab ?? allTabOptions[0]),
+        diffTab ?? allTabOptions[2],
+      ].filter(Boolean);
     }
-    return [filename ? { ...tab, label: filename } : tab];
-  }, [allTabOptions, constrainedTab, currentArtifact?.title]);
+    return allTabOptions;
+  }, [allTabOptions, isCodeOnly, isPreviewOnly, currentArtifact?.title]);
+
   /* The panel keeps one `activeTab`, but a trigger row promises what
    * opening *that* artifact does. Writing a constrained tab back into the
    * shared state leaked it to the next artifact — after a `.py` (code-only)
@@ -222,10 +241,16 @@ export default function Artifacts() {
       return;
     }
     openedArtifactRef.current = openedId;
-    if (openedId != null && constrainedTab == null && activeTab !== 'preview') {
-      setActiveTab('preview');
+    if (openedId != null) {
+      if (isPreviewOnly && activeTab !== 'preview') {
+        setActiveTab('preview');
+      } else if (isCodeOnly && activeTab === 'preview') {
+        setActiveTab('code');
+      } else if (!isPreviewOnly && !isCodeOnly && activeTab !== 'preview') {
+        setActiveTab('preview');
+      }
     }
-  }, [activeTab, constrainedTab, currentArtifact?.id, setActiveTab]);
+  }, [activeTab, isCodeOnly, isPreviewOnly, currentArtifact?.id, setActiveTab]);
 
   const handleCopyArtifact = useCallback(() => {
     const content = currentArtifact?.content ?? '';
