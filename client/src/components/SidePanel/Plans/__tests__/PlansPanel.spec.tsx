@@ -7,7 +7,7 @@ jest.mock('react-router-dom', () => ({
   useParams: () => mockUseParams(),
 }));
 
-let mockMessages: Array<{ sender: string; text: string }> = [];
+let mockMessages: Array<{ sender: string; text: string; content?: unknown[] }> = [];
 jest.mock('~/data-provider', () => ({
   useGetMessagesByConvoId: () => ({ data: mockMessages }),
   useCoworkTasksQuery: () => ({
@@ -21,6 +21,10 @@ jest.mock('~/data-provider', () => ({
         },
       ],
     },
+  }),
+  useCreateCoworkTaskMutation: () => ({
+    mutate: jest.fn(),
+    isLoading: false,
   }),
 }));
 
@@ -98,5 +102,75 @@ Kvar att göra:
 
     // Progress updates to 100%
     expect(screen.getByText(/2 of 2 completed \(100%\)/)).toBeInTheDocument();
+  });
+
+  it('renders Make.com style visual node workflow tab', () => {
+    mockUseParams.mockReturnValue({ conversationId: 'convo-with-plan' });
+    mockMessages = [
+      {
+        sender: 'User',
+        text: 'Automate weekly report and search web',
+      },
+      {
+        sender: 'Claude',
+        text: 'Executing automation...',
+        content: [
+          {
+            type: 'tool_call',
+            tool_call: {
+              name: 'web_search',
+              args: { query: 'latest tech news' },
+              output: 'Found 5 articles',
+              runStepStatus: 'completed',
+              runStepDurationMs: 320,
+            },
+          },
+        ],
+      },
+    ];
+
+    render(<PlansPanel />);
+    const workflowTab = screen.getByRole('button', { name: /Workflow/i });
+    fireEvent.click(workflowTab);
+
+    expect(screen.getByText('Deterministic Node Pipeline')).toBeInTheDocument();
+    expect(screen.getByText(/Trigger: User Prompt/)).toBeInTheDocument();
+    expect(screen.getByText(/Decision Engine: Tool Routing & Strategy/)).toBeInTheDocument();
+    expect(screen.getByText(/Action: web_search/)).toBeInTheDocument();
+    expect(screen.getByText(/Output: Stream & Artifact Delivery/)).toBeInTheDocument();
+  });
+
+  it('renders detailed execution logs tab with stats and copyable payloads', () => {
+    mockUseParams.mockReturnValue({ conversationId: 'convo-with-plan' });
+    mockMessages = [
+      {
+        sender: 'User',
+        text: 'Run database query',
+      },
+      {
+        sender: 'Claude',
+        text: 'Done',
+        content: [
+          {
+            type: 'tool_call',
+            tool_call: {
+              name: 'database_query',
+              args: { table: 'users', limit: 10 },
+              output: '{"count": 10}',
+              runStepStatus: 'completed',
+              runStepDurationMs: 150,
+            },
+          },
+        ],
+      },
+    ];
+
+    render(<PlansPanel />);
+    const logsTab = screen.getByRole('button', { name: /Logs/i });
+    fireEvent.click(logsTab);
+
+    expect(screen.getByText('Total Latency')).toBeInTheDocument();
+    expect(screen.getByText('Success Rate')).toBeInTheDocument();
+    expect(screen.getByText(/Action: database_query/)).toBeInTheDocument();
   });
 });

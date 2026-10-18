@@ -259,3 +259,36 @@ När denna plan är genomförd:
    - 28/28 tester gröna (`Artifacts.test.tsx`, `ArtifactTabs.test.tsx`, `ArtifactCodeEditor.test.tsx`).
    - `npx tsc --noEmit` i `client/` ger 0 typfel.
    - Körde `npm run sort-imports` på alla ändrade filer.
+
+---
+
+## 8. Genomfört Arbete: Del 3 (Deterministiska Automationer i Make.com-stil)
+
+### Vad som faktiskt gjordes
+1. **Skapad `ExecutionWorkflow.tsx` (`client/src/components/SidePanel/Plans/ExecutionWorkflow.tsx`):**
+   - Make.com-inspirerad visuell nodpipeline med vertikala anslutningsrör och riktningspilar:
+     - **Trigger Node:** Visar vad som initierade exekveringen (`⚡ User Prompt`, schemalagt cron-intervall eller händelse).
+     - **Decision Engine Node:** Visar Claudes resonemangsmotor, planformulering och verktygsrouting.
+     - **Action / Tool Nodes:** Dynamiskt extraherade från konversationens MCP- och verktygsanrop (t.ex. `web_search`, `playwright`, `bash`, `database_query`). Färgkodade ikoner per verktygskategori och latens-indikator (`X ms`).
+     - **Output Node:** Visar resultatet som levererats (streamade tokens, artefakter och notifieringar).
+   - Interaktiv inspektion per nod med utfällbara in-/utdata-payloads (`pre`-formaterad JSON/text).
+2. **Skapad `ExecutionLog.tsx` (`client/src/components/SidePanel/Plans/ExecutionLog.tsx`):**
+   - Detaljerad determinism-logg med metriker:
+     - Total latens/varaktighet i millisekunder.
+     - Framgångsgrad (Success Rate %) och felräknare.
+     - Filterflikar: `All`, `Actions`, `Errors`.
+   - Per rad: Tidsstämpel, nodtyp, statuskod (`OK`, `ERR`, `RUN`), varaktighet, samt utfällbar payload med ett-klicks "Copy JSON"-funktionalitet.
+3. **Uppdaterad `PlansPanel.tsx` och `Cowork/queries.ts`:**
+   - Lade till subnavigering mellan `Plan` (checklista), `Workflow` (visuell nodgraf) och `Logs` (exekveringshistorik).
+   - Lade till `useCreateCoworkTaskMutation` kopplad till `POST /api/cowork/tasks`.
+   - "Run Now"-triggerknapp i panelens sidhuvud för att omedelbart initiera en deterministisk bakgrundsautomation.
+4. **Kvalitetssäkring och verifiering:**
+   - 5/5 enhetstester gröna i `PlansPanel.spec.tsx` (inklusive checklist-toggling, workflow-nodgraf och execution logs).
+   - `npx tsc --noEmit` i `client/` ger 0 typfel.
+   - Körde `npm run sort-imports` och `npx eslint` med 0 fel och 0 varningar.
+
+### Vad som återstår (Nästa steg i Fas 17)
+- **Del 4 (Bildstudio):** Nano Banana 2 / Google Imagen 3 och conversational in-painting i Artifacts.
+- **Del 5 (Lärande):** Klickbara Perplexity citationsbadges `[1]` och källutdragspanel.
+- **Del 6 (Webbplatsbygge):** Higgsfield MCP website generator och live Sandpack preview.
+

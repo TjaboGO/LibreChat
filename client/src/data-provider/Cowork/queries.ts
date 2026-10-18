@@ -46,3 +46,16 @@ export const useDeleteCoworkTaskMutation = () => {
     },
   });
 };
+
+export const useCreateCoworkTaskMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (data: { title: string; type?: 'scheduled' | 'task'; conversationId?: string }) =>
+      request.post('/api/cowork/tasks', data) as Promise<CoworkTask>,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['coworkTasks']);
+      },
+    },
+  );
+};
