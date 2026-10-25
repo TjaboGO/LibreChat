@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
 import { isValidAppId } from 'librechat-data-provider';
+import { Navigate, useParams, useLocation } from 'react-router-dom';
 import ChatRoute from './ChatRoute';
 
 /**
@@ -12,6 +12,7 @@ import ChatRoute from './ChatRoute';
  * - Validates appId against APPS_REGISTRY, gracefully falling back to `/c/new` if invalid
  */
 function AppRoute() {
+  const location = useLocation();
   const { appId = '', conversationId } = useParams<{
     appId?: string;
     conversationId?: string;
@@ -22,9 +23,9 @@ function AppRoute() {
     return <Navigate to="/c/new" replace={true} />;
   }
 
-  // If no conversationId is supplied, default to a new scoped session
+  // If no conversationId is supplied, default to a new scoped session preserving search params
   if (!conversationId) {
-    return <Navigate to={`/app/${appId}/new`} replace={true} />;
+    return <Navigate to={`/app/${appId}/new${location.search}`} replace={true} />;
   }
 
   return <ChatRoute />;

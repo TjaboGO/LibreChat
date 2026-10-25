@@ -216,7 +216,11 @@ const useNavigateToConvo = (index = 0) => {
       return;
     }
     applyConversation(record);
-    navigate(`/c/${conversationId}`);
+    const targetUrl =
+      record.appId && record.appId !== 'chat'
+        ? `/app/${record.appId}/${conversationId}`
+        : `/c/${conversationId}`;
+    navigate(targetUrl);
   };
 
   const navigateToConvo = (
@@ -306,12 +310,20 @@ const useNavigateToConvo = (index = 0) => {
        * write this navigation makes — what the user sees now is what a send
        * will carry until they change it themselves. */
       applyConversation({ ...cachedConvo, ...convo });
-      navigate(`/c/${convo.conversationId}`);
+      const targetUrl =
+        convo.appId && convo.appId !== 'chat'
+          ? `/app/${convo.appId}/${convo.conversationId}`
+          : `/c/${convo.conversationId}`;
+      navigate(targetUrl);
       refreshConversationRecord(convo.conversationId);
     } else {
       setConversation(convo);
       requestChatFocus();
-      navigate(`/c/${convo.conversationId ?? Constants.NEW_CONVO}`);
+      const targetUrl =
+        convo.appId && convo.appId !== 'chat'
+          ? `/app/${convo.appId}/${convo.conversationId ?? Constants.NEW_CONVO}`
+          : `/c/${convo.conversationId ?? Constants.NEW_CONVO}`;
+      navigate(targetUrl);
     }
   };
 
