@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { PanelLeftOpen, PanelLeftClose } from 'lucide';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { X, ArrowDownToLine, RotateCcw } from 'lucide-react';
 import { Button, MorphIcon, TooltipAnchor } from '@librechat/client';
+import { X, ArrowDownToLine, RotateCcw, Sparkles } from 'lucide-react';
 import { useLocalize } from '~/hooks';
 
 const imageSizeCache = new Map<string, string>();
@@ -24,6 +24,7 @@ export default function DialogImage({
   downloadImage,
   args,
   triggerRef,
+  onOpenStudio,
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -36,6 +37,7 @@ export default function DialogImage({
     [key: string]: unknown;
   };
   triggerRef?: React.RefObject<HTMLButtonElement>;
+  onOpenStudio?: () => void;
 }) {
   const localize = useLocalize();
   const [isPromptOpen, setIsPromptOpen] = useState(false);
@@ -307,6 +309,24 @@ export default function DialogImage({
                 }
               />
             )}
+            {onOpenStudio && (
+              <TooltipAnchor
+                description="Open in Image Studio"
+                render={
+                  <Button
+                    onClick={() => {
+                      onOpenChange(false);
+                      onOpenStudio();
+                    }}
+                    variant="ghost"
+                    className="h-10 w-10 p-0 text-white hover:bg-white/10"
+                    aria-label="Open in Image Studio"
+                  >
+                    <Sparkles className="size-5 text-amber-400" aria-hidden="true" />
+                  </Button>
+                }
+              />
+            )}
             <TooltipAnchor
               description={localize('com_ui_download')}
               render={
@@ -444,6 +464,32 @@ export default function DialogImage({
                     </div>
                   </div>
                 </div>
+
+                {/* Conversational Editing / Image Studio */}
+                {onOpenStudio && (
+                  <div className="rounded-lg border border-border-light bg-surface-secondary p-3.5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles className="size-4 text-amber-500" />
+                      <h4 className="text-sm font-semibold text-text-primary">
+                        Image Studio (Nano Banana 2)
+                      </h4>
+                    </div>
+                    <p className="text-xs text-text-secondary mb-3 leading-relaxed">
+                      Modify style, alter elements, or conversational in-paint without losing character continuity.
+                    </p>
+                    <Button
+                      onClick={() => {
+                        onOpenChange(false);
+                        onOpenStudio();
+                      }}
+                      className="w-full flex items-center justify-center gap-2 text-xs py-2"
+                      variant="default"
+                    >
+                      <Sparkles className="size-3.5 text-amber-300" />
+                      Open in Studio
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

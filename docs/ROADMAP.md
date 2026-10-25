@@ -216,9 +216,9 @@ Systematisk integration av styrkorna från marknadens bästa verktyg (Cursor, Pe
 - [x] Brainstorming: Sokratisk idéutveckling utan sycophancy via `skill/socratic-brainstorm/`
 - [x] Coding: In-app visual diffs i Artifacts (Monaco DiffEditor med Accept/Revert/Copy) samt utökad repo-medvetenhet
 - [x] Automations: Deterministiska triggers och visuell exekveringslogg (Make.com node flow + execution logs) kopplad till `/api/cowork/tasks`
-- [ ] Image generation: Integrera Nano Banana 2 / Google Imagen 3 och conversational in-painting i Artifacts
-- [ ] Learning: Källhänvisningar i realtid med klickbara citationsbadges `[1]` och utdragspanel
-- [ ] Web building: Higgsfield MCP Website Builder-koppling och live React 19 / TanStack preview i Artifacts
+- [x] Image generation: Integrera Nano Banana 2 / Google Imagen 3 och conversational in-painting i Artifacts
+- [x] Learning: Källhänvisningar i realtid med klickbara citationsbadges `[1]` och utdragspanel
+- [x] Web building: Higgsfield MCP Website Builder-koppling och live React 19 / TanStack preview i Artifacts
 
 → [docs/tasks/017-video-critique-masterplan.md](tasks/017-video-critique-masterplan.md)
 

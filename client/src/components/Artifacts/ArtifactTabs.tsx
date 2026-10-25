@@ -8,6 +8,8 @@ import { MermaidRenderer } from '~/components/Messages/Content/Mermaid/Mermaid';
 import { MERMAID_ARTIFACT_TYPE, type Artifact } from '~/common/artifacts';
 import { ArtifactCodeEditor } from './ArtifactCodeEditor';
 import { useCodeState } from '~/Providers/EditorContext';
+import { TOOL_ARTIFACT_TYPES } from '~/utils/artifacts';
+import ArtifactImageStudio from './ArtifactImageStudio';
 import ArtifactDiffEditor from './ArtifactDiffEditor';
 import { useLocalize } from '~/hooks';
 
@@ -112,6 +114,13 @@ export default function ArtifactTabs(props: ArtifactTabsProps) {
         onMermaidExportReady={props.onMermaidExportReady}
       />
     );
+  }
+
+  if (
+    props.artifact.type === TOOL_ARTIFACT_TYPES.IMAGE ||
+    props.artifact.type?.startsWith('image/')
+  ) {
+    return <ArtifactImageStudio artifact={props.artifact} isSharedConvo={props.isSharedConvo} />;
   }
 
   return (

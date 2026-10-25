@@ -9,6 +9,7 @@ import {
   toAbsoluteFilePath,
 } from '~/utils';
 import Mermaid, { MermaidErrorBoundary } from '~/components/Messages/Content/Mermaid';
+import { SourceHovercard, getCleanDomain } from '~/components/Web/SourceHovercard';
 import { useCodeBlockContext, useMediaContext } from '~/Providers';
 import CodeBlock from '~/components/Messages/Content/CodeBlock';
 import useHasAccess from '~/hooks/Roles/useHasAccess';
@@ -118,6 +119,34 @@ export const a: React.ElementType = memo(function MarkdownAnchor({ href, childre
   const user = useRecoilValue(store.user);
   const { showToast } = useToastContext();
   const localize = useLocalize();
+
+  const citationMatch = useMemo(() => {
+    const raw =
+      typeof children === 'string'
+        ? children.trim()
+        : Array.isArray(children) && children.length === 1 && typeof children[0] === 'string'
+          ? (children[0] as string).trim()
+          : '';
+    return /^\[?\^?(\d+)\]?$/.exec(raw);
+  }, [children]);
+
+  if (citationMatch && href && (href.startsWith('http') || href.startsWith('citation:'))) {
+    const num = citationMatch[1];
+    const cleanDomain = getCleanDomain(href);
+    return (
+      <span className="inline-flex items-center align-baseline">
+        <SourceHovercard
+          source={{
+            link: href,
+            title: cleanDomain || `Source [${num}]`,
+            attribution: cleanDomain,
+            snippet: href,
+          }}
+          label={`[${num}]`}
+        />
+      </span>
+    );
+  }
 
   const {
     file_id = '',

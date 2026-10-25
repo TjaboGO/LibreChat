@@ -408,6 +408,7 @@ export const TOOL_ARTIFACT_TYPES = {
   DOCX: 'application/vnd.librechat.docx-preview',
   SPREADSHEET: 'application/vnd.librechat.spreadsheet-preview',
   PRESENTATION: 'application/vnd.librechat.presentation-preview',
+  IMAGE: 'application/vnd.librechat.image-studio',
 } as const;
 
 export type ToolArtifactType = (typeof TOOL_ARTIFACT_TYPES)[keyof typeof TOOL_ARTIFACT_TYPES];
@@ -436,6 +437,7 @@ const PREVIEW_ONLY_ARTIFACT_TYPES: ReadonlySet<ToolArtifactType> = new Set([
   TOOL_ARTIFACT_TYPES.DOCX,
   TOOL_ARTIFACT_TYPES.SPREADSHEET,
   TOOL_ARTIFACT_TYPES.PRESENTATION,
+  TOOL_ARTIFACT_TYPES.IMAGE,
 ]);
 
 export function isPreviewOnlyArtifact(type: string | null | undefined): boolean {
@@ -568,6 +570,12 @@ const ARTIFACT_ROW_KINDS: Record<string, ArtifactRowKind> = {
      * on its rendered preview tab — the row must say so. */
     rendersPreview: true,
     fallbackGlyph: 'text',
+  },
+  [TOOL_ARTIFACT_TYPES.IMAGE]: {
+    lang: '',
+    label: { text: 'Image Studio' },
+    rendersPreview: true,
+    fallbackGlyph: 'preview',
   },
 };
 

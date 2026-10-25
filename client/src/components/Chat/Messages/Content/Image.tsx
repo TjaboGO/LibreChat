@@ -1,8 +1,13 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
+import { Sparkles } from 'lucide-react';
+import { useSetRecoilState } from 'recoil';
 import { Skeleton } from '@librechat/client';
 import { apiBaseUrl } from 'librechat-data-provider';
+import type { Artifact } from '~/common';
+import { TOOL_ARTIFACT_TYPES } from '~/utils/artifacts';
 import { cn, toAbsoluteFilePath } from '~/utils';
 import DialogImage from './DialogImage';
+import store from '~/store';
 
 /** Max display height for chat images (Tailwind JIT class) */
 export const IMAGE_MAX_H = 'max-h-[45vh]' as const;
@@ -93,8 +98,35 @@ const Image = ({
   const heightStyle = hasDimensions ? computeHeightStyle(dims.width, dims.height) : undefined;
   const showSkeleton = hasDimensions && !paintedUrls.has(absoluteImageUrl);
 
+  const setArtifactsVisible = useSetRecoilState(store.artifactsVisibility);
+  const setArtifacts = useSetRecoilState(store.artifactsState);
+  const setCurrentArtifactId = useSetRecoilState(store.currentArtifactId);
+
+  const handleOpenStudio = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    const artifactId = `img-${Date.now()}`;
+    const newArtifact: Artifact = {
+      id: artifactId,
+      type: TOOL_ARTIFACT_TYPES.IMAGE,
+      title: altText || 'Image Studio',
+      content: absoluteImageUrl,
+      lastUpdateTime: Date.now(),
+      download: {
+        filename: altText || 'image.png',
+        filepath: absoluteImageUrl,
+        mimeType: 'image/png',
+      },
+    };
+    setArtifacts((prev) => ({
+      ...prev,
+      [artifactId]: newArtifact,
+    }));
+    setCurrentArtifactId(artifactId);
+    setArtifactsVisible(true);
+  };
+
   return (
-    <div>
+    <div className="group relative w-fit">
       <button
         ref={triggerRef}
         type="button"
@@ -120,6 +152,23 @@ const Image = ({
               : cn('h-auto w-auto max-w-full', IMAGE_MAX_H),
           )}
         />
+        {/* Floating Open in Studio button on hover */}
+        <span
+          role="button"
+          tabIndex={0}
+          onClick={handleOpenStudio}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleOpenStudio();
+            }
+          }}
+          title="Open in Image Studio (Nano Banana 2)"
+          className="absolute right-2 top-2 z-10 flex items-center gap-1 rounded-md border border-white/20 bg-black/60 px-2 py-1 text-[11px] font-medium text-white opacity-0 shadow-md backdrop-blur-sm transition-opacity group-hover:opacity-100 hover:bg-black/80"
+        >
+          <Sparkles className="h-3 w-3 text-amber-400" />
+          <span>Edit in Studio</span>
+        </span>
       </button>
       <DialogImage
         isOpen={isOpen}
@@ -128,6 +177,7 @@ const Image = ({
         downloadImage={downloadImage}
         args={args}
         triggerRef={triggerRef}
+        onOpenStudio={() => handleOpenStudio()}
       />
     </div>
   );

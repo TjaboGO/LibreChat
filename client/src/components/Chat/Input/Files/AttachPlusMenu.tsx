@@ -19,6 +19,7 @@ import {
   ChevronRight,
   Check,
   Lightbulb,
+  BookOpen,
 } from 'lucide-react';
 import type { TConversation } from 'librechat-data-provider';
 import type { ExtendedFile, FileSetter } from '~/common';
@@ -332,6 +333,42 @@ export default function AttachPlusMenu({
                   </span>
                 </Ariakit.MenuItem>
                 <Ariakit.MenuItem
+                  onClick={() => handleSelectSkill('nano-banana-image-studio')}
+                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  <span className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-amber-500" />
+                    <span>Nano Banana 2 Studio</span>
+                  </span>
+                  <span className="rounded bg-amber-500/10 px-1 py-0.5 text-[9px] font-semibold text-amber-600 dark:text-amber-400">
+                    Continuity
+                  </span>
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
+                  onClick={() => handleSelectSkill('deep-learning-citations')}
+                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  <span className="flex items-center gap-2">
+                    <BookOpen className="h-4 w-4 text-teal-500" />
+                    <span>Deep Learning & Citations</span>
+                  </span>
+                  <span className="rounded bg-teal-500/10 px-1 py-0.5 text-[9px] font-semibold text-teal-600 dark:text-teal-400">
+                    Active Recall
+                  </span>
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
+                  onClick={() => handleSelectSkill('higgsfield-site-builder')}
+                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  <span className="flex items-center gap-2">
+                    <Globe className="h-4 w-4 text-lime-500" />
+                    <span>Higgsfield Site Builder</span>
+                  </span>
+                  <span className="rounded bg-lime-500/10 px-1 py-0.5 text-[9px] font-semibold text-lime-600 dark:text-lime-400">
+                    Superhero
+                  </span>
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
                   onClick={() => handleSelectSkill('live-docs-and-slides')}
                   className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
                 >
@@ -390,7 +427,13 @@ export default function AttachPlusMenu({
                   onClick={() => menuStore.hide()}
                   className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
                 >
-                  Web Search MCP
+                  Web Search MCP (Tavily)
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
+                  onClick={() => menuStore.hide()}
+                  className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  Higgsfield Builder MCP
                 </Ariakit.MenuItem>
                 <div className="my-1 border-t border-border-light" />
                 <Ariakit.MenuItem

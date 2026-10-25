@@ -288,7 +288,55 @@ När denna plan är genomförd:
    - Körde `npm run sort-imports` och `npx eslint` med 0 fel och 0 varningar.
 
 ### Vad som återstår (Nästa steg i Fas 17)
-- **Del 4 (Bildstudio):** Nano Banana 2 / Google Imagen 3 och conversational in-painting i Artifacts.
-- **Del 5 (Lärande):** Klickbara Perplexity citationsbadges `[1]` och källutdragspanel.
-- **Del 6 (Webbplatsbygge):** Higgsfield MCP website generator och live Sandpack preview.
+- Samtliga delar är nu fullständigt implementerade och verifierade.
+
+---
+
+## 9. Genomfört Arbete: Del 4, 5 & 6 (Slutförande av Fas 17)
+
+### 9.1 Del 4: Bildgenerering — Nano Banana 2 & In-Painting Studio i Artifacts
+1. **Skapad färdighet (`skill/nano-banana-image-studio/SKILL.md`):**
+   - Strikt formaterad enligt `meta-skill-orchestrator` (< 5 000 tokens, YAML frontmatter med `user-invocable: true`).
+   - Implementerar Nano Banana 2 och Google Imagen 3 direktiv: kristallklar typografi i genererade bilder, karaktärskonsistens över iterationer och målstyrd in-painting.
+2. **Skapad `ArtifactImageStudio.tsx` (`client/src/components/Artifacts/ArtifactImageStudio.tsx`):**
+   - Interaktiv canvas med zoom/pan, PNG-nedladdning och bild-URL-kopiering.
+   - Nano Banana 2 Studio-sidopanel med:
+     - Modellväljare (`Nano Banana 2`, `Google Imagen 3`, `FLUX.1 Schnell`).
+     - Bildförhållande (`1:1`, `16:9`, `9:16`, `4:3`).
+     - Stil- och detaljförädlarchips (`✦ Crisp Typography`, `✦ Photorealistic 8K`, `✦ Studio Lighting`, `✦ Cyberpunk Neon`, `✦ Minimalist 3D`).
+     - In-painting promptmodul som injicerar direktiv i promptboxen med ett klick.
+3. **UI- & Routing-koppling:**
+   - `ArtifactTabs.tsx`: Renderar `ArtifactImageStudio` för `TOOL_ARTIFACT_TYPES.IMAGE` (`application/vnd.librechat.image-studio`) samt `image/*`.
+   - `Image.tsx` och `DialogImage.tsx`: Svävande "Edit in Studio"-knapp och studiokort som öppnar genererade bilder direkt i Artifacts.
+
+### 9.2 Del 5: Lärande — Källhänvisningar i realtid & Perplexity Citations
+1. **Skapad färdighet (`skill/deep-learning-citations/SKILL.md`):**
+   - Tvingande källkritiskt protokoll (eliminerar "ChatGPT makes you dumb").
+   - Källciteringsformat `[1](url)` för varje konkret faktapåstående.
+   - Epistemisk nivåmärkning (`[KONSENSUS]`, `[DEBATT / TRADE-OFF]`, `[EXPERIMENTELLT]`).
+   - Obligatorisk **Active Recall Check** med 3 kontrollfrågor som bryter passiv konsumtion.
+2. **Perplexity-style CitationsBadges i UI:**
+   - Uppdaterade `MarkdownComponents.tsx` (`MarkdownAnchor`): Länkar med numerisk text `[1]`, `1`, `[^1]` konverteras automatiskt till en Perplexity-inspirerad källbadge.
+   - Integrerad med `SourceHovercard`: Hovring/klick visar domän, favikon, sidtitel och källutdrag i ett elegant popoverkort.
+3. **Composer Integration:**
+   - Lade till `Deep Learning & Citations` i `AttachPlusMenu.tsx` med bärnsten/teal `Active Recall`-badge.
+
+### 9.3 Del 6: Webbplatsbygge — Higgsfield Site Builder & Live Sandpack Multi-Viewport
+1. **Skapad färdighet (`skill/higgsfield-site-builder/SKILL.md`):**
+   - Instruktioner för produktion av full-stack React 19 + TanStack Start-webbplatser med filmiska hjälteavsnitt, bento-grids, interaktiva widgets och mikrogaming.
+   - Levererar direkt exekverbara `:::artifact{identifier="higgsfield-site" type="application/vnd.react" title="..."}`.
+2. **Multi-Viewport & Responsive Preview i Artifacts:**
+   - Uppdaterade `ArtifactPreview.tsx`: Integrerade en subtil kontrollrad med snabbväxling mellan **Desktop** (100% fluid), **Tablet** (768px bezel) och **Mobile** (375px bezel).
+   - Smidig breddanimering och ramrendering för testning av responsivitet i realtid.
+3. **MCP- och Menyinfrastruktur:**
+   - `librechat.yaml`: Konfigurerade `webSearch` (Tavily) och `higgsfield` MCP-servrar med environment interpolation.
+   - `AttachPlusMenu.tsx`: Lade till `Higgsfield Site Builder` under Skills med limegrön `Superhero`-badge samt `Web Search MCP (Tavily)` och `Higgsfield Builder MCP` under Connectors.
+
+### 9.4 Kvalitetssäkring och verifiering
+- Nya dedikerade enhetstester:
+  - `ArtifactImageStudio.spec.tsx` (canvas, reglage, sidopanel, in-painting prompt).
+  - `ArtifactPreview.spec.tsx` (Desktop/Tablet/Mobile viewport-växling).
+  - `MarkdownCitations.spec.tsx` (Perplexity källbadges och standardlänkar).
+- Samtliga importer sorterade med `npm run sort-imports`.
+- Alla deluppgifter i Fas 17 är därmed 100 % slutförda!
 
