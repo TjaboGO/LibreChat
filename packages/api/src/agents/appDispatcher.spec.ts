@@ -156,6 +156,34 @@ describe('Backend Hidden Prompt Dispatcher & OpenRouter Payload Assembler (Fas 2
       expect(payload.messages[1].role).toBe('user');
       expect(payload.messages.length).toBe(2);
     });
+
+    it('preserves reasoning_content in OpenRouter assistant turns for reasoning models (Fas 36)', () => {
+      const rawMessages = [
+        { role: 'user', content: 'What is 17 * 19?' },
+        {
+          role: 'assistant',
+          content: '323',
+          reasoning_content: 'Let me calculate: 17 * 19 = 17 * (20 - 1) = 340 - 17 = 323.',
+        },
+      ];
+
+      const payload = assembleOpenRouterPayload('deepseek-r1', rawMessages);
+      expect(payload.messages[0].role).toBe('system');
+      expect(payload.messages[0].content).toContain('DeepSeek-R1');
+      expect(payload.messages[0].content).toContain('<think>...</think>');
+      expect(payload.messages[2].role).toBe('assistant');
+      expect(payload.messages[2].reasoning_content).toContain('17 * 19 = 17 * (20 - 1)');
+    });
+
+    it('assembles Block 3 apps cleanly (Claude, OpenAI Atlas, Grok, Qwen)', () => {
+      const testApps = ['chat', 'cowork', 'design', 'code', 'atlas', 'grok', 'qwen'];
+      for (const appId of testApps) {
+        const payload = assembleOpenRouterPayload(appId, [{ role: 'user', content: 'Hello' }]);
+        expect(payload.messages[0].role).toBe('system');
+        expect(payload.messages[0].content.length).toBeGreaterThan(150);
+        expect(payload.messages[1].role).toBe('user');
+      }
+    });
   });
 
   describe('Strict Isolation & Security', () => {

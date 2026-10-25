@@ -227,12 +227,27 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
 - **Syfte:** Integrera resonemangs- och kodningsdirektiv från ledande open-source och utmanare.
 - **Filer:**
   - `packages/data-provider/src/apps/prompts/frontierAlternative.ts`
-  - Promptkällor: `My system prompts/DeepSeek/`, `My system prompts/xAI/grok-build.md`, `My system prompts/Qwen/`
+  - `packages/data-provider/src/apps/promptStore.ts`
+  - `packages/data-provider/src/apps/__tests__/frontierAlternative.spec.ts`
+  - `packages/api/src/agents/appDispatcher.ts`
+  - `packages/api/src/agents/appDispatcher.spec.ts`
+  - Promptkällor: `My system prompts/DeepSeek/`, `My system prompts/xAI/grok-build.md`, `My system prompts/Qwen/`, `My system prompts/Kimi/`
 - **Checklista:**
-  - [ ] DeepSeek R1 prompt med strikt `<think>`-verifiering och eliminering av hallisar.
-  - [ ] xAI Grok Build prompt med stöd för parallella verktygsanrop och Jinja2-mallar.
-  - [ ] Qwen 2.5 Coder & Moonshot Kimi K2 direktiv.
-- **Verifiering:** Testa anrop via OpenRouter mot DeepSeek-R1 och bekräfta att tankekedjor parsas korrekt.
+  - [x] DeepSeek R1 prompt med strikt `<think>`-verifiering och eliminering av hallisar.
+  - [x] xAI Grok Build prompt med stöd för parallella verktygsanrop och Jinja2-mallar.
+  - [x] Qwen 2.5 Coder & Moonshot Kimi K2 direktiv.
+- **Verifiering:** Testa anrop via OpenRouter mot DeepSeek-R1 och bekräfta att tankekedjor och `reasoning_content` parsas och bevaras korrekt.
+- **Resultat (Fas 36 & Block 3 slutförda och granskade):**
+  - Skapade `packages/data-provider/src/apps/prompts/frontierAlternative.ts` med fullständiga autentiska prompter:
+    - `DEEPSEEK_R1_PROMPT` (`deepseek-r1`, `deepseek`, `r1`): Kedjeresonemang i `<think>...</think>`, eliminering av hallisar, randvillkorsanalys, epistemisk kalibrering samt meningsnära källhänvisning via `[citation:X]`.
+    - `XAI_GROK_BUILD_PROMPT` (`/app/grok`, `xai-grok-build`): Parallell verktygsexekvering (`<tool_calling>`), asynkrona bakgrundsprocesser med `background: true` och `task_id`, kirurgiska kodändringar utan onödiga abstraktioner samt verifiering innan slutrapportering.
+    - `QWEN_CODER_PROMPT` (`qwen-coder`, `qwen`): Strikt anpassning till repots befintliga kodkonventioner, kontroll av bibliotek före import, minimala kommentarer, permanenta automatiska tester och typkontroller.
+    - `MOONSHOT_KIMI_PROMPT` (`moonshot-kimi`, `kimi`): Långkontextuell syntes upp till 2M tokens, rekursivt multi-hop resonemang och epistemisk stringens.
+  - Uppdaterade `packages/data-provider/src/apps/promptStore.ts` med integration, export och alias.
+  - Granskade och förstärkte `packages/api/src/agents/appDispatcher.ts` för att bevara `reasoning_content` i OpenRouter assistant-turer för DeepSeek R1 och resonemangsmodeller.
+  - Kompilerade `packages/data-provider/dist/apps/` med `tsc`.
+  - Skapade testsvit `packages/data-provider/src/apps/__tests__/frontierAlternative.spec.ts` och utökade `packages/api/src/agents/appDispatcher.spec.ts`.
+  - Genomförde fullständig Block 3-audit: Samtliga 22 appar i `APPS_REGISTRY` samt alla 12 modellalias verifierade mot `AUTHENTIC_PROMPTS` utan olösta platshållare (100% gröna tester).
 
 ---
 

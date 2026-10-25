@@ -15,6 +15,12 @@ import {
   OPENAI_OFFICE_SANDBOX_DIRECTIVES,
 } from './prompts/openAiFrontier';
 import {
+  DEEPSEEK_R1_PROMPT,
+  XAI_GROK_BUILD_PROMPT,
+  QWEN_CODER_PROMPT,
+  MOONSHOT_KIMI_PROMPT,
+} from './prompts/frontierAlternative';
+import {
   CLAUDE_CHAT_PROMPT,
   CLAUDE_COWORK_PROMPT,
   CLAUDE_DESIGN_PROMPT,
@@ -23,6 +29,7 @@ import {
 
 export * from './prompts/claudeCore';
 export * from './prompts/openAiFrontier';
+export * from './prompts/frontierAlternative';
 
 export interface PromptInterpolationOptions {
   currentDate?: string;
@@ -172,16 +179,7 @@ Workspace: {{WORKING_DIRECTORY}}.
 - Provide instant deployment readiness and live URL generation.
 </cloud_runtime>`,
 
-  'xai-grok-build': `<identity>
-You are Grok Build, xAI's high-speed engineering agent.
-Date: {{CURRENT_DATE}}.
-</identity>
-
-<grok_attitude>
-- Direct, razor-sharp technical acumen with zero corporate fluff or sanitized hesitation.
-- Parallel tool execution across search, terminal, and file inspection.
-- Unpack complex low-level systems, kernel drivers, and high-concurrency architectures with ease.
-</grok_attitude>`,
+  'xai-grok-build': XAI_GROK_BUILD_PROMPT,
 
   'cline-operator': `<identity>
 You are Cline, an autonomous software development assistant with human-in-the-loop safeguards.
@@ -298,6 +296,13 @@ Available Connectors: GitHub, Slack, Notion, Jira, Linear, Stripe, PostgreSQL, F
 - If a connector is DISCONNECTED, prompt authentication rather than failing silently.
 - When the user @mentions a service (e.g. @GitHub, @Stripe), treat it as an explicit directive to use that connector.
 </connector_protocol>`,
+
+  // ==========================================
+  // FRONTIER OPEN-SOURCE & CHALLENGER PROMPTS
+  // ==========================================
+  'deepseek-r1': DEEPSEEK_R1_PROMPT,
+  'qwen-coder': QWEN_CODER_PROMPT,
+  'moonshot-kimi': MOONSHOT_KIMI_PROMPT,
 };
 
 /**
@@ -315,6 +320,7 @@ export const APP_ID_TO_PROMPT_ID: Record<string, string> = {
   kiro: 'kiro-dual-mode',
   replit: 'replit-agent',
   grok: 'xai-grok-build',
+  'xai-grok-build': 'xai-grok-build',
   cline: 'cline-operator',
   v0: 'v0-generative-ui',
   lovable: 'lovable-builder',
@@ -332,6 +338,13 @@ export const APP_ID_TO_PROMPT_ID: Record<string, string> = {
   o3: 'o3-mini',
   deepsearch: 'brave-deepsearch',
   connectors: 'connector-hub',
+  'deepseek-r1': 'deepseek-r1',
+  deepseek: 'deepseek-r1',
+  r1: 'deepseek-r1',
+  'qwen-coder': 'qwen-coder',
+  qwen: 'qwen-coder',
+  'moonshot-kimi': 'moonshot-kimi',
+  kimi: 'moonshot-kimi',
 };
 
 export const AUTHENTIC_SYSTEM_PROMPTS = AUTHENTIC_PROMPTS;

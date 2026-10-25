@@ -29,6 +29,7 @@ export interface OpenRouterMessage {
   name?: string;
   tool_call_id?: string;
   tool_calls?: unknown[];
+  reasoning_content?: string;
 }
 
 export interface OpenRouterPayloadAssembly {
@@ -195,6 +196,7 @@ export function assembleOpenRouterPayload(
     ...(m.name && { name: m.name }),
     ...(m.tool_call_id && { tool_call_id: m.tool_call_id }),
     ...(m.tool_calls && { tool_calls: m.tool_calls }),
+    ...(m.reasoning_content && { reasoning_content: m.reasoning_content }),
   }));
 
   // Mount authentic prompt as first message
