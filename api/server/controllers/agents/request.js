@@ -501,6 +501,7 @@ async function saveErrorTurn(
 
     const agentId = endpointOption?.agent_id ?? req.body?.agent_id;
     const chatProjectId = endpointOption?.chatProjectId ?? req.body?.chatProjectId;
+    const appId = endpointOption?.appId ?? req.body?.appId ?? req.resolvedConversation?.appId ?? 'chat';
     const seedConvo = isNewConvo || req.resolvedConversation === null;
     const codeEnvironmentDecision = req._codeEnvironmentDecision;
     const convoFields = seedConvo
@@ -514,6 +515,7 @@ async function saveErrorTurn(
           ...(endpointOption?.spec != null && { spec: endpointOption.spec }),
           ...(agentId != null && { agent_id: agentId }),
           ...(typeof chatProjectId === 'string' && chatProjectId.length > 0 && { chatProjectId }),
+          ...(appId != null && { appId }),
           ...(codeEnvironmentDecision?.mode != null && {
             codeEnvironmentMode: codeEnvironmentDecision.mode,
             ...(codeEnvironmentDecision.codeWorkspaces != null && {

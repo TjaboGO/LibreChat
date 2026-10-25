@@ -245,7 +245,7 @@ Integration av världens alla 72 AI-tjänster och modeller som inbyggda, dediker
 - [x] **Fas 26: Unified App Registry & Types Definition** (`packages/data-provider/src/apps/types.ts` & `appsRegistry.ts`)
 - [x] **Fas 27: Authentic Prompt Store & Interpolation Engine** (`packages/data-provider/src/apps/promptStore.ts`)
 - [x] **Fas 28: Databasschema & Session Scoping** (`appId` i `Conversation.js` och MongoDB-indexering)
-- [ ] **Fas 29: Backend Hidden Prompt Dispatcher & OpenRouter Payload Assembler** (100% dold injektion i API-lagret)
+- [x] **Fas 29: Backend Hidden Prompt Dispatcher & OpenRouter Payload Assembler** (100% dold injektion i API-lagret)
 
 ### Block 2: Sidomeny, Navigation & Scoped Routing (Fas 30–33)
 - [ ] **Fas 30: Sidomeny med 4 Sektioner** (Core, Agents, Builders, Research med Lucide-ikoner & badges)

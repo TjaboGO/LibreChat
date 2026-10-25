@@ -111,6 +111,7 @@ import { assertAgentAttachmentLimits, isModelBoundAttachmentFile } from './attac
 import { resolveAttachedWorkspaceCommandTimeoutMax } from '~/code/command';
 import { assertModelBoundContent } from '../middleware/modelBoundContent';
 import { isImplicitStatefulCodeRouteAvailable } from '../code/config';
+import { resolveAppId, applyAppScopeToAgent } from './appDispatcher';
 import { registerMemoryTools, memoryToolUsageGuard } from './memory';
 import { applyIntentLabels, sanitizeIntentLabels } from './intent';
 import { ContentFilterError } from '../middleware/contentFilter';
@@ -2248,6 +2249,14 @@ export async function initializeAgent(
   agent.model_parameters = { ...options.llmConfig } as Agent['model_parameters'];
   if (options.configOptions) {
     (agent.model_parameters as Record<string, unknown>).configuration = options.configOptions;
+  }
+
+  const appId = resolveAppId(runtime.requestBody);
+  if (appId && appId !== 'chat') {
+    applyAppScopeToAgent(agent, appId, {
+      user: user as unknown as { name?: string },
+      timezone: runtime.requestBody?.timezone,
+    });
   }
 
   if (agent.instructions && agent.instructions !== '') {

@@ -23,6 +23,7 @@ import {
 } from '~/mcp/utils';
 import { ASK_USER_QUESTION_TOOL_NAME } from '~/agents/hitl/askUserQuestionTool';
 import { synthesizeBackgroundToolOptions } from '~/agents/background';
+import { resolveAppId, applyAppScopeToAgent } from './appDispatcher';
 import { mergeSynthesizedToolOptions } from '~/agents/selection';
 import { synthesizeIntentToolOptions } from '~/agents/intent';
 import { getCustomEndpointConfig } from '~/app/config';
@@ -217,6 +218,13 @@ export async function loadEphemeralAgent(
       result.skills = [];
     }
   }
+
+  const appId = resolveAppId(req);
+  applyAppScopeToAgent(result, appId, {
+    user: req.user,
+    timezone: (req.body as any)?.timezone,
+  });
+
   return result as Agent;
 }
 

@@ -33,6 +33,7 @@ export default function createPayload(submission: t.TSubmission) {
     expectedPredecessorCreatedAt,
   } = submission;
   const { conversationId } = s.tConvoUpdateSchema.parse(conversation);
+  const appId = (conversation as Record<string, any>)?.appId ?? 'chat';
   const { endpoint: _e, endpointType } = endpointOption as {
     endpoint: s.EModelEndpoint;
     endpointType?: s.EModelEndpoint;
@@ -67,6 +68,7 @@ export default function createPayload(submission: t.TSubmission) {
     codeEnvironmentMode: s.isAssistantsEndpoint(endpoint) ? undefined : codeEnvironmentMode,
     codeWorkspaces: s.isAssistantsEndpoint(endpoint) ? undefined : codeWorkspaces,
     timezone: getUserTimezone(),
+    appId,
     clientRequestId,
     recoverySteerId,
     expectedPredecessorCreatedAt,

@@ -1362,6 +1362,7 @@ class BaseClient {
       conversationId: message.conversationId,
       endpoint: options.endpoint,
       endpointType: options.endpointType,
+      appId: endpointOptions?.appId ?? req?.body?.appId ?? existingConvo?.appId ?? 'chat',
       ...endpointOptions,
     };
     const conversationCreatedAt = options?.req?.conversationCreatedAt;
