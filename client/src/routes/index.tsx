@@ -82,6 +82,11 @@ const loadCodeAppView = () =>
     Component: m.default,
   }));
 
+const loadAllActivityView = () =>
+  import('~/components/Activity/AllActivityTimeline').then((m) => ({
+    Component: m.default,
+  }));
+
 const baseEl = document.querySelector('base');
 const baseHref = baseEl?.getAttribute('href') || '/';
 
@@ -233,6 +238,10 @@ export const router = createBrowserRouter(
             {
               path: 'code',
               lazy: loadCodeAppView,
+            },
+            {
+              path: 'all',
+              lazy: loadAllActivityView,
             },
             {
               path: 'agents',

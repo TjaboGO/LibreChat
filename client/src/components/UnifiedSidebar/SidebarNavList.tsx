@@ -9,6 +9,7 @@ import {
   Boxes,
   Clock,
   Sparkles,
+  Activity,
   MoreHorizontal,
   MessagesSquare,
 } from 'lucide-react';
@@ -172,6 +173,7 @@ function SidebarNavList() {
         label={localize('com_ui_scheduled')}
         showDot={hasActiveTasks}
       />
+      <RouteRow to="/all" icon={Activity} label="All Activity" />
       <RouteRow to="/skills" icon={Sparkles} label={localize('com_ui_customize')} />
       <MoreMenu />
 

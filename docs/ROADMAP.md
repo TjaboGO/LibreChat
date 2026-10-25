@@ -251,7 +251,7 @@ Integration av världens alla 72 AI-tjänster och modeller som inbyggda, dediker
 - [x] **Fas 30: Sidomeny med 4 Sektioner** (Core, Agents, Builders, Research med Lucide-ikoner & badges)
 - [x] **Fas 31: Favoriter & Pinning System** (Pinna appar till toppen i snabbåtkomst)
 - [x] **Fas 32: Scoped Routing & App Shell** (`/app/:appId` och `AppLayout` med `useCurrentApp()`)
-- [ ] **Fas 33: Isolerad Historik per App vs. Startsida ("All Activity")** (Scoped trådlista + global tidslinje)
+- [x] **Fas 33: Isolerad Historik per App vs. Startsida ("All Activity")** (Scoped trådlista + global tidslinje)
 
 ### Block 3: Core Apps & Frontier Prompts Integration (Fas 34–36)
 - [ ] **Fas 34: Core Claude Suite Integration** (`/app/chat`, `/app/cowork`, `/app/design`, `/app/code` med Opus 5.5 & Fable 5.1 prompts)

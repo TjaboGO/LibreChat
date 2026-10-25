@@ -1,9 +1,11 @@
 import { memo } from 'react';
-import type { TConversation, TEndpointsConfig } from 'librechat-data-provider';
+import { getAppDefinition, type TConversation, type TEndpointsConfig } from 'librechat-data-provider';
 import { useAgentsMapContext, useAssistantsMapContext } from '~/Providers';
+import { getAppIcon } from '~/components/UnifiedSidebar/appIcons';
 import EndpointIcon from '~/components/Endpoints/EndpointIcon';
 import { areConversationIconFieldsEqual } from './utils';
 import { useGetEndpointsQuery } from '~/data-provider';
+import { cn } from '~/utils';
 
 const emptyEndpointsConfig = {} as TEndpointsConfig;
 
@@ -26,6 +28,29 @@ function ConversationEndpointIcon({
   const agentsMap = useAgentsMapContext();
   const assistantMap = useAssistantsMapContext();
 
+  const app =
+    conversation?.appId && conversation.appId !== 'chat'
+      ? getAppDefinition(conversation.appId)
+      : null;
+
+  if (app) {
+    const AppIcon = getAppIcon(app.icon);
+    return (
+      <div
+        className={cn(
+          'flex shrink-0 items-center justify-center rounded border text-xs',
+          app.color || 'border-border-light bg-surface-active text-text-secondary',
+          className,
+        )}
+        style={{ width: size, height: size }}
+        title={`${app.name} (${app.badge || 'App'})`}
+        data-testid={`convo-app-icon-${app.id}`}
+      >
+        <AppIcon className="h-3 w-3" aria-hidden="true" />
+      </div>
+    );
+  }
+
   return (
     <EndpointIcon
       conversation={conversation}
@@ -44,6 +69,7 @@ export default memo(ConversationEndpointIcon, (prevProps, nextProps) => {
     prevProps.className === nextProps.className &&
     prevProps.context === nextProps.context &&
     prevProps.size === nextProps.size &&
+    prevProps.conversation?.appId === nextProps.conversation?.appId &&
     areConversationIconFieldsEqual(prevProps.conversation, nextProps.conversation)
   );
 });

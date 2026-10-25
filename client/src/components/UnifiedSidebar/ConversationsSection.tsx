@@ -15,13 +15,19 @@ import {
   usePinnedConversationsQuery,
   useTitleGeneration,
 } from '~/data-provider';
-import { useLocalize, useAuthContext, useLocalStorage, useNavScrolling } from '~/hooks';
+import {
+  useLocalize,
+  useAuthContext,
+  useLocalStorage,
+  useNavScrolling,
+  useConversationFilters,
+} from '~/hooks';
 import ProjectsSection from '~/components/Conversations/ProjectsSection';
 import ChatFilterMenu from '~/components/Conversations/ChatFilterMenu';
 import PinnedSection from '~/components/Conversations/PinnedSection';
 import useSidebarToggle from '~/hooks/Nav/useSidebarToggle';
 import { Conversations } from '~/components/Conversations';
-import { collectPinnedConversations } from '~/utils';
+import { collectPinnedConversations, cn } from '~/utils';
 import SearchBar from '~/components/Nav/SearchBar';
 import SidebarNavList from './SidebarNavList';
 import store from '~/store';
@@ -36,6 +42,13 @@ const ConversationsSection = memo(() => {
   useTitleGeneration(isAuthenticated);
 
   const [isChatsExpanded, setIsChatsExpanded] = useLocalStorage('chatsExpanded', true);
+  const {
+    filterScope,
+    setFilterScope,
+    effectiveAppId,
+    currentApp,
+    isSpecializedApp,
+  } = useConversationFilters();
 
   const tags = useAtomValue(chatFilterTagsAtom);
   const sort = useAtomValue(chatSortAtom);
@@ -60,6 +73,7 @@ const ConversationsSection = memo(() => {
       sortDirection: sort.direction,
       tags: tags.length === 0 ? undefined : tags,
       search: search.debouncedQuery || undefined,
+      appId: effectiveAppId,
     },
     {
       enabled: isAuthenticated,
@@ -217,6 +231,46 @@ const ConversationsSection = memo(() => {
                  enough to prune the stored order against. */
               membershipUpdatedAt={pinnedUpdatedAt}
             />
+          )}
+          {isSpecializedApp && !search.query && (
+            <div
+              data-testid="app-history-scope-toggle"
+              className="mx-2 mb-1 flex items-center justify-between rounded-lg border border-border-light bg-surface-secondary/40 px-2 py-1"
+            >
+              <div className="flex min-w-0 items-center gap-1.5">
+                <span className="truncate text-xs font-semibold text-text-primary">
+                  {currentApp.name}
+                </span>
+              </div>
+              <div className="flex items-center rounded-md bg-surface-tertiary p-0.5 text-xs">
+                <button
+                  type="button"
+                  data-testid="scope-toggle-app"
+                  onClick={() => setFilterScope('app')}
+                  className={cn(
+                    'rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors',
+                    filterScope === 'app'
+                      ? 'bg-surface-primary font-semibold text-text-primary shadow-2xs'
+                      : 'text-text-tertiary hover:text-text-primary',
+                  )}
+                >
+                  This App
+                </button>
+                <button
+                  type="button"
+                  data-testid="scope-toggle-all"
+                  onClick={() => setFilterScope('all')}
+                  className={cn(
+                    'rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors',
+                    filterScope === 'all'
+                      ? 'bg-surface-primary font-semibold text-text-primary shadow-2xs'
+                      : 'text-text-tertiary hover:text-text-primary',
+                  )}
+                >
+                  All Apps
+                </button>
+              </div>
+            </div>
           )}
           <Conversations
             conversations={conversations}

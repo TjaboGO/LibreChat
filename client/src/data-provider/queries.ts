@@ -86,12 +86,12 @@ export const useConversationsInfiniteQuery = (
   params: ConversationListParams,
   config?: UseInfiniteQueryOptions<ConversationListResponse, unknown>,
 ) => {
-  const { isArchived, sortBy, sortDirection, tags, search, projectId } = params;
+  const { isArchived, sortBy, sortDirection, tags, search, projectId, appId } = params;
 
   return useInfiniteQuery<ConversationListResponse>({
     queryKey: [
       isArchived ? QueryKeys.archivedConversations : QueryKeys.allConversations,
-      { isArchived, sortBy, sortDirection, tags, search, projectId },
+      { isArchived, sortBy, sortDirection, tags, search, projectId, appId },
     ],
     queryFn: async ({ pageParam }) => {
       const page = await dataService.listConversations({
@@ -101,6 +101,7 @@ export const useConversationsInfiniteQuery = (
         tags,
         search,
         projectId,
+        appId,
         cursor: pageParam?.toString(),
       });
       /* A row's own `isArchived` decides what its menu offers, so a backend that predates

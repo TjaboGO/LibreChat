@@ -160,10 +160,18 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
   - `client/src/hooks/useConversationFilters.ts`
   - `client/src/components/Activity/AllActivityTimeline.tsx`
 - **Checklista:**
-  - [ ] Filtrera historikhämtningen med `currentAppId` när användaren är på `/app/:appId`.
-  - [ ] Skapa startsidan `/all` (eller `/`) med en kombinerad tidslinje som visar alla sessioner märkta med app-specifika badges.
-  - [ ] Lägg till en toggle-knapp i historiken: "Bara denna app" / "Alla appar".
-- **Verifiering:** Skapa en tråd i Manus och en i v0; kontrollera att Manus-tråden inte syns under v0 men syns på Startsidan.
+  - [x] Filtrera historikhämtningen med `currentAppId` när användaren är på `/app/:appId`.
+  - [x] Skapa startsidan `/all` (eller `/`) med en kombinerad tidslinje som visar alla sessioner märkta med app-specifika badges.
+  - [x] Lägg till en toggle-knapp i historiken: "Bara denna app" / "Alla appar".
+- **Verifiering:** Skapa en tråd i Manus och en i v0; kontrollera att Manus-tråden inte syns under v0 men syns på Startsidan (`HistoryScoping.spec.tsx`).
+- **Resultat (Fas 33 slutförd):**
+  - Implementerade `useConversationFilters.ts` med `conversationFilterScopeAtom` (`side:conversation-filter-scope`) som tillåter användare att växla mellan isolerad apphistorik och full översikt.
+  - Uppdaterade `useConversationsInfiniteQuery` i `queries.ts` och `ConversationsSection.tsx` så att `appId: effectiveAppId` skickas till backend Mongo-frågan (`getConvosByCursor`).
+  - Skapade scope-toggle-listen i `ConversationsSection.tsx` som visas när man är i en specialiserad app med knapparna "This App" och "All Apps".
+  - Uppdaterade `ConversationEndpointIcon.tsx` så att konversationer i historiklistan märkta med specialiserade appar renderar appens brandikon i färg.
+  - Skapade `AllActivityTimeline.tsx` och registrerade `/all` i `client/src/routes/index.tsx` med sektionsflikar, kronologisk datumgruppering (`Today`, `Yesterday`, `Earlier`), sökning och direktlänkar till trådar.
+  - Lade till direktlänk "All Activity" i `SidebarNavList.tsx`.
+  - Byggde testsvit i `client/src/components/UnifiedSidebar/__tests__/HistoryScoping.spec.tsx`.
 
 ---
 
