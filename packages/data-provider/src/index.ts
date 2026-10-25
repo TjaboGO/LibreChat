@@ -84,3 +84,5 @@ export * from './code/workspace';
 export * from './browser/actionParser';
 /* manus agent tools & process management */
 export * from './manus';
+/* dual-mode engine (spec vs vibe) */
+export * from './modes';

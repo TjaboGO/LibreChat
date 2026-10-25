@@ -323,6 +323,13 @@ export const permissionModeFamily = atomFamily<PermissionMode, string | number |
   default: 'auto',
 });
 
+export type EngineMode = 'auto' | 'spec' | 'vibe';
+
+export const engineModeFamily = atomFamily<EngineMode, string | number | null>({
+  key: 'engineModeByIndex',
+  default: 'auto',
+});
+
 export const researchModeFamily = atomFamily<boolean, string | number | null>({
   key: 'researchModeByIndex',
   default: false,
@@ -849,6 +856,7 @@ export default {
   showPlusPopoverFamily,
   composerModeFamily,
   permissionModeFamily,
+  engineModeFamily,
   researchModeFamily,
   outputFormatFamily,
   autoApprovalFamily,

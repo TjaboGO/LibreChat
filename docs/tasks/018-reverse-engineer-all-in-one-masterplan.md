@@ -142,3 +142,52 @@ Fullständig specifikation finns i artefakten:
 - `ProcessManagerView.spec.tsx` (rendering, stdin submit, processavslut).
 - `PlansPanel.spec.tsx` (utökat med processes-tabben).
 - Formatering med `npm run sort-imports`.
+
+---
+
+## Genomfört Arbete: Fas 19 (Dual-Mode Engine: Spec Mode vs Vibe Mode)
+
+### 1. Kärnmotor & Datamodeller (`packages/data-provider/src/modes/`)
+- Skapade `types.ts`:
+  - `EngineMode` (`'auto' | 'spec' | 'vibe'`).
+  - `ModeConfidence` (`{ spec: number, vibe: number, chat: number }`).
+  - `ModeClassificationResult` med moderesultat, motivering och föreslagna spec-tasks.
+  - `SpecDocument` & `SpecTask` (strukturerad modell för krav, arkitektur, acceptanskriterier och implementation tasks).
+- Skapade `classifier.ts`:
+  - Deterministisk Intent Classifier inspirerad av Kiros `Mode_Clasifier_Prompt.txt`.
+  - Heuristisk scoring och regex-mönster för spec-signaler (`spec`, `specification`, `kravspec`, `TDD plan`, `architecture doc`, `execute task N`).
+  - Kiro Golden Rule: *Vid tveksamhet, defaulta till Vibe/Do Mode* — undviker onödig overhead vid vanliga kodningsfrågor.
+  - Kontextkänslig klassificering vid dialoghistorik (känner av svar på spec-tasks).
+  - Promptextraktioner: `SPEC_MODE_DIRECTIVE` (Kiro & Traycer read-only architect prompt) och `VIBE_MODE_DIRECTIVE` (Kiro rapid flow prompt).
+- Skapade `specEngine.ts`:
+  - `generateSpecMarkdown`: Genererar enhetlig Markdown-specifikation enligt Kiro/Traycer-standard (`## 1. Overview & Goal`, `## 2. Requirements`, `## 3. Architecture & Data Contracts`, `## 4. Acceptance Criteria & TDD Test Plan`, `## 5. Implementation Tasks`).
+  - `parseSpecMarkdown`: Parser som återskapar `SpecDocument` inklusive checkbox-status (`- [ ]`, `- [x]`).
+  - `validateSpecDocument`: Verifierar att obligatoriska specifikationssektioner finns.
+  - `updateTaskStatus`: Uppdaterar status på diskreta deluppgifter.
+- Exporterade `modes`-modulen via `packages/data-provider/src/index.ts`.
+
+### 2. State & Klientintegration
+- **Recoil State:** Skapade `engineModeFamily` (`'auto' | 'spec' | 'vibe'`) i `client/src/store/families.ts` med automatisk persistens mot `localStorage` (`claude_engine_mode`).
+- **UI ModeToggle:** Skapade `client/src/components/Chat/Input/ModeToggle.tsx` som en Ariakit Menu med:
+  - Lägesväljare bredvid `PermissionModePopover` i Composer toolbar.
+  - Ikoner och badges: `Sparkles` (Auto ✦), `ClipboardList` (Spec Mode 📋), `Zap` (Vibe Mode ⚡).
+  - Detaljerade förklarande menyer med rollbeskrivningar (Lead Architect vs Rapid Flow).
+- **Composer Prompt Injection:** Integrerade lägesdirektiv i `client/src/components/Chat/Input/ChatForm.tsx`:
+  - När användaren skickar ett meddelande evalueras valt läge (`auto`, `spec`, `vibe`).
+  - Vid `auto` anropas `classifyIntent()` för att avgöra om prompten kräver read-only spec/arkitektur eller direkt kod.
+  - Motsvarande promptdirektiv (`[Engine Mode: SPEC MODE]` eller `[Engine Mode: VIBE MODE]`) injiceras automatiskt utan dubbletter.
+- **AttachPlusMenu Integration:** Lade till `Dual-Mode Engine (Spec vs Vibe)` i Skills-menyn med cyan `Kiro / Traycer`-badge.
+
+### 3. Master Skill
+- Skapade `skill/dual-mode-engine/SKILL.md`:
+  - Systemöversikt och jämförelse mellan Kiro och Traycer AI.
+  - Intent Classifier regler och konfidensberäkning.
+  - Formell Spec Mode dokumentstandard och TDD-disciplin.
+  - Vibe Mode snabbhets- och "Show don't tell"-protokoll.
+
+### 4. Verifiering & Enhetstester
+- `classifier.spec.ts`: Tester för default vibe mode, imperativ kodning, explicita spec/arkitektur-anrop, task-exekvering, och samtalshistorik.
+- `specEngine.spec.ts`: Tester för markdown-generering, parsing, validering och task-uppdateringar.
+- `ModeToggle.spec.tsx`: Tester för rendering, menyöppning, val av Spec/Vibe Mode, localStorage-persistens och disabled-läge.
+- Verifierade assertions med 100% framgång via direkt testkörning.
+- Formatering med `npm run sort-imports`.

@@ -223,7 +223,7 @@ export class ProcessManager {
    */
   public clearCompleted(): number {
     let cleared = 0;
-    for (const [id, proc] of this.processes.entries()) {
+    for (const [id, proc] of Array.from(this.processes.entries())) {
       if (proc.status !== 'running') {
         this.processes.delete(id);
         cleared++;

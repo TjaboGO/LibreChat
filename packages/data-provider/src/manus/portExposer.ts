@@ -65,7 +65,7 @@ export class PortExposer {
     const now = Date.now();
     const active: ExposedPortInfo[] = [];
 
-    for (const [port, info] of this.exposedPorts.entries()) {
+    for (const [port, info] of Array.from(this.exposedPorts.entries())) {
       if (info.expiresAt && now > info.expiresAt) {
         info.status = 'closed';
         continue;

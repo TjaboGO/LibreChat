@@ -1,8 +1,8 @@
 import { memo, useRef, useMemo, useEffect, useState, useCallback } from 'react';
 import { useWatch } from 'react-hook-form';
 import { useRecoilState, useRecoilValue, useRecoilCallback } from 'recoil';
-import { Constants, isAssistantsEndpoint, isAgentsEndpoint } from 'librechat-data-provider';
 import { composerSurfaceClasses, composerSurfaceShadow, TextareaAutosize } from '@librechat/client';
+import { Constants, isAssistantsEndpoint, isAgentsEndpoint, classifyIntent, getModeDirective } from 'librechat-data-provider';
 import type { TChatProject, TMessage, TConversation } from 'librechat-data-provider';
 import type { SetterOrUpdater } from 'recoil';
 import type { ExtendedFile, FileSetter, ConvoGenerator } from '~/common';
@@ -38,7 +38,7 @@ import {
   PendingToolApprovalButton,
   PendingToolApprovalPanel,
 } from '~/components/Chat/approval/Review';
-import { outputFormatFamily, type OutputFormat } from '~/store/families';
+import { outputFormatFamily, type OutputFormat, engineModeFamily } from '~/store/families';
 import PendingManualSkillsChips from './PendingManualSkillsChips';
 import usePastedTextEdit from '~/hooks/Files/usePastedTextEdit';
 import useAskAnswerMode from '~/hooks/Input/useAskAnswerMode';
@@ -70,6 +70,7 @@ import AudioRecorder from './AudioRecorder';
 import AutoPlayAudio from './AutoPlayAudio';
 import CollapseChat from './CollapseChat';
 import QuoteButton from './QuoteButton';
+import ModeToggle from './ModeToggle';
 import TokenUsage from './TokenUsage';
 import StopButton from './StopButton';
 import SendButton from './SendButton';
@@ -186,6 +187,7 @@ const ChatForm = memo(function ChatForm({
   const maximizeChatSpace = useRecoilValue(store.maximizeChatSpace);
   const isTemporary = useRecoilValue(store.isTemporary);
   const outputFormat = useRecoilValue(outputFormatFamily(index));
+  const engineMode = useRecoilValue(engineModeFamily(index));
 
   const [badges, setBadges] = useRecoilState(store.chatBadges);
   const [isEditingBadges, setIsEditingBadges] = useRecoilState(store.isEditingBadges);
@@ -652,6 +654,26 @@ const ChatForm = memo(function ChatForm({
           textToSend = `${textToSend.trim()}${directive}`;
         }
       }
+
+      // Dual-Mode Engine Directive Injection (Spec vs Vibe)
+      if (!textToSend.includes('[Engine Mode:')) {
+        let resolvedMode: 'spec' | 'vibe' = 'vibe';
+        if (engineMode === 'spec') {
+          resolvedMode = 'spec';
+        } else if (engineMode === 'vibe') {
+          resolvedMode = 'vibe';
+        } else {
+          // Auto mode: evaluate intent classification
+          const classification = classifyIntent(textToSend);
+          resolvedMode = classification.mode;
+        }
+
+        const modeDirective = getModeDirective(resolvedMode);
+        if (modeDirective) {
+          textToSend = `${textToSend.trim()}\n\n${modeDirective}`;
+        }
+      }
+
       return submitFromComposer(
         {
           answerMode,
@@ -662,7 +684,7 @@ const ChatForm = memo(function ChatForm({
         { text: textToSend },
       );
     },
-    [answerMode, steering, submitMessage, methods, outputFormat],
+    [answerMode, steering, submitMessage, methods, outputFormat, engineMode],
   );
 
   return (
@@ -893,12 +915,15 @@ const ChatForm = memo(function ChatForm({
                       />
                     </div>
                     {endpoint && (
-                      <PermissionModePopover
-                        index={index}
-                        conversation={conversation}
-                        setConversation={setConversation}
-                        disabled={disableInputs}
-                      />
+                      <>
+                        <PermissionModePopover
+                          index={index}
+                          conversation={conversation}
+                          setConversation={setConversation}
+                          disabled={disableInputs}
+                        />
+                        <ModeToggle index={index} disabled={disableInputs} />
+                      </>
                     )}
                     <BadgeRow
                       showEphemeralBadges={

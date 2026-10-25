@@ -21,6 +21,7 @@ import {
   Lightbulb,
   BookOpen,
   Cpu,
+  Layers,
 } from 'lucide-react';
 import type { TConversation } from 'librechat-data-provider';
 import type { ExtendedFile, FileSetter } from '~/common';
@@ -379,6 +380,18 @@ export default function AttachPlusMenu({
                   </span>
                   <span className="rounded bg-purple-500/10 px-1 py-0.5 text-[9px] font-semibold text-purple-600 dark:text-purple-400">
                     Autonomous
+                  </span>
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
+                  onClick={() => handleSelectSkill('dual-mode-engine')}
+                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  <span className="flex items-center gap-2">
+                    <Layers className="h-4 w-4 text-cyan-500" />
+                    <span>Dual-Mode Engine (Spec vs Vibe)</span>
+                  </span>
+                  <span className="rounded bg-cyan-500/10 px-1 py-0.5 text-[9px] font-semibold text-cyan-600 dark:text-cyan-400">
+                    Kiro / Traycer
                   </span>
                 </Ariakit.MenuItem>
                 <Ariakit.MenuItem
