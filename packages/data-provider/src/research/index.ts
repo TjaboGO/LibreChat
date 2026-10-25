@@ -3,3 +3,4 @@ export * from './queryPlanner';
 export * from './sourceCollector';
 export * from './synthesizer';
 export * from './researchManager';
+export * from './deepResearchTools';

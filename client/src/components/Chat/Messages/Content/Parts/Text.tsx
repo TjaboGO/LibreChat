@@ -1,6 +1,7 @@
 import React, { memo, useMemo, ReactElement } from 'react';
 import { useRecoilValue } from 'recoil';
 import { normalizeFormCardQuestions } from 'librechat-data-provider';
+import InteractiveResearchCard from '~/components/Chat/Messages/Content/ResearchCard/InteractiveResearchCard';
 import InteractiveFormCard from '~/components/Chat/Messages/Content/FormCard/InteractiveFormCard';
 import MarkdownLite from '~/components/Chat/Messages/Content/MarkdownLite';
 import useSmoothStreaming from '~/hooks/Messages/useSmoothStreaming';
@@ -16,10 +17,13 @@ type TextPartProps = {
   isCreatedByUser: boolean;
 };
 
-const FORM_CONTAINER_REGEX = /:::(?:form-card|question)(?:\{[^}]*\})?\s*\n([\s\S]*?)\n:::/g;
+const COMBINED_CONTAINER_REGEX = /:::(?:form-card|question|deep-research|research)(?:\{[^}]*\})?\s*\n([\s\S]*?)\n:::/g;
 
-function renderTextWithFormCards(text: string, isLatestMessage?: boolean) {
-  if (!text.includes(':::form-card') && !text.includes(':::question')) {
+function renderInteractiveContainers(text: string, isLatestMessage?: boolean) {
+  const hasForm = text.includes(':::form-card') || text.includes(':::question');
+  const hasResearch = text.includes(':::deep-research') || text.includes(':::research');
+
+  if (!hasForm && !hasResearch) {
     return <Markdown content={text} isLatestMessage={isLatestMessage} />;
   }
 
@@ -27,9 +31,9 @@ function renderTextWithFormCards(text: string, isLatestMessage?: boolean) {
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
-  FORM_CONTAINER_REGEX.lastIndex = 0;
+  COMBINED_CONTAINER_REGEX.lastIndex = 0;
 
-  while ((match = FORM_CONTAINER_REGEX.exec(text)) !== null) {
+  while ((match = COMBINED_CONTAINER_REGEX.exec(text)) !== null) {
     const preText = text.slice(lastIndex, match.index);
     if (preText.trim()) {
       elements.push(
@@ -37,19 +41,27 @@ function renderTextWithFormCards(text: string, isLatestMessage?: boolean) {
       );
     }
 
-    const formContent = match[1];
-    const normalizedData = normalizeFormCardQuestions(formContent);
-    if (normalizedData) {
+    const fullMatch = match[0];
+    const containerContent = match[1];
+
+    if (fullMatch.startsWith(':::deep-research') || fullMatch.startsWith(':::research')) {
       elements.push(
-        <InteractiveFormCard key={`form-${match.index}`} data={normalizedData} />,
+        <InteractiveResearchCard key={`research-${match.index}`} args={containerContent} />,
       );
     } else {
-      elements.push(
-        <Markdown key={`raw-${match.index}`} content={match[0]} isLatestMessage={false} />,
-      );
+      const normalizedData = normalizeFormCardQuestions(containerContent);
+      if (normalizedData) {
+        elements.push(
+          <InteractiveFormCard key={`form-${match.index}`} data={normalizedData} />,
+        );
+      } else {
+        elements.push(
+          <Markdown key={`raw-${match.index}`} content={fullMatch} isLatestMessage={false} />,
+        );
+      }
     }
 
-    lastIndex = match.index + match[0].length;
+    lastIndex = match.index + fullMatch.length;
   }
 
   const remainingText = text.slice(lastIndex);
@@ -76,7 +88,7 @@ const TextPart = memo(function TextPart({ text, isCreatedByUser, showCursor }: T
 
   const content = useMemo(() => {
     if (!isCreatedByUser) {
-      return renderTextWithFormCards(text, isLatestMessage);
+      return renderInteractiveContainers(text, isLatestMessage);
     } else if (enableUserMsgMarkdown) {
       return <MarkdownLite content={text} />;
     } else {

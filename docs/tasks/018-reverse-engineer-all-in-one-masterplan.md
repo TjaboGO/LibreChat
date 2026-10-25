@@ -320,6 +320,8 @@ Fullständig specifikation finns i artefakten:
   - `synthesizeDeepResearch`: Bygger en komplett 6-delad djupforskningsrapport (Executive Summary, Key Thematic Findings med mening-för-mening citatankare, Comparative Matrix, Chronological Milestones, Open Knowledge Gaps, och Annotated Bibliography).
 - Skapade `researchManager.ts`:
   - `DeepResearchManager`: Hanterar sessioner, spårar förlopp (0–100%), loggar steg, uppdaterar querystatus, expanderar noder och slutför syntesrapporter.
+- Skapade `deepResearchTools.ts`:
+  - `deep_research`, `research_plan_queries`, `research_expand_query`, `research_synthesize` och `isDeepResearchTool` med fullständiga JSON-schemas.
 - Exporterade `research`-modulen i `packages/data-provider/src/index.ts`, `dist/types/index.d.ts` och `dist/index.mjs`.
 
 ### 2. Backend REST API (`api/server/routes/cowork.js`)
@@ -335,6 +337,12 @@ Fullständig specifikation finns i artefakten:
 - **CitationBadge (`client/src/components/Chat/Messages/Content/CitationBadge.tsx`):**
   - Perplexity-liknande pill-knapp `[1]` med domän-favicon och hovercard.
   - Ariakit Hovercard med domännamn, favicon, auktoritetsbadge (`Academic`, `Primary Source`, `Official`, `News Outlet`), fullständig titel med extern länk, citerat textutdrag och snabbkopiering av URL.
+- **InteractiveResearchCard (`client/src/components/Chat/Messages/Content/ResearchCard/InteractiveResearchCard.tsx`):**
+  - In-chat interaktivt forskningskort med pulserande kompassikon, statusindikator, hop-visualiserare och källbadges.
+  - Knapp för att direkt öppna och fördjupa sökningen i Plans -> Research-panelen.
+- **Tool-Call & Container Routing (`Part.tsx` & `Text.tsx`):**
+  - `Part.tsx`: Routar alla verktygsanrop som matchar `isDeepResearchTool` direkt till `InteractiveResearchCard`.
+  - `Text.tsx`: Stöd för `:::deep-research` och `:::research` markdown-containers så modeller utan function calling kan generera in-chat forskningskort.
 - **MarkdownComponents-integration (`MarkdownComponents.tsx`):**
   - Ersatte grundläggande källankare med `CitationBadge` för alla källcitat `[1]`, `[^1]`, `citation:1` och http-länkar.
 - **ResearchProgressView (`client/src/components/SidePanel/Plans/ResearchProgressView.tsx`):**
@@ -356,7 +364,9 @@ Fullständig specifikation finns i artefakten:
 - `sourceCollector.spec.ts`: Tester för URL-städning, domänextraktion, tillförlitlighetsklassificering, deduplicering och bibliografiformatering.
 - `synthesizer.spec.ts`: Tester för citatextraktion, länk-injicering och rapportgenerering med matris och tidslinje.
 - `researchManager.spec.ts`: Tester för livscykel, statusuppdateringar, källsamling, gap-expansion och rapportslutförande.
+- `deepResearchTools.spec.ts`: Tester för `isDeepResearchTool` och verktygsscheman.
 - `CitationBadge.spec.tsx`: Tester för siffer- och strängcitat rendering, URL-länkar och tillgänglighet.
+- `InteractiveResearchCard.spec.tsx`: Tester för in-chat rendering och dragspelsfällning.
 - `ResearchProgressView.spec.tsx`: Tester för rendering, källfiltrering, ny forskningsstart och inmatning i chatten.
 - `PlansPanel.spec.tsx`: Utökat med test för rendering av Research-tabben.
 - Formatering med `npm run sort-imports`.

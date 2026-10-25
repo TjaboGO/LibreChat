@@ -7,6 +7,7 @@ import {
   imageGenTools,
   isImageVisionTool,
   isInteractiveFormTool,
+  isDeepResearchTool,
 } from 'librechat-data-provider';
 import type { TMessageContentParts, TAttachment } from 'librechat-data-provider';
 import {
@@ -27,6 +28,7 @@ import {
   SteerPart,
 } from './Parts';
 import { getCachedPreview, getActivityLabelPart, getActivityLabelText } from '~/utils';
+import InteractiveResearchCard from './ResearchCard/InteractiveResearchCard';
 import InteractiveFormCard from './FormCard/InteractiveFormCard';
 import { getAskUserQuestionPart } from '~/utils/approval';
 import AskUserQuestionCall from './AskUserQuestionCall';
@@ -379,6 +381,14 @@ const Part = memo(function Part({
               hideAttachments={hideAttachments}
               onExpand={onToolExpand}
               toolCallId={toolCallId}
+            />
+          );
+        } else if (isDeepResearchTool(toolCall.name)) {
+          return (
+            <InteractiveResearchCard
+              toolName={toolCall.name}
+              args={toolCall.args}
+              output={toolCall.output ?? ''}
             />
           );
         } else if (toolCall.name === Tools.web_search) {
