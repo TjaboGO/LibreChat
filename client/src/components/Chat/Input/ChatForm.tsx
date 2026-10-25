@@ -1,8 +1,8 @@
 import { memo, useRef, useMemo, useEffect, useState, useCallback } from 'react';
 import { useWatch } from 'react-hook-form';
 import { useRecoilState, useRecoilValue, useRecoilCallback } from 'recoil';
-import { detectSlashStyle, injectCognitiveStyle } from 'librechat-data-provider';
 import { composerSurfaceClasses, composerSurfaceShadow, TextareaAutosize } from '@librechat/client';
+import { detectSlashStyle, injectCognitiveStyle, detectConnectorMention } from 'librechat-data-provider';
 import { Constants, isAssistantsEndpoint, isAgentsEndpoint, classifyIntent, getModeDirective } from 'librechat-data-provider';
 import type { TChatProject, TMessage, TConversation } from 'librechat-data-provider';
 import type { SetterOrUpdater } from 'recoil';
@@ -687,6 +687,13 @@ const ChatForm = memo(function ChatForm({
 
       if (activeStyle && activeStyle !== 'default') {
         textToSend = injectCognitiveStyle(textToSend, activeStyle);
+      }
+
+      // Perplexity Computer @connector mention handling (@GitHub, @Slack, @Notion, @Stripe, etc.)
+      const mentionResult = detectConnectorMention(textToSend);
+      if (mentionResult.hasMention && !textToSend.includes('[External Connector Context:')) {
+        const connectorList = mentionResult.mentionedConnectors.join(', ');
+        textToSend = `${textToSend.trim()}\n\n[External Connector Context: User requested data or operations from external connector(s): ${connectorList}. Call 'list_external_tools' and 'describe_external_tools' to discover their schemas before declaring external data inaccessible.]`;
       }
 
       return submitFromComposer(

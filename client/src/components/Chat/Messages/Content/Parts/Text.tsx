@@ -1,6 +1,7 @@
 import React, { memo, useMemo, ReactElement } from 'react';
 import { useRecoilValue } from 'recoil';
 import { normalizeFormCardQuestions } from 'librechat-data-provider';
+import InteractiveConnectorCard from '~/components/Chat/Messages/Content/ConnectorCard/InteractiveConnectorCard';
 import InteractiveResearchCard from '~/components/Chat/Messages/Content/ResearchCard/InteractiveResearchCard';
 import InteractiveFormCard from '~/components/Chat/Messages/Content/FormCard/InteractiveFormCard';
 import MarkdownLite from '~/components/Chat/Messages/Content/MarkdownLite';
@@ -17,13 +18,15 @@ type TextPartProps = {
   isCreatedByUser: boolean;
 };
 
-const COMBINED_CONTAINER_REGEX = /:::(?:form-card|question|deep-research|research)(?:\{[^}]*\})?\s*\n([\s\S]*?)\n:::/g;
+const COMBINED_CONTAINER_REGEX =
+  /:::(?:form-card|question|deep-research|research|connector|external-tool)(?:\{[^}]*\})?\s*\n([\s\S]*?)\n:::/g;
 
 function renderInteractiveContainers(text: string, isLatestMessage?: boolean) {
   const hasForm = text.includes(':::form-card') || text.includes(':::question');
   const hasResearch = text.includes(':::deep-research') || text.includes(':::research');
+  const hasConnector = text.includes(':::connector') || text.includes(':::external-tool');
 
-  if (!hasForm && !hasResearch) {
+  if (!hasForm && !hasResearch && !hasConnector) {
     return <Markdown content={text} isLatestMessage={isLatestMessage} />;
   }
 
@@ -47,6 +50,28 @@ function renderInteractiveContainers(text: string, isLatestMessage?: boolean) {
     if (fullMatch.startsWith(':::deep-research') || fullMatch.startsWith(':::research')) {
       elements.push(
         <InteractiveResearchCard key={`research-${match.index}`} args={containerContent} />,
+      );
+    } else if (fullMatch.startsWith(':::connector') || fullMatch.startsWith(':::external-tool')) {
+      let parsed: Record<string, any> = {};
+      try {
+        parsed = JSON.parse(containerContent);
+      } catch {
+        parsed = { data: containerContent };
+      }
+      const sourceMatch = /source="([^"]+)"/.exec(fullMatch);
+      const toolMatch = /tool="([^"]+)"/.exec(fullMatch);
+      elements.push(
+        <InteractiveConnectorCard
+          key={`connector-${match.index}`}
+          sourceId={sourceMatch ? sourceMatch[1] : parsed.sourceId || parsed.source_id || 'connector'}
+          toolName={toolMatch ? toolMatch[1] : parsed.toolName || parsed.tool_name || 'call_external_tool'}
+          arguments={parsed.arguments || parsed.args}
+          data={parsed.data || parsed}
+          needsAuth={parsed.needsAuth}
+          authUrl={parsed.authUrl}
+          error={parsed.error}
+          cliHint={parsed.cliHint}
+        />,
       );
     } else {
       const normalizedData = normalizeFormCardQuestions(containerContent);

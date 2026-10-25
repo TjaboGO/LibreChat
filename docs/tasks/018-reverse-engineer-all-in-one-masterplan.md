@@ -466,3 +466,62 @@ Fullständig specifikation finns i artefakten:
 - `CognitiveStyleSelector.spec.tsx`: Tester för triggerknapp, öppning av dropdown, visning av alla 5 stilar och Recoil-tillståndsuppdatering.
 - Formatering med `npm run sort-imports`.
 
+---
+
+## Genomfört Arbete: Fas 25 (Perplexity Computer Connector Hub)
+
+### 1. Kärnmotor & Datamodeller (`packages/data-provider/src/connectors/`)
+- Skapade `types.ts`:
+  - `ConnectorCategory`: `developer`, `productivity`, `communication`, `finance`, `data`, `design`, `storage`.
+  - `ConnectorAuthStatus`: `CONNECTED`, `DISCONNECTED`, `NEEDS_AUTH`, `PENDING`.
+  - `ConnectorDefinition`, `ConnectorToolSummary`, `ConnectorToolSchema`, `ListExternalToolsParams`, `ListExternalToolsResult`, `DescribeExternalToolsParams`, `CallExternalToolParams`, `CallExternalToolResult`.
+- Skapade `connectorRegistry.ts`:
+  - Katalog med toppkopplingar: GitHub, Slack, Notion, Jira Cloud, Linear, Stripe, PostgreSQL, Figma, Google Drive, Tavily, Filesystem, Spotify.
+  - Varje connector specificerar verktyg, beskrivningar, CLI-hints (`gh repo list`, `slack-cli`, `psql $DATABASE_URL`, `stripe balance`), auth-typ och dokumentationslänkar.
+  - Dynamiska schema-helpers (`getToolSchema`, `getConnector`, `updateConnectorStatus`).
+- Skapade `connectorHubEngine.ts`:
+  - `listExternalTools`: Söker och filtrerar connectors och deras verktyg on-demand baserat på sökord eller kategorier utan att belasta systemprompten.
+  - `describeExternalTools`: Returnerar fullständiga parametrar och JSON-scheman för valda verktygsnamn.
+  - `callExternalTool`: Exekverar verktyget eller returnerar auth-krav (`needsAuth: true`, `authUrl`) om connectorn är frånkopplad.
+  - `connectExternalTool` & `disconnectExternalTool`: Hanterar anslutningsstatus.
+  - `detectConnectorMention`: Detekterar `@GitHub`, `@Slack`, `@Notion`, `@Stripe` i användarmeddelanden.
+  - `PERPLEXITY_CONNECTOR_TOOLS`: Formella definitioner av de 3 kärnverktygen (`list_external_tools`, `describe_external_tools`, `call_external_tool`).
+- Re-exporterade i `packages/data-provider/src/index.ts`, `dist/types/index.d.ts` och `dist/index.mjs`.
+
+### 2. Backend REST API (`api/server/routes/cowork.js`)
+- Exponerade nya endpoints:
+  - `GET /api/cowork/connectors`: Hämtar katalogen av alla connectors.
+  - `POST /api/cowork/connectors/list-tools`: Kör on-demand discovery.
+  - `POST /api/cowork/connectors/describe-tools`: Hämtar verktygsscheman.
+  - `POST /api/cowork/connectors/call-tool`: Exekverar externt verktygsanrop.
+  - `POST /api/cowork/connectors/connect`: Ansluter tjänst.
+  - `POST /api/cowork/connectors/disconnect`: Kopplar från tjänst.
+
+### 3. Klient & Interaktiv Generative UI
+- **`ConnectorHubModal.tsx` (`client/src/components/Chat/Input/ConnectorHubModal.tsx`):**
+  - Fullständig modal med kategorifilter (Alla, Utvecklare, Produktivitet, Kommunikation, Finans, Data, Design, Lagring).
+  - Sökfält över verktyg, beskrivningar och CLI-kommandon.
+  - Interaktiva anslutningsknappar med omedelbar statusuppdatering och verktygsförteckning.
+- **`InteractiveConnectorCard.tsx` (`client/src/components/Chat/Messages/Content/ConnectorCard/InteractiveConnectorCard.tsx`):**
+  - In-chat interaktivt generative UI-kort som renderas vid verktygsanrop eller auth-blockering.
+  - Visar tjänstens logotyp/ikon, status, argument, svarsdata och CLI-alternativ i expanderbart dragspel.
+  - Interaktiv "Connect Account"-knapp med auth-länk och omedelbar tillståndsändring.
+- **`Part.tsx` & `Text.tsx` Integration:**
+  - `Part.tsx` fångar automatiskt externa verktygsanrop och renderar `InteractiveConnectorCard`.
+  - `Text.tsx` stöder `:::connector{source="..." tool="..."}` och `:::external-tool` markdown-behållare.
+- **`AttachPlusMenu.tsx` Integration:**
+  - Lade till "Perplexity Connector Hub (On-Demand)" under Connectors-undermenyn.
+- **`ChatForm.tsx` @mention Integration:**
+  - När användaren skriver t.ex. `@GitHub` eller `@Notion`, injiceras automatiskt kontextuella instruktioner för att modellen ska anropa `list_external_tools` och `describe_external_tools`.
+
+### 4. Master Skill & Dokumentation
+- Skapade `skill/perplexity-connector-hub/SKILL.md`:
+  - Omfattande instruktioner om on-demand discovery-cykeln, CLI-fallbacks, auth-regler och `@mention`-triggers.
+
+### 5. Verifiering & Enhetstester
+- `connectorHub.spec.ts`: Enhetstester för alla 3 verktyg, katalogfiltrering, schemabeskrivningar, anrop och `@mention`-detektering.
+- `ConnectorHubModal.spec.tsx`: Tester för dialogrendering, sökfilter och kategorifiltrering.
+- `InteractiveConnectorCard.spec.tsx`: Tester för ansluten vy, auth-varningsvy och expanderbar datavy.
+- Formatering med `npm run sort-imports`.
+
+

@@ -28,6 +28,7 @@ import {
   SteerPart,
 } from './Parts';
 import { getCachedPreview, getActivityLabelPart, getActivityLabelText } from '~/utils';
+import InteractiveConnectorCard from './ConnectorCard/InteractiveConnectorCard';
 import InteractiveResearchCard from './ResearchCard/InteractiveResearchCard';
 import InteractiveFormCard from './FormCard/InteractiveFormCard';
 import { getAskUserQuestionPart } from '~/utils/approval';
@@ -389,6 +390,54 @@ const Part = memo(function Part({
               toolName={toolCall.name}
               args={toolCall.args}
               output={toolCall.output ?? ''}
+            />
+          );
+        } else if (
+          toolCall.name === 'list_external_tools' ||
+          toolCall.name === 'describe_external_tools' ||
+          toolCall.name === 'call_external_tool' ||
+          toolCall.name?.startsWith('github_') ||
+          toolCall.name?.startsWith('slack_') ||
+          toolCall.name?.startsWith('notion_') ||
+          toolCall.name?.startsWith('jira_') ||
+          toolCall.name?.startsWith('stripe_') ||
+          toolCall.name?.startsWith('postgres_') ||
+          toolCall.name?.startsWith('linear_') ||
+          toolCall.name?.startsWith('figma_') ||
+          toolCall.name?.startsWith('spotify_')
+        ) {
+          let parsedArgs: Record<string, any> = {};
+          let parsedData: any = null;
+          try {
+            parsedArgs =
+              typeof toolCall.args === 'string' ? JSON.parse(toolCall.args) : toolCall.args || {};
+          } catch {
+            parsedArgs = {};
+          }
+          try {
+            parsedData =
+              typeof toolCall.output === 'string'
+                ? JSON.parse(toolCall.output)
+                : toolCall.output || null;
+          } catch {
+            parsedData = null;
+          }
+
+          const sourceId =
+            parsedArgs.source_id ||
+            (toolCall.name && toolCall.name.includes('_')
+              ? toolCall.name.split('_')[0]
+              : 'connector');
+
+          return (
+            <InteractiveConnectorCard
+              sourceId={sourceId}
+              toolName={toolCall.name}
+              arguments={parsedArgs.arguments || parsedArgs}
+              data={parsedData?.data || parsedData}
+              needsAuth={parsedData?.needsAuth}
+              authUrl={parsedData?.authUrl}
+              error={parsedData?.error}
             />
           );
         } else if (toolCall.name === Tools.web_search) {

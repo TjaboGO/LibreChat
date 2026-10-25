@@ -96,5 +96,7 @@ export * from './research';
 export * from './office';
 /* cognitive output styles (/concise, /learning) */
 export * from './styles';
+/* perplexity computer connector hub (mcp dynamic tool hub) */
+export * from './connectors';
 
 

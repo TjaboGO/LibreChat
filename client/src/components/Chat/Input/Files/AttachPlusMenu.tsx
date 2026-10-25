@@ -31,6 +31,7 @@ import type { TConversation } from 'librechat-data-provider';
 import type { ExtendedFile, FileSetter } from '~/common';
 import { useFileHandlingNoChatContext, useLocalize } from '~/hooks';
 import { useBadgeRowContext } from '~/Providers/BadgeRowContext';
+import ConnectorHubModal from '../ConnectorHubModal';
 import RecordSkillModal from '../RecordSkillModal';
 import { cn } from '~/utils';
 import store from '~/store';
@@ -66,6 +67,7 @@ export default function AttachPlusMenu({
 
   const [researchMode, setResearchMode] = useRecoilState(store.researchModeFamily(index));
   const [recordSkillOpen, setRecordSkillOpen] = useState(false);
+  const [isConnectorHubOpen, setIsConnectorHubOpen] = useState(false);
 
   const menuStore = Ariakit.useMenuStore({ placement: 'top-start' });
   const isOpen = menuStore.useState('open');
@@ -508,6 +510,21 @@ export default function AttachPlusMenu({
                   {localize('com_ui_connectors')}
                 </div>
                 <Ariakit.MenuItem
+                  onClick={() => {
+                    menuStore.hide();
+                    setIsConnectorHubOpen(true);
+                  }}
+                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  <span className="flex items-center gap-2">
+                    <Plug className="h-4 w-4 text-purple-500" />
+                    <span>Perplexity Connector Hub</span>
+                  </span>
+                  <span className="rounded bg-purple-500/10 px-1 py-0.5 text-[9px] font-semibold text-purple-600 dark:text-purple-400">
+                    On-Demand
+                  </span>
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
                   onClick={() => menuStore.hide()}
                   className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
                 >
@@ -523,11 +540,20 @@ export default function AttachPlusMenu({
                   onClick={() => menuStore.hide()}
                   className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
                 >
-                  Higgsfield Builder MCP
+                  GitHub MCP (Repos & PRs)
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
+                  onClick={() => menuStore.hide()}
+                  className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  Slack MCP (Channels & DMs)
                 </Ariakit.MenuItem>
                 <div className="my-1 border-t border-border-light" />
                 <Ariakit.MenuItem
-                  onClick={() => menuStore.hide()}
+                  onClick={() => {
+                    menuStore.hide();
+                    setIsConnectorHubOpen(true);
+                  }}
                   className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-hover hover:text-text-primary"
                 >
                   {localize('com_ui_add_custom_connector')}
@@ -624,6 +650,7 @@ export default function AttachPlusMenu({
         </Ariakit.MenuProvider>
       </FileUpload>
       <RecordSkillModal open={recordSkillOpen} onOpenChange={setRecordSkillOpen} />
+      <ConnectorHubModal open={isConnectorHubOpen} onOpenChange={setIsConnectorHubOpen} />
     </>
   );
 }

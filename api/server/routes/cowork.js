@@ -987,5 +987,547 @@ router.post('/office/generate', (req, res) => {
   });
 });
 
+// ==========================================
+// PERPLEXITY COMPUTER CONNECTOR HUB (MCP DYNAMIC TOOL HUB)
+// ==========================================
+
+const connectorRegistry = [
+  {
+    id: 'github',
+    name: 'GitHub',
+    category: 'developer',
+    description: 'Repositories, pull requests, issues, branch commits, and release tags.',
+    status: 'CONNECTED',
+    authType: 'oauth2',
+    icon: 'Github',
+    cliHint: 'gh repo list --limit 10',
+    authUrl: 'https://github.com/login/oauth/authorize',
+    docsUrl: 'https://docs.github.com/en/rest',
+    version: '1.4.0',
+    tools: [
+      {
+        name: 'github_search_repos',
+        description: 'Search public and private GitHub repositories by keywords or qualifiers.',
+        parametersSummary: 'query: string, sort?: string, limit?: number',
+      },
+      {
+        name: 'github_create_pull_request',
+        description: 'Create a new pull request across repository branches.',
+        parametersSummary: 'repo: string, title: string, head: string, base: string, body?: string',
+      },
+      {
+        name: 'github_list_issues',
+        description: 'List and filter issues for a specific repository.',
+        parametersSummary: 'repo: string, state?: "open" | "closed" | "all", limit?: number',
+      },
+      {
+        name: 'github_get_file_contents',
+        description: 'Fetch raw file contents from a repository at a given ref or branch.',
+        parametersSummary: 'repo: string, path: string, ref?: string',
+      },
+    ],
+  },
+  {
+    id: 'slack',
+    name: 'Slack',
+    category: 'communication',
+    description: 'Workspace channels, direct messages, thread replies, and reminders.',
+    status: 'CONNECTED',
+    authType: 'oauth2',
+    icon: 'MessageSquare',
+    cliHint: 'slack-cli chat post --channel general',
+    authUrl: 'https://slack.com/oauth/v2/authorize',
+    docsUrl: 'https://api.slack.com/methods',
+    version: '2.1.0',
+    tools: [
+      {
+        name: 'slack_post_message',
+        description: 'Send a formatted rich message to a channel or DM.',
+        parametersSummary: 'channel: string, text: string, thread_ts?: string',
+      },
+      {
+        name: 'slack_read_channel_history',
+        description: 'Read the recent message history from a public or private channel.',
+        parametersSummary: 'channel: string, limit?: number',
+      },
+      {
+        name: 'slack_search_messages',
+        description: 'Search messages across workspace channels by keyword or user.',
+        parametersSummary: 'query: string, count?: number',
+      },
+    ],
+  },
+  {
+    id: 'notion',
+    name: 'Notion',
+    category: 'productivity',
+    description: 'Workspaces, databases, project roadmaps, documents, and nested pages.',
+    status: 'CONNECTED',
+    authType: 'oauth2',
+    icon: 'FileText',
+    cliHint: 'notion-cli search --query "Q1 Roadmap"',
+    authUrl: 'https://api.notion.com/v1/oauth/authorize',
+    docsUrl: 'https://developers.notion.com/reference',
+    version: '1.8.0',
+    tools: [
+      {
+        name: 'notion_search_pages',
+        description: 'Search Notion pages and databases by title or query string.',
+        parametersSummary: 'query: string, filter_type?: "page" | "database"',
+      },
+      {
+        name: 'notion_get_page_content',
+        description: 'Retrieve blocks and full markdown content of a Notion page.',
+        parametersSummary: 'page_id: string',
+      },
+      {
+        name: 'notion_query_database',
+        description: 'Query structured items from a Notion database with filters.',
+        parametersSummary: 'database_id: string, filter?: Record<string, any>',
+      },
+      {
+        name: 'notion_append_block',
+        description: 'Append content blocks or paragraphs to an existing page.',
+        parametersSummary: 'page_id: string, text: string',
+      },
+    ],
+  },
+  {
+    id: 'jira',
+    name: 'Jira Cloud',
+    category: 'productivity',
+    description: 'Atlassian Jira sprints, epics, bug tickets, and workflow transitions.',
+    status: 'DISCONNECTED',
+    authType: 'oauth2',
+    icon: 'CheckSquare',
+    cliHint: 'jira issue list -q "project = ENG AND status = Open"',
+    authUrl: 'https://auth.atlassian.com/authorize',
+    docsUrl: 'https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/',
+    version: '2.0.0',
+    tools: [
+      {
+        name: 'jira_search_issues',
+        description: 'Search Jira issues using JQL syntax.',
+        parametersSummary: 'jql: string, maxResults?: number',
+      },
+      {
+        name: 'jira_create_issue',
+        description: 'Create a new ticket or task in a project.',
+        parametersSummary: 'projectKey: string, summary: string, description: string, issueType?: string',
+      },
+      {
+        name: 'jira_update_issue_status',
+        description: 'Transition an issue to a new status (e.g. In Progress, Done).',
+        parametersSummary: 'issueIdOrKey: string, transitionName: string',
+      },
+    ],
+  },
+  {
+    id: 'linear',
+    name: 'Linear',
+    category: 'developer',
+    description: 'Linear issue tracking, cycles, initiatives, and roadmap milestones.',
+    status: 'DISCONNECTED',
+    authType: 'api_key',
+    icon: 'Radio',
+    cliHint: 'linear issue list --team ENG',
+    authUrl: 'https://linear.app/oauth/authorize',
+    docsUrl: 'https://developers.linear.app',
+    version: '1.2.0',
+    tools: [
+      {
+        name: 'linear_search_issues',
+        description: 'Search Linear issues across teams with filters.',
+        parametersSummary: 'query: string, teamId?: string, state?: string',
+      },
+      {
+        name: 'linear_create_issue',
+        description: 'Create a Linear task or feature ticket.',
+        parametersSummary: 'teamId: string, title: string, description?: string, priority?: number',
+      },
+      {
+        name: 'linear_list_projects',
+        description: 'List active and planned Linear projects.',
+        parametersSummary: 'teamId?: string',
+      },
+    ],
+  },
+  {
+    id: 'stripe',
+    name: 'Stripe',
+    category: 'finance',
+    description: 'Payments, subscriptions, MRR analytics, invoices, and customer accounts.',
+    status: 'DISCONNECTED',
+    authType: 'api_key',
+    icon: 'CreditCard',
+    cliHint: 'stripe balance retrieve',
+    authUrl: 'https://dashboard.stripe.com/apikeys',
+    docsUrl: 'https://stripe.com/docs/api',
+    version: '3.0.0',
+    tools: [
+      {
+        name: 'stripe_get_balance',
+        description: 'Retrieve current available and pending account balances.',
+        parametersSummary: 'currency?: string',
+      },
+      {
+        name: 'stripe_search_customers',
+        description: 'Search customers by email, name, or metadata.',
+        parametersSummary: 'query: string, limit?: number',
+      },
+      {
+        name: 'stripe_list_subscriptions',
+        description: 'List active and past-due recurring customer subscriptions.',
+        parametersSummary: 'status?: "active" | "past_due" | "canceled", limit?: number',
+      },
+      {
+        name: 'stripe_create_payment_link',
+        description: 'Create a hosted payment link for a line item or price.',
+        parametersSummary: 'priceId: string, quantity?: number',
+      },
+    ],
+  },
+  {
+    id: 'postgres',
+    name: 'PostgreSQL Database',
+    category: 'data',
+    description: 'Direct SQL execution, schema inspection, and relational database queries.',
+    status: 'CONNECTED',
+    authType: 'native',
+    icon: 'Database',
+    cliHint: 'psql $DATABASE_URL -c "SELECT count(*) FROM users;"',
+    docsUrl: 'https://www.postgresql.org/docs/',
+    version: '16.0',
+    tools: [
+      {
+        name: 'postgres_run_query',
+        description: 'Execute read-only or transactional SQL queries against database.',
+        parametersSummary: 'sql: string, params?: any[]',
+      },
+      {
+        name: 'postgres_list_tables',
+        description: 'List all public and system tables with row count estimates.',
+        parametersSummary: 'schema?: string',
+      },
+      {
+        name: 'postgres_describe_schema',
+        description: 'Inspect columns, primary keys, and foreign relations of a table.',
+        parametersSummary: 'tableName: string',
+      },
+    ],
+  },
+  {
+    id: 'figma',
+    name: 'Figma',
+    category: 'design',
+    description: 'Design files, frames, vector components, design tokens, and CSS properties.',
+    status: 'DISCONNECTED',
+    authType: 'oauth2',
+    icon: 'Figma',
+    cliHint: 'figma export --file-key ABC123XYZ',
+    authUrl: 'https://www.figma.com/oauth',
+    docsUrl: 'https://www.figma.com/developers/api',
+    version: '1.0.0',
+    tools: [
+      {
+        name: 'figma_get_file_components',
+        description: 'Fetch component hierarchy and layout structures for a Figma file.',
+        parametersSummary: 'fileKey: string, nodeIds?: string[]',
+      },
+      {
+        name: 'figma_export_frames',
+        description: 'Export specific canvas frames as SVG, PNG, or PDF images.',
+        parametersSummary: 'fileKey: string, frameIds: string[], format?: "svg" | "png"',
+      },
+      {
+        name: 'figma_inspect_layer_css',
+        description: 'Extract computed CSS styles, flex layouts, and color tokens from a node.',
+        parametersSummary: 'fileKey: string, nodeId: string',
+      },
+    ],
+  },
+  {
+    id: 'google_drive',
+    name: 'Google Drive & Docs',
+    category: 'storage',
+    description: 'Cloud files, Google Docs, Sheets, Slides, and folder permissions.',
+    status: 'DISCONNECTED',
+    authType: 'oauth2',
+    icon: 'HardDrive',
+    cliHint: 'gdrive list --query "mimeType = \'application/pdf\'"',
+    authUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+    docsUrl: 'https://developers.google.com/drive/api',
+    version: '3.0.0',
+    tools: [
+      {
+        name: 'google_drive_search_files',
+        description: 'Search user Drive files by name, type, or full-text query.',
+        parametersSummary: 'query: string, mimeType?: string, limit?: number',
+      },
+      {
+        name: 'google_drive_read_doc',
+        description: 'Fetch and convert Google Doc text content to Markdown.',
+        parametersSummary: 'fileId: string',
+      },
+      {
+        name: 'google_drive_export_pdf',
+        description: 'Export Docs or Slides as downloadable PDF binary buffer.',
+        parametersSummary: 'fileId: string',
+      },
+    ],
+  },
+  {
+    id: 'tavily',
+    name: 'Tavily Search Engine',
+    category: 'data',
+    description: 'High-authority web search, real-time knowledge retrieval, and fact extraction.',
+    status: 'CONNECTED',
+    authType: 'api_key',
+    icon: 'Search',
+    cliHint: 'tavily-search "Latest AI benchmarks 2026"',
+    docsUrl: 'https://docs.tavily.com',
+    version: '1.1.0',
+    tools: [
+      {
+        name: 'tavily_web_search',
+        description: 'Search live web sources with synthesized text snippets and verified citations.',
+        parametersSummary: 'query: string, search_depth?: "basic" | "advanced", max_results?: number',
+      },
+      {
+        name: 'tavily_deep_extract',
+        description: 'Extract raw cleaned markdown content and tables from a web URL.',
+        parametersSummary: 'urls: string[]',
+      },
+    ],
+  },
+  {
+    id: 'filesystem',
+    name: 'Filesystem MCP',
+    category: 'storage',
+    description: 'Local workspace file manipulation, directory reading, and code search.',
+    status: 'CONNECTED',
+    authType: 'native',
+    icon: 'Folder',
+    cliHint: 'ls -la packages/client',
+    docsUrl: 'https://modelcontextprotocol.io',
+    version: '1.0.0',
+    tools: [
+      {
+        name: 'fs_read_file',
+        description: 'Read complete content of a workspace file.',
+        parametersSummary: 'path: string',
+      },
+      {
+        name: 'fs_write_file',
+        description: 'Write or update a file in the workspace directory.',
+        parametersSummary: 'path: string, content: string',
+      },
+      {
+        name: 'fs_list_directory',
+        description: 'List contents of a directory with file sizes and timestamps.',
+        parametersSummary: 'path: string, recursive?: boolean',
+      },
+    ],
+  },
+  {
+    id: 'spotify',
+    name: 'Spotify Player',
+    category: 'communication',
+    description: 'Music playback controls, playlists, artist discovery, and podcast tracking.',
+    status: 'DISCONNECTED',
+    authType: 'oauth2',
+    icon: 'Music',
+    cliHint: 'spotify-api status',
+    authUrl: 'https://accounts.spotify.com/authorize',
+    docsUrl: 'https://developer.spotify.com/documentation/web-api',
+    version: '1.0.0',
+    tools: [
+      {
+        name: 'spotify_search_tracks',
+        description: 'Search tracks, albums, or playlists on Spotify.',
+        parametersSummary: 'query: string, type?: "track" | "album" | "playlist"',
+      },
+      {
+        name: 'spotify_get_current_playback',
+        description: 'Get details of currently playing track, artist, and progress.',
+        parametersSummary: '',
+      },
+      {
+        name: 'spotify_start_playback',
+        description: 'Start playback of a URI or resume playback on active device.',
+        parametersSummary: 'contextUri?: string, trackUri?: string',
+      },
+    ],
+  },
+];
+
+/**
+ * GET /api/cowork/connectors
+ * Lists all external service connectors in catalog
+ */
+router.get('/connectors', (req, res) => {
+  res.json({ ok: true, connectors: connectorRegistry });
+});
+
+/**
+ * POST /api/cowork/connectors/list-tools
+ * On-demand tool and connector discovery (Perplexity Computer `list_external_tools`)
+ */
+router.post('/connectors/list-tools', (req, res) => {
+  const { queries = [], category, status } = req.body || {};
+
+  let list = [...connectorRegistry];
+
+  if (status && status !== 'ALL') {
+    list = list.filter((c) => c.status === status);
+  }
+
+  if (category) {
+    const cleanCat = category.toLowerCase().trim();
+    list = list.filter((c) => c.category.toLowerCase() === cleanCat);
+  }
+
+  if (Array.isArray(queries) && queries.length > 0) {
+    const cleanQueries = queries.map((q) => q.toLowerCase().trim()).filter(Boolean);
+    list = list.filter((conn) => {
+      const matchTarget = [
+        conn.id,
+        conn.name,
+        conn.description,
+        conn.category,
+        ...conn.tools.map((t) => `${t.name} ${t.description}`),
+      ]
+        .join(' ')
+        .toLowerCase();
+      return cleanQueries.some((q) => matchTarget.includes(q));
+    });
+  }
+
+  const resultConnectors = list.map((c) => ({
+    id: c.id,
+    name: c.name,
+    status: c.status,
+    category: c.category,
+    description: c.description,
+    tools: c.tools.map((t) => t.name),
+    cliHint: c.cliHint,
+  }));
+
+  res.json({
+    ok: true,
+    connectors: resultConnectors,
+    totalCount: resultConnectors.length,
+  });
+});
+
+/**
+ * POST /api/cowork/connectors/describe-tools
+ * On-demand tool schema resolution (Perplexity Computer `describe_external_tools`)
+ */
+router.post('/connectors/describe-tools', (req, res) => {
+  const { tool_names = [] } = req.body || {};
+  const tools = [];
+
+  for (const name of tool_names) {
+    for (const conn of connectorRegistry) {
+      const found = conn.tools.find((t) => t.name === name);
+      if (found) {
+        tools.push({
+          name: found.name,
+          sourceId: conn.id,
+          description: found.description,
+          parameters: {
+            type: 'object',
+            properties: {
+              query: { type: 'string', description: found.parametersSummary || 'Input query' },
+            },
+          },
+        });
+        break;
+      }
+    }
+  }
+
+  res.json({ ok: true, tools });
+});
+
+/**
+ * POST /api/cowork/connectors/call-tool
+ * Dispatches an external tool call (Perplexity Computer `call_external_tool`)
+ */
+router.post('/connectors/call-tool', (req, res) => {
+  const { tool_name, source_id, arguments: args = {} } = req.body || {};
+  const connector = connectorRegistry.find((c) => c.id === source_id);
+
+  if (!connector) {
+    return res.status(404).json({
+      ok: false,
+      error: `Connector '${source_id}' not found.`,
+    });
+  }
+
+  if (connector.status === 'DISCONNECTED' || connector.status === 'NEEDS_AUTH') {
+    return res.json({
+      ok: false,
+      needsAuth: true,
+      authUrl: connector.authUrl || `https://app.librechat.ai/connect/${source_id}`,
+      error: `Connector '${connector.name}' is disconnected. Please connect before calling '${tool_name}'.`,
+    });
+  }
+
+  res.json({
+    ok: true,
+    result: {
+      success: true,
+      tool_name,
+      source_id,
+      data: {
+        message: `Successfully executed '${tool_name}' on '${connector.name}'.`,
+        arguments: args,
+        timestamp: new Date().toISOString(),
+      },
+    },
+  });
+});
+
+/**
+ * POST /api/cowork/connectors/connect
+ */
+router.post('/connectors/connect', (req, res) => {
+  const { source_id } = req.body || {};
+  const connector = connectorRegistry.find((c) => c.id === source_id);
+
+  if (!connector) {
+    return res.status(404).json({ ok: false, error: `Connector '${source_id}' not found.` });
+  }
+
+  connector.status = 'CONNECTED';
+  res.json({
+    ok: true,
+    status: 'CONNECTED',
+    message: `Connected ${connector.name} successfully.`,
+  });
+});
+
+/**
+ * POST /api/cowork/connectors/disconnect
+ */
+router.post('/connectors/disconnect', (req, res) => {
+  const { source_id } = req.body || {};
+  const connector = connectorRegistry.find((c) => c.id === source_id);
+
+  if (!connector) {
+    return res.status(404).json({ ok: false, error: `Connector '${source_id}' not found.` });
+  }
+
+  connector.status = 'DISCONNECTED';
+  res.json({
+    ok: true,
+    status: 'DISCONNECTED',
+    message: `Disconnected ${connector.name}.`,
+  });
+});
+
 module.exports = router;
+
 
