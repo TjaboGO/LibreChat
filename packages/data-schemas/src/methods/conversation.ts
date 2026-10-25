@@ -304,6 +304,7 @@ export interface ConversationMethods {
       sortBy?: string;
       sortDirection?: string;
       projectId?: string;
+      appId?: string;
     },
   ): Promise<{ conversations: IConversation[]; nextCursor: string | null }>;
   getConvosQueried(
@@ -559,7 +560,11 @@ export function createConversationMethods(
   async function getConvo(user: string, conversationId: string) {
     try {
       const Conversation = mongoose.models.Conversation as Model<IConversation>;
-      return await Conversation.findOne({ user, conversationId }).lean<IConversation>();
+      const convo = await Conversation.findOne({ user, conversationId }).lean<IConversation>();
+      if (convo && !convo.appId) {
+        convo.appId = 'chat';
+      }
+      return convo;
     } catch (error) {
       logger.error('[getConvo] Error getting single conversation', error);
       throw new Error('Error getting single conversation');
@@ -2764,6 +2769,7 @@ export function createConversationMethods(
       sortBy = 'updatedAt',
       sortDirection = 'desc',
       projectId,
+      appId,
     }: {
       cursor?: string | null;
       limit?: number;
@@ -2774,6 +2780,7 @@ export function createConversationMethods(
       sortBy?: string;
       sortDirection?: string;
       projectId?: string;
+      appId?: string;
     } = {},
   ) {
     const Conversation = mongoose.models.Conversation as Model<IConversation> &
@@ -2806,6 +2813,14 @@ export function createConversationMethods(
       } as FilterQuery<IConversation>);
     } else if (projectId) {
       filters.push({ chatProjectId: projectId } as FilterQuery<IConversation>);
+    }
+
+    if (appId === 'chat') {
+      filters.push({
+        $or: [{ appId: 'chat' }, { appId: null }, { appId: { $exists: false } }],
+      } as FilterQuery<IConversation>);
+    } else if (appId) {
+      filters.push({ appId } as FilterQuery<IConversation>);
     }
 
     filters.push(getVisibleConversationRetentionFilter());
@@ -2957,11 +2972,17 @@ export function createConversationMethods(
            the sidebar lists archived and unarchived chats in the same session, and the
            active list also carries the unarchived pins beside them. */
         .select(
-          'conversationId endpoint title createdAt updatedAt archivedAt isArchived user model agent_id assistant_id spec iconURL chatProjectId pinned',
+          'conversationId endpoint title createdAt updatedAt archivedAt isArchived user model agent_id assistant_id spec iconURL chatProjectId pinned appId',
         )
         .sort(sortObj)
         .limit(pageSize + 1)
         .lean<IConversation[]>();
+
+      for (const convo of convos) {
+        if (!convo.appId) {
+          convo.appId = 'chat';
+        }
+      }
 
       let nextCursor: string | null = null;
       if (convos.length > pageSize) {

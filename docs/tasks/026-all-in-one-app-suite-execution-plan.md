@@ -63,15 +63,20 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
 #### Fas 28: Databasschema & Session Scoping (`appId`)
 - **Syfte:** Utöka databasmodellen så att varje konversation kopplas till ett specifikt `appId` med blixtsnabb indexering.
 - **Filer:**
-  - `packages/data-schemas/src/schema/conversation.ts`
-  - `api/models/Conversation.js`
+  - `packages/data-schemas/src/schema/convo.ts`
+  - `packages/data-schemas/src/types/convo.ts`
+  - `packages/data-schemas/src/methods/conversation.ts`
+  - `packages/data-schemas/src/schema/convoAppId.spec.ts`
+  - `packages/data-provider/src/schemas.ts`
   - `packages/data-provider/src/types/queries.ts`
+  - `api/server/routes/convos.js`
 - **Checklista:**
-  - [ ] Lägg till fältet `appId: { type: String, default: 'chat', index: true }` i Conversation-schemat.
-  - [ ] Säkerställ bakåtkompatibilitet: Äldre konversationer utan `appId` mappas implicit till `'chat'`.
-  - [ ] Skapa sammansatt MongoDB-index: `{ user: 1, appId: 1, updatedAt: -1 }`.
-  - [ ] Uppdatera queries och API-kontrakt för att tillåta filtrering på `appId`.
-- **Verifiering:** Starta API lokalt eller kör schematest för att bekräfta att `appId` sparas och hämtas korrekt.
+  - [x] Lägg till fältet `appId: { type: String, default: 'chat', index: true }` i Conversation-schemat.
+  - [x] Säkerställ bakåtkompatibilitet: Äldre konversationer utan `appId` mappas implicit till `'chat'`.
+  - [x] Skapa sammansatta MongoDB-index: `{ user: 1, appId: 1, updatedAt: -1, _id: -1 }`, `{ user: 1, appId: 1, createdAt: -1, _id: -1 }`, `{ user: 1, appId: 1, isArchived: 1, updatedAt: -1, _id: -1 }`.
+  - [x] Uppdatera queries och API-kontrakt för att tillåta filtrering på `appId` i `getConvosByCursor` och Express-routern.
+- **Verifiering:** Enhetstester i `packages/data-schemas/src/schema/convoAppId.spec.ts` och `tsc` typecheck verifierade.
+- **Resultat:** Databasschema och session scoping är implementerat med fullständig bakåtkompatibilitet för befintliga konversationer.
 
 #### Fas 29: Backend Hidden Prompt Dispatcher & OpenRouter Payload Assembler
 - **Syfte:** Kärnmotorn som fångar upp inkommande `appId` och monterar den dolda systemprompten direkt i API-anropet till OpenRouter.

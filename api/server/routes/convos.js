@@ -169,6 +169,13 @@ router.get('/', async (req, res) => {
     return res.status(400).json({ error: 'projectId must be a valid project id or unassigned' });
   }
 
+  const appId =
+    typeof req.query.appId === 'string'
+      ? req.query.appId.trim() || undefined
+      : Array.isArray(req.query.appId) && typeof req.query.appId[0] === 'string'
+        ? req.query.appId[0].trim() || undefined
+        : undefined;
+
   let tags;
   if (req.query.tags) {
     tags = Array.isArray(req.query.tags) ? req.query.tags : [req.query.tags];
@@ -185,6 +192,7 @@ router.get('/', async (req, res) => {
       sortBy,
       sortDirection,
       projectId,
+      appId,
     });
     res.status(200).json(result);
   } catch (error) {

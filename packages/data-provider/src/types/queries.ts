@@ -23,6 +23,7 @@ export type ConversationListParams = {
   tags?: string[];
   search?: string;
   projectId?: string;
+  appId?: string;
 };
 
 export type MinimalConversation = Pick<
@@ -36,6 +37,7 @@ export type MinimalConversation = Pick<
   | 'isArchived'
   | 'user'
   | 'chatProjectId'
+  | 'appId'
   | 'pinned'
 >;
 
