@@ -55,9 +55,9 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
   - `packages/data-provider/src/apps/promptStore.ts`
   - `packages/data-provider/src/apps/promptStore.spec.ts`
 - **Checklista:**
-  - [ ] Importera och lagra råa systemprompts för Manus, v0, Cursor, Devin, Perplexity, Office, Lovable, Claude etc.
-  - [ ] Bygg en snabb interpoleringsmotor för dynamiska placeholders: `{{CURRENT_DATE}}`, `{{WORKING_DIRECTORY}}`, `{{USER_NAME}}`, `{{CURRENT_OS}}`.
-  - [ ] Garantera strängsanering och skydd mot läckage till klienten.
+  - [x] Importera och lagra råa systemprompts för Manus, v0, Cursor, Devin, Perplexity, Office, Lovable, Claude etc.
+  - [x] Bygg en snabb interpoleringsmotor för dynamiska placeholders: `{{CURRENT_DATE}}`, `{{WORKING_DIRECTORY}}`, `{{USER_NAME}}`, `{{CURRENT_OS}}`.
+  - [x] Garantera strängsanering och skydd mot läckage till klienten.
 - **Verifiering:** Enhetstester som verifierar att interpolation och prompt-hämtning fungerar felfritt.
 
 #### Fas 28: Databasschema & Session Scoping (`appId`)
@@ -351,4 +351,46 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
   - Verifierar strukturell integritet (strängar, arrays, starters, routePath `/app/:appId`).
   - Verifierar sökning, sektionsfiltrering, fallbacks och pinning.
 - Formatering med `npm run sort-imports`.
+
+---
+
+## Genomfört Arbete: Fas 27 (Authentic Prompt Store & Placeholder Engine)
+
+### 1. Kärnmotor & Autentiska Prompter (`packages/data-provider/src/apps/promptStore.ts`)
+- **Autentiska Prompts (`AUTHENTIC_PROMPTS`):**
+  - Strukturerade och kapslade in råa systemprompts för samtliga 22 appar (100% täckning mot `APPS_REGISTRY`):
+    - `claude-chat`, `claude-cowork`, `claude-design`, `claude-code`.
+    - `manus-agent` (30+ verktyg, process loop, port exposure).
+    - `cognition-devin` (test-first felreproduktion, sandbox isolering).
+    - `cursor-composer` (multi-fil diffs, symbol tracing, search/replace).
+    - `windsurf-cascade` (dev server preview, real-time console feedback).
+    - `kiro-dual-mode` (Spec mode arkitektur vs Vibe mode rapid UI).
+    - `replit-agent` (container sandbox, host binding 0.0.0.0, cloud deployment).
+    - `xai-grok-build` (höghastighets systems coding, parrallella anrop).
+    - `cline-operator` (human-in-the-loop bekräftelsespärrar).
+    - `v0-generative-ui` (shadcn/ui, Tailwind CSS, AskUserQuestions form cards).
+    - `lovable-builder` (Supabase, PostgreSQL RLS, live preview).
+    - `living-office` (Word, Excel formler `=SUM`, `=AVERAGE`, PowerPoint 16:9).
+    - `notion-studio` (hierarkiska dokumentblock, databastabeller).
+    - `bolt-new` (WebContainers i webbläsaren, Vite scaffolding).
+    - `higgsfield-builder` (React 19 SSR, multimedia AI video/foto).
+    - `perplexity-computer` (multi-hop 4-stegs syntes, citatbadges `[1]`, on-demand `list_external_tools`).
+    - `chatgpt-atlas` (fliknavigering, sidchatt, källsyntes).
+    - `brave-deepsearch` (oberoende index, spårningsfri webbextraktion).
+    - `connector-hub` (on-demand MCP discovery, `@mention`-triggere).
+- **Dynamisk Interpoleringsmotor:**
+  - `interpolatePrompt(template, options)`: Blixtsnabb regex-ersättning av `{{CURRENT_DATE}}`, `{{WORKING_DIRECTORY}}`, `{{USER_NAME}}`, `{{CURRENT_OS}}`, `{{KNOWLEDGE_CUTOFF}}`, `{{APP_NAME}}` samt valfria custom parametrar.
+  - `getDefaultPlaceholders()`: Genererar realtidsdatum, användarnamn och standardmiljö.
+  - `getAuthenticPrompt(promptId, options)`: Hämtar och interpolerar prompt med fallback till `claude-chat`.
+  - `hasPrompt(promptId)` och `getAllPromptIds()`: Säker validering och uppslagning.
+- Re-exporterat från `packages/data-provider/src/apps/index.ts`.
+
+### 2. Verifiering & Enhetstester
+- `promptStore.spec.ts`:
+  - 100% assertions godkända.
+  - Verifierar att samtliga 22 appar i `APPS_REGISTRY` har en matchande autentisk prompt.
+  - Verifierar interpolation av standardplaceholders, anpassade variabler och case-insensitiv uppslagning.
+  - Verifierar säker fallback till `claude-chat`.
+- Formatering med `npm run sort-imports`.
+
 

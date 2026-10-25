@@ -243,7 +243,7 @@ Integration av världens alla 72 AI-tjänster och modeller som inbyggda, dediker
 
 ### Block 1: App Registry, Prompt Store & Datamodell (Fas 26–29)
 - [x] **Fas 26: Unified App Registry & Types Definition** (`packages/data-provider/src/apps/types.ts` & `appsRegistry.ts`)
-- [ ] **Fas 27: Authentic Prompt Store & Interpolation Engine** (`packages/data-provider/src/apps/promptStore.ts`)
+- [x] **Fas 27: Authentic Prompt Store & Interpolation Engine** (`packages/data-provider/src/apps/promptStore.ts`)
 - [ ] **Fas 28: Databasschema & Session Scoping** (`appId` i `Conversation.js` och MongoDB-indexering)
 - [ ] **Fas 29: Backend Hidden Prompt Dispatcher & OpenRouter Payload Assembler** (100% dold injektion i API-lagret)
 
