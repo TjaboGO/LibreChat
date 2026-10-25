@@ -897,5 +897,95 @@ router.delete('/research/sessions/:id', (req, res) => {
   res.json({ ok: true });
 });
 
+// ==========================================
+// LIVING OFFICE ARTIFACTS (WORD, EXCEL, PPTX)
+// ==========================================
+
+const officeTemplates = {
+  word: {
+    title: 'Strategic Architecture Proposal',
+    content: `# Strategic Architecture Proposal
+*Author: Claude Executive Office*
+*Date: ${new Date().toLocaleDateString('sv-SE')}*
+
+> [!NOTE] Executive Summary
+> This document details the technical migration plan from single-turn retrieval to living office artifacts and recursive multi-hop systems.
+
+## 1. Objectives & Scope
+We aim to eliminate static text exports by rendering editable living documents (Word, Excel, PowerPoint) directly in Artifacts.
+
+| Deliverable | Target Format | Interactive Capability |
+| --- | --- | --- |
+| Executive Brief | Word (.docx) | Pagination, callouts, @media print PDF |
+| Financial Model | Excel (.xlsx) | Real-time formula engine (=SUM, =AVG) |
+| Pitch Deck | PowerPoint (.pptx) | 16:9 Widescreen slideshow, KPI cards |
+
+## 2. Key Recommendations
+> [!TIP] Universal Compatibility
+> All generated artifacts must support one-click export into standard Microsoft Office and OpenDocument files.
+`,
+  },
+  excel: {
+    title: 'Q1-Q4 Financial Projections',
+    content: `Quarter,Revenue,Expenses,Net Income,Growth Margin
+Q1 2026,120000,75000,45000,37.5%
+Q2 2026,150000,85000,65000,43.3%
+Q3 2026,195000,98000,97000,49.7%
+Q4 2026,260000,115000,145000,55.8%
+Total,=SUM(B2:B5),=SUM(C2:C5),=SUM(D2:D5),=AVERAGE(E2:E5)`,
+  },
+  powerpoint: {
+    title: 'Autonomous AI Platform Pitch',
+    content: `# Autonomous AI Platform 2026
+## Next-Generation Multi-Agent Cowork & Living Office Suite
+
+---
+
+# Enterprise Performance Metrics
+ARR: $28M (+140%)
+Active Teams: 1200 (+95%)
+Net Retention: 148%
+
+Note: Highlight rapid enterprise adoption across financial services and engineering sectors.
+
+---
+
+# Strategic Superpowers
+- Living Office Artifacts: Word, Excel, PowerPoint in-browser
+- Self-Healing Dev Server: Real-time browser console error feedback
+- Deep Research Engine: Recursive multi-hop query graphs
+- Dual-Mode Engine: Spec Mode vs Vibe Mode execution
+`,
+  },
+};
+
+/**
+ * GET /api/cowork/office/templates
+ */
+router.get('/office/templates', (req, res) => {
+  res.json({ ok: true, templates: officeTemplates });
+});
+
+/**
+ * POST /api/cowork/office/generate
+ */
+router.post('/office/generate', (req, res) => {
+  const { type = 'word', title, content } = req.body || {};
+  const selectedTemplate = officeTemplates[type] || officeTemplates.word;
+  const docTitle = title || selectedTemplate.title;
+  const docContent = content || selectedTemplate.content;
+
+  res.json({
+    ok: true,
+    document: {
+      id: `office_${Date.now()}`,
+      type,
+      title: docTitle,
+      content: docContent,
+      generatedAt: new Date().toISOString(),
+    },
+  });
+});
+
 module.exports = router;
 

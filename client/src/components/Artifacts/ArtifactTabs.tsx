@@ -7,6 +7,7 @@ import type { ProcessedMermaidSvg } from '~/utils/diagram/export';
 import { MermaidRenderer } from '~/components/Messages/Content/Mermaid/Mermaid';
 import { MERMAID_ARTIFACT_TYPE, type Artifact } from '~/common/artifacts';
 import { ArtifactCodeEditor } from './ArtifactCodeEditor';
+import ArtifactOfficeStudio from './ArtifactOfficeStudio';
 import { useCodeState } from '~/Providers/EditorContext';
 import { TOOL_ARTIFACT_TYPES } from '~/utils/artifacts';
 import ArtifactImageStudio from './ArtifactImageStudio';
@@ -121,6 +122,24 @@ export default function ArtifactTabs(props: ArtifactTabsProps) {
     props.artifact.type?.startsWith('image/')
   ) {
     return <ArtifactImageStudio artifact={props.artifact} isSharedConvo={props.isSharedConvo} />;
+  }
+
+  const isOfficeArtifact =
+    props.artifact.type === TOOL_ARTIFACT_TYPES.DOCX ||
+    props.artifact.type === TOOL_ARTIFACT_TYPES.SPREADSHEET ||
+    props.artifact.type === TOOL_ARTIFACT_TYPES.PRESENTATION ||
+    props.artifact.type === 'application/vnd.librechat.docx-preview' ||
+    props.artifact.type === 'application/vnd.librechat.spreadsheet-preview' ||
+    props.artifact.type === 'application/vnd.librechat.presentation-preview' ||
+    props.artifact.type === 'docx' ||
+    props.artifact.type === 'xlsx' ||
+    props.artifact.type === 'pptx' ||
+    props.artifact.title?.endsWith('.docx') ||
+    props.artifact.title?.endsWith('.xlsx') ||
+    props.artifact.title?.endsWith('.pptx');
+
+  if (isOfficeArtifact) {
+    return <ArtifactOfficeStudio artifact={props.artifact} isSharedConvo={props.isSharedConvo} />;
   }
 
   return (

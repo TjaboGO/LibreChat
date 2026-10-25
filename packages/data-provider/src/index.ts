@@ -92,5 +92,7 @@ export * from './forms';
 export * from './devserver';
 /* deep research engine & citation badges */
 export * from './research';
+/* living office artifacts (word, excel, powerpoint) */
+export * from './office';
 
 

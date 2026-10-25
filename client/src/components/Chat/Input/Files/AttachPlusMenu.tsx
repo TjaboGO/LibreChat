@@ -24,6 +24,7 @@ import {
   Layers,
   HelpCircle,
   Laptop,
+  FileSpreadsheet,
 } from 'lucide-react';
 import type { TConversation } from 'librechat-data-provider';
 import type { ExtendedFile, FileSetter } from '~/common';
@@ -430,6 +431,18 @@ export default function AttachPlusMenu({
                   </span>
                   <span className="rounded bg-cyan-500/10 px-1 py-0.5 text-[9px] font-semibold text-cyan-600 dark:text-cyan-400">
                     Perplexity / OpenAI
+                  </span>
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
+                  onClick={() => handleSelectSkill('living-office-artifacts')}
+                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  <span className="flex items-center gap-2">
+                    <FileSpreadsheet className="h-4 w-4 text-emerald-500" />
+                    <span>Living Office Suite (Word, Excel, PPT)</span>
+                  </span>
+                  <span className="rounded bg-emerald-500/10 px-1 py-0.5 text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">
+                    GPT-5.6 / Claude Office
                   </span>
                 </Ariakit.MenuItem>
                 <Ariakit.MenuItem

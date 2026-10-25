@@ -370,3 +370,57 @@ Fullständig specifikation finns i artefakten:
 - `ResearchProgressView.spec.tsx`: Tester för rendering, källfiltrering, ny forskningsstart och inmatning i chatten.
 - `PlansPanel.spec.tsx`: Utökat med test för rendering av Research-tabben.
 - Formatering med `npm run sort-imports`.
+
+---
+
+## Genomfört Arbete: Fas 23 (Living Office Artifacts: Word, Excel, PowerPoint)
+
+### 1. Kärnmotor & Datamodeller (`packages/data-provider/src/office/`)
+- Skapade `types.ts`:
+  - `WordDocumentSpec`: title, subtitle, author, date, version, sections (heading, level, paragraphs, tables, callouts).
+  - `SpreadsheetSpec`: title, sheets (name, columns, rows, formulas).
+  - `PresentationSpec`: title, subtitle, theme (`modern_dark | navy_executive | minimal_light | emerald_venture`), slides (id, layout, title, subtitle, bulletPoints, metrics, speakerNotes).
+  - `LivingOfficeArtifact`: samlad universell modell.
+- Skapade `formulaEngine.ts`:
+  - Koordinatparsing (`colLetterToIndex`, `indexToColLetter`, `parseCoordinate`).
+  - Formelmotor med stöd för `=SUM(A1:A5)`, `=AVERAGE(B1:B10)`, `=COUNT(...)`, `=MAX(...)`, `=MIN(...)` och grundläggande aritmetik (`+`, `-`, `*`, `/`).
+  - Formatering (`formatCellValue` för valuta `$1,250`, procent `25.4%`, och tal).
+- Skapade `parser.ts`:
+  - `parseMarkdownTable`: Extraherar headers och rader från markdown-tabeller.
+  - `parseWordDocument`: Bygger strukturerat Word-dokument ur Markdown med callouts (`[!NOTE]`, `[!WARNING]`, `[!TIP]`), metadata och tabeller.
+  - `parseSpreadsheet`: Bygger interaktivt kalkylblad ur CSV eller Markdown-tabeller.
+  - `parsePresentation`: Extraherar 16:9-bildspel med titlar, metrik-kort (KPIs), punktlistor och talarnoter.
+  - `parseLivingOfficeArtifact`: Universell parser som identifierar rätt format.
+- Skapade `exporters.ts`:
+  - `exportToWordHtml`: Genererar Microsoft Word-kompatibel HTML med `@page A4` marginaler och utskriftsstilar.
+  - `exportToCsv`: RFC 4180-kompatibel CSV-exportör med citat-escaping.
+  - `exportToExcelXml`: Skapar Microsoft Excel XML Spreadsheet 2003 (`.xml` / `.xlsx`) med bibehållna formler och kalkylblad.
+  - `exportToPresentationHtml`: Genererar interaktivt widescreen 16:9 bildspel med mörkt tema och fotnoter.
+- Exporterade `office`-modulen i `packages/data-provider/src/index.ts`, `dist/types/index.d.ts` och `dist/index.mjs`.
+
+### 2. Backend REST API (`api/server/routes/cowork.js`)
+- Exponerade nya endpoints:
+  - `GET /api/cowork/office/templates`: Returnerar färdiga förlagsmallar (Word strategirapport, Excel finansiell modell, PowerPoint pitch deck).
+  - `POST /api/cowork/office/generate`: Skapar och returnerar strukturerat living office-dokument.
+
+### 3. Klient & Interaktiv Office Studio
+- **ArtifactOfficeStudio (`client/src/components/Artifacts/ArtifactOfficeStudio.tsx`):**
+  - **Toolbar:** Växla mellan Word (`.docx`), Excel (`.xlsx`) och PowerPoint (`.pptx`), växla mellan "Live Office" och "Source Structure", kopiera källkod, skriva ut till PDF (`window.print()`), och ladda ner direkt som fil.
+  - **Word Document Viewer:** A4-papperslayout med snygg typografi, författardatum-metadata, varnings-/infocallouts och stylade tabeller.
+  - **Excel Spreadsheet Viewer:** Formelrad med aktiv cellkoordinat (`B3`), interaktiv redigerbar rutnätsvy, formelberäkning, och kalkylbladsflikar (`Sheet 1`).
+  - **PowerPoint Presentation Viewer:** 16:9 widescreen presentationsduk, KPI-metrikkort med procentuella förändringar, bildspelsnavigering (Föregående/Nästa, miniatyrband, bildräknare `1 of 3`), samt talarnotslåda.
+- **ArtifactTabs-integration (`ArtifactTabs.tsx`):**
+  - Automatiskt renderar `ArtifactOfficeStudio` när en artefakt matchar `docx`, `xlsx`, `pptx`, eller kontors-MIME-typer (`TOOL_ARTIFACT_TYPES.DOCX`, `SPREADSHEET`, `PRESENTATION`).
+- **AttachPlusMenu Integration:**
+  - Lade till `Living Office Suite (Word, Excel, PPT)` under Skills med grön `GPT-5.6 / Claude Office`-badge.
+
+### 4. Master Skill & Dokumentation
+- Skapade `skill/living-office-artifacts/SKILL.md`:
+  - Detaljerade riktlinjer och syntaxexempel för hur agenten genererar Word-rapporter, Excel-ark med formler, och PowerPoint-bildspel.
+
+### 5. Verifiering & Enhetstester
+- `formulaEngine.spec.ts`: Tester för koordinater, formler (`=SUM`, `=AVERAGE`, `=MAX`, `=MIN`, aritmetik) och formatering.
+- `parser.spec.ts`: Tester för Word-dokument, CSV-kalkylblad, presentationer och LivingOfficeArtifact-wrapper.
+- `exporters.spec.ts`: Tester för Word HTML, CSV, Excel XML och Presentation HTML.
+- `ArtifactOfficeStudio.spec.tsx`: Tester för Word-rendering, växling till Excel och PowerPoint, samt nedladdningstrigger.
+- Formatering med `npm run sort-imports`.
