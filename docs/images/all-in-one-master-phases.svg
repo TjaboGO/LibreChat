@@ -1,0 +1,337 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 2100" width="100%" height="100%" style="background-color: #0b0d13; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#121622" />
+      <stop offset="50%" stop-color="#0a0c10" />
+      <stop offset="100%" stop-color="#10141d" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+  <rect width="1600" height="2100" fill="url(#bgGrad)" />
+  <g transform="translate(60, 45)">
+    <rect width="1480" height="135" rx="16" fill="#151a26" stroke="#232d40" stroke-width="1.5" filter="url(#shadow)" />
+    <circle cx="50" cy="50" r="18" fill="#d97706" />
+    <text x="50" y="56" fill="#ffffff" font-size="18" font-weight="900" text-anchor="middle">✦</text>
+    <text x="82" y="48" fill="#f8fafc" font-size="26" font-weight="800" letter-spacing="-0.5">ALL-IN-ONE MULTI-APP SUITE: FAS-KARTA &amp; MASTER-ARKITEKTUR</text>
+    <text x="82" y="78" fill="#94a3b8" font-size="15">Komplett exekveringsplan för integration av världens alla 72 AI-plattformar | 20 Granulära Faser (Fas 26 till Fas 45)</text>
+    <text x="82" y="104" fill="#fbbf24" font-size="13" font-weight="600">&quot;In order to trust the output, one must understand the input.&quot; • 100% Dolda Prompter • Fri Modell via OpenRouter • Isolerade App-Sessioner</text>
+    
+    <rect x="1270" y="42" width="180" height="42" rx="21" fill="#22c55e1a" stroke="#22c55e" stroke-width="1.5" />
+    <circle cx="1292" cy="63" r="5" fill="#22c55e" />
+    <text x="1308" y="68" fill="#4ade80" font-size="14" font-weight="700">FAS 26 &#8594; FAS 45</text>
+  </g>
+  <!-- BLOCK 1 -->
+  <g transform="translate(60, 220)">
+    <rect width="1480" height="320" rx="14" fill="#1e131d" stroke="#e11d4844" stroke-width="1.5" filter="url(#shadow)" />
+    <rect x="0" y="0" width="1480" height="42" rx="14" fill="#e11d4822" />
+    <rect x="0" y="0" width="6" height="320" rx="3" fill="#e11d48" />
+    <text x="25" y="27" fill="#e11d48" font-size="14" font-weight="800" letter-spacing="1">BLOCK 1</text>
+    <text x="120" y="27" fill="#f8fafc" font-size="15" font-weight="700">BLOCK 1: APPS REGISTRY, PROMPT STORE &amp; DATA ARCHITECTURE</text>
+    <g transform="translate(25, 55)">
+      <rect width="705" height="118" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#e11d482a" stroke="#e11d4866" stroke-width="1" />
+      <text x="49" y="29" fill="#e11d48" font-size="11" font-weight="800" text-anchor="middle">FAS 26</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Unified App Registry &amp; Types</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 packages/data-provider/src/apps/types.ts</text>
+      <circle cx="20" cy="66" r="2" fill="#e11d48" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">AppDefinition, AppSection, AppCapability</text>
+      <circle cx="20" cy="84" r="2" fill="#e11d48" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Manifest register för samtliga 20+ appar</text>
+      <circle cx="20" cy="102" r="2" fill="#e11d48" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Valideringsregler &amp; enhetstester</text>
+    </g>
+    <g transform="translate(750, 55)">
+      <rect width="705" height="118" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#e11d482a" stroke="#e11d4866" stroke-width="1" />
+      <text x="49" y="29" fill="#e11d48" font-size="11" font-weight="800" text-anchor="middle">FAS 27</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Authentic Prompt Store &amp; Engine</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 packages/data-provider/src/apps/promptStore.ts</text>
+      <circle cx="20" cy="66" r="2" fill="#e11d48" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Inbäddade systemprompter från &#x27;My system prompts/&#x27;</text>
+      <circle cx="20" cy="84" r="2" fill="#e11d48" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Variabel-injektion ({{DATE}}, {{USER}}, {{OS}})</text>
+      <circle cx="20" cy="102" r="2" fill="#e11d48" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">100% isolering: raderas från synlig chatt-array</text>
+    </g>
+    <g transform="translate(25, 185)">
+      <rect width="705" height="118" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#e11d482a" stroke="#e11d4866" stroke-width="1" />
+      <text x="49" y="29" fill="#e11d48" font-size="11" font-weight="800" text-anchor="middle">FAS 28</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Databas &amp; Session Scoping (appId)</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 packages/data-schemas/src/schema/conversation.ts</text>
+      <circle cx="20" cy="66" r="2" fill="#e11d48" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Fältet &#x27;appId&#x27; i Conversation-schemat</text>
+      <circle cx="20" cy="84" r="2" fill="#e11d48" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">MongoDB-indexering för snabb filtrering per app</text>
+      <circle cx="20" cy="102" r="2" fill="#e11d48" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Smidig bakåtkompatibilitet (default: &#x27;chat&#x27;)</text>
+    </g>
+    <g transform="translate(750, 185)">
+      <rect width="705" height="118" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#e11d482a" stroke="#e11d4866" stroke-width="1" />
+      <text x="49" y="29" fill="#e11d48" font-size="11" font-weight="800" text-anchor="middle">FAS 29</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Backend Hidden Prompt Dispatcher</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 packages/api/src/endpoints/chat/index.ts</text>
+      <circle cx="20" cy="66" r="2" fill="#e11d48" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Intercept av appId i Express API-anrop</text>
+      <circle cx="20" cy="84" r="2" fill="#e11d48" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Injektion som äkta &#x27;system&#x27; / &#x27;developer&#x27;-roll</text>
+      <circle cx="20" cy="102" r="2" fill="#e11d48" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Automatisk tool-schemamappning mot OpenRouter</text>
+    </g>
+  </g>
+  <!-- BLOCK 2 -->
+  <g transform="translate(60, 570)">
+    <rect width="1480" height="320" rx="14" fill="#111c26" stroke="#0284c744" stroke-width="1.5" filter="url(#shadow)" />
+    <rect x="0" y="0" width="1480" height="42" rx="14" fill="#0284c722" />
+    <rect x="0" y="0" width="6" height="320" rx="3" fill="#0284c7" />
+    <text x="25" y="27" fill="#0284c7" font-size="14" font-weight="800" letter-spacing="1">BLOCK 2</text>
+    <text x="120" y="27" fill="#f8fafc" font-size="15" font-weight="700">BLOCK 2: UNIFIED SIDEBAR, NAVIGATION &amp; SCOPED ROUTING</text>
+    <g transform="translate(25, 55)">
+      <rect width="705" height="118" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#0284c72a" stroke="#0284c766" stroke-width="1" />
+      <text x="49" y="29" fill="#0284c7" font-size="11" font-weight="800" text-anchor="middle">FAS 30</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Sidomeny med 4 Sektioner</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 client/src/components/UnifiedSidebar/SidebarNavList.tsx</text>
+      <circle cx="20" cy="66" r="2" fill="#0284c7" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Core, Agents, Builders, Research-kategorier</text>
+      <circle cx="20" cy="84" r="2" fill="#0284c7" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Lucide-ikoner matchade för alla 20+ appar</text>
+      <circle cx="20" cy="102" r="2" fill="#0284c7" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Statusbadges (&#x27;Active Task&#x27;, &#x27;Compiling&#x27;, &#x27;Idle&#x27;)</text>
+    </g>
+    <g transform="translate(750, 55)">
+      <rect width="705" height="118" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#0284c72a" stroke="#0284c766" stroke-width="1" />
+      <text x="49" y="29" fill="#0284c7" font-size="11" font-weight="800" text-anchor="middle">FAS 31</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Favoriter &amp; Pinning System</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 client/src/store/pinnedApps.ts</text>
+      <circle cx="20" cy="66" r="2" fill="#0284c7" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Pinna favoritappar till toppen av sidomenyn</text>
+      <circle cx="20" cy="84" r="2" fill="#0284c7" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Persistering i localStorage och användarinställningar</text>
+      <circle cx="20" cy="102" r="2" fill="#0284c7" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Drag-and-drop eller stjärnmarkering för omordning</text>
+    </g>
+    <g transform="translate(25, 185)">
+      <rect width="705" height="118" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#0284c72a" stroke="#0284c766" stroke-width="1" />
+      <text x="49" y="29" fill="#0284c7" font-size="11" font-weight="800" text-anchor="middle">FAS 32</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Scoped Routing &amp; App Shell</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 client/src/routes/AppRoute.tsx</text>
+      <circle cx="20" cy="66" r="2" fill="#0284c7" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Rutter: /app/:appId och /app/:appId/:conversationId</text>
+      <circle cx="20" cy="84" r="2" fill="#0284c7" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">AppLayout med global useCurrentApp() hook</text>
+      <circle cx="20" cy="102" r="2" fill="#0284c7" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Dynamisk sidtitel, header och kontextmeny</text>
+    </g>
+    <g transform="translate(750, 185)">
+      <rect width="705" height="118" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#0284c72a" stroke="#0284c766" stroke-width="1" />
+      <text x="49" y="29" fill="#0284c7" font-size="11" font-weight="800" text-anchor="middle">FAS 33</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Isolerad Historik vs. All Activity</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 client/src/components/UnifiedSidebar/HistoryList.tsx</text>
+      <circle cx="20" cy="66" r="2" fill="#0284c7" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Isolerad trådlista i /app/:appId-vyer</text>
+      <circle cx="20" cy="84" r="2" fill="#0284c7" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Startsida /all med samlad aktivitet från alla appar</text>
+      <circle cx="20" cy="102" r="2" fill="#0284c7" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">App-specifika färgbrickor och ikoner i historiken</text>
+    </g>
+  </g>
+  <!-- BLOCK 3 -->
+  <g transform="translate(60, 920)">
+    <rect width="1480" height="240" rx="14" fill="#211a12" stroke="#d9770644" stroke-width="1.5" filter="url(#shadow)" />
+    <rect x="0" y="0" width="1480" height="42" rx="14" fill="#d9770622" />
+    <rect x="0" y="0" width="6" height="240" rx="3" fill="#d97706" />
+    <text x="25" y="27" fill="#d97706" font-size="14" font-weight="800" letter-spacing="1">BLOCK 3</text>
+    <text x="120" y="27" fill="#f8fafc" font-size="15" font-weight="700">BLOCK 3: CORE APPS &amp; FRONTIER PROMPTS INTEGRATION</text>
+    <g transform="translate(25, 55)">
+      <rect width="460" height="168" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#d977062a" stroke="#d9770666" stroke-width="1" />
+      <text x="49" y="29" fill="#d97706" font-size="11" font-weight="800" text-anchor="middle">FAS 34</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Core Claude Suite (Chat, Cowork, Design, Code)</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 Anthropic/official/ &amp; claude-*/</text>
+      <circle cx="20" cy="66" r="2" fill="#d97706" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Opus 5.5 / Fable 5.1 dolda prompts monterade</text>
+      <circle cx="20" cy="84" r="2" fill="#d97706" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Subagent activity stream &amp; Cowork task dispatcher</text>
+      <circle cx="20" cy="102" r="2" fill="#d97706" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Monaco diff-editor för Claude Code-läget</text>
+    </g>
+    <g transform="translate(510, 55)">
+      <rect width="460" height="168" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#d977062a" stroke="#d9770666" stroke-width="1" />
+      <text x="49" y="29" fill="#d97706" font-size="11" font-weight="800" text-anchor="middle">FAS 35</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">OpenAI Frontier (Atlas Browser, GPT-5.6 Sol, o3)</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 My system prompts/OpenAI/</text>
+      <circle cx="20" cy="66" r="2" fill="#d97706" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">ChatGPT Atlas: full-page &amp; side-chat web research</text>
+      <circle cx="20" cy="84" r="2" fill="#d97706" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">GPT-5.6 Sol: coding &amp; reasoning scaffold</text>
+      <circle cx="20" cy="102" r="2" fill="#d97706" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Modulära docx/xlsx/slides sandlådedirektiv</text>
+    </g>
+    <g transform="translate(995, 55)">
+      <rect width="460" height="168" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#d977062a" stroke="#d9770666" stroke-width="1" />
+      <text x="49" y="29" fill="#d97706" font-size="11" font-weight="800" text-anchor="middle">FAS 36</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Frontier Open-Source (DeepSeek R1, Grok Build, Qwen)</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 My system prompts/DeepSeek/ &amp; xAI/</text>
+      <circle cx="20" cy="66" r="2" fill="#d97706" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">DeepSeek R1 tankekedjeprompt &amp; resonemangsregler</text>
+      <circle cx="20" cy="84" r="2" fill="#d97706" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">xAI Grok Build: parallella verktygsanrop &amp; Jinja2</text>
+      <circle cx="20" cy="102" r="2" fill="#d97706" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Moonshot Kimi K2 &amp; Qwen 2.5 Coder direktiv</text>
+    </g>
+  </g>
+  <!-- BLOCK 4 -->
+  <g transform="translate(60, 1190)">
+    <rect width="1480" height="240" rx="14" fill="#121a29" stroke="#2563eb44" stroke-width="1.5" filter="url(#shadow)" />
+    <rect x="0" y="0" width="1480" height="42" rx="14" fill="#2563eb22" />
+    <rect x="0" y="0" width="6" height="240" rx="3" fill="#2563eb" />
+    <text x="25" y="27" fill="#2563eb" font-size="14" font-weight="800" letter-spacing="1">BLOCK 4</text>
+    <text x="120" y="27" fill="#f8fafc" font-size="15" font-weight="700">BLOCK 4: AUTONOMOUS AGENTS WORKSPACES</text>
+    <g transform="translate(25, 55)">
+      <rect width="460" height="168" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#2563eb2a" stroke="#2563eb66" stroke-width="1" />
+      <text x="49" y="29" fill="#2563eb" font-size="11" font-weight="800" text-anchor="middle">FAS 37</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Manus Workspace (/app/manus)</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 packages/data-provider/src/manus/</text>
+      <circle cx="20" cy="66" r="2" fill="#2563eb" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Autentisk Manus Agent Loop prompt aktiverad</text>
+      <circle cx="20" cy="84" r="2" fill="#2563eb" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Alla 31 Manus-verktyg: shell_write_to_process &amp; ports</text>
+      <circle cx="20" cy="102" r="2" fill="#2563eb" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Manus Live Dashboard med terminal &amp; browser preview</text>
+    </g>
+    <g transform="translate(510, 55)">
+      <rect width="460" height="168" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#2563eb2a" stroke="#2563eb66" stroke-width="1" />
+      <text x="49" y="29" fill="#2563eb" font-size="11" font-weight="800" text-anchor="middle">FAS 38</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Cognition Devin &amp; DeepWiki (/app/devin)</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 My system prompts/Devin AI/</text>
+      <circle cx="20" cy="66" r="2" fill="#2563eb" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Devin AI systemprompt och arkitekturlogik</text>
+      <circle cx="20" cy="84" r="2" fill="#2563eb" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">DeepWiki sidopanel: automatisk kodbas-dokumentation</text>
+      <circle cx="20" cy="102" r="2" fill="#2563eb" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Persistent arkitekturträd över repot</text>
+    </g>
+    <g transform="translate(995, 55)">
+      <rect width="460" height="168" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#2563eb2a" stroke="#2563eb66" stroke-width="1" />
+      <text x="49" y="29" fill="#2563eb" font-size="11" font-weight="800" text-anchor="middle">FAS 39</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Coding Studios (Cursor, Windsurf, Kiro/Traycer)</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 My system prompts/Cursor Prompts/ &amp; Windsurf/</text>
+      <circle cx="20" cy="66" r="2" fill="#2563eb" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Cursor Studio (/app/cursor): Fast diff &amp; codebase_search</text>
+      <circle cx="20" cy="84" r="2" fill="#2563eb" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Windsurf (/app/windsurf): Cascade Wave 11 &amp; auto-healing</text>
+      <circle cx="20" cy="102" r="2" fill="#2563eb" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Kiro/Traycer (/app/kiro): Spec vs Vibe TDD kontrakt</text>
+    </g>
+  </g>
+  <!-- BLOCK 5 -->
+  <g transform="translate(60, 1460)">
+    <rect width="1480" height="240" rx="14" fill="#1d1429" stroke="#7c3aed44" stroke-width="1.5" filter="url(#shadow)" />
+    <rect x="0" y="0" width="1480" height="42" rx="14" fill="#7c3aed22" />
+    <rect x="0" y="0" width="6" height="240" rx="3" fill="#7c3aed" />
+    <text x="25" y="27" fill="#7c3aed" font-size="14" font-weight="800" letter-spacing="1">BLOCK 5</text>
+    <text x="120" y="27" fill="#f8fafc" font-size="15" font-weight="700">BLOCK 5: BUILDERS &amp; LIVING OFFICE WORKSPACES</text>
+    <g transform="translate(25, 55)">
+      <rect width="460" height="168" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#7c3aed2a" stroke="#7c3aed66" stroke-width="1" />
+      <text x="49" y="29" fill="#7c3aed" font-size="11" font-weight="800" text-anchor="middle">FAS 40</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">v0 Studio Integration (/app/v0)</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 client/src/components/v0Studio/</text>
+      <circle cx="20" cy="66" r="2" fill="#7c3aed" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">v0 officiella prompt &amp; shadcn/ui komponentstandarder</text>
+      <circle cx="20" cy="84" r="2" fill="#7c3aed" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">AskUserQuestions interaktiva formulärkort i chatten</text>
+      <circle cx="20" cy="102" r="2" fill="#7c3aed" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">React 19 Sandpack multi-viewport (Desktop/Tablet/Mobile)</text>
+    </g>
+    <g transform="translate(510, 55)">
+      <rect width="460" height="168" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#7c3aed2a" stroke="#7c3aed66" stroke-width="1" />
+      <text x="49" y="29" fill="#7c3aed" font-size="11" font-weight="800" text-anchor="middle">FAS 41</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Lovable &amp; Bolt Full-Stack (/app/lovable, /app/bolt)</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 My system prompts/Lovable/ &amp; Bolt/</text>
+      <circle cx="20" cy="66" r="2" fill="#7c3aed" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Lovable Agent prompt: fullstack Supabase &amp; SQL schema</text>
+      <circle cx="20" cy="84" r="2" fill="#7c3aed" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Bolt.new instant sandbox deployment</text>
+      <circle cx="20" cy="102" r="2" fill="#7c3aed" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Realtids preview i isolerad iframe</text>
+    </g>
+    <g transform="translate(995, 55)">
+      <rect width="460" height="168" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#7c3aed2a" stroke="#7c3aed66" stroke-width="1" />
+      <text x="49" y="29" fill="#7c3aed" font-size="11" font-weight="800" text-anchor="middle">FAS 42</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Living Office &amp; Notion AI (/app/office, /app/notion)</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 client/src/components/Artifacts/OfficeStudio/</text>
+      <circle cx="20" cy="66" r="2" fill="#7c3aed" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Word (.docx), Excel (.xlsx) och PowerPoint (.pptx)</text>
+      <circle cx="20" cy="84" r="2" fill="#7c3aed" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Inbyggd formelberäkning och PDF-export</text>
+      <circle cx="20" cy="102" r="2" fill="#7c3aed" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Notion AI databaser &amp; hierarkiska dokument</text>
+    </g>
+  </g>
+  <!-- BLOCK 6 -->
+  <g transform="translate(60, 1730)">
+    <rect width="1480" height="240" rx="14" fill="#10221c" stroke="#05966944" stroke-width="1.5" filter="url(#shadow)" />
+    <rect x="0" y="0" width="1480" height="42" rx="14" fill="#05966922" />
+    <rect x="0" y="0" width="6" height="240" rx="3" fill="#059669" />
+    <text x="25" y="27" fill="#059669" font-size="14" font-weight="800" letter-spacing="1">BLOCK 6</text>
+    <text x="120" y="27" fill="#f8fafc" font-size="15" font-weight="700">BLOCK 6: RESEARCH, INTELLIGENCE &amp; VERIFICATION HUB</text>
+    <g transform="translate(25, 55)">
+      <rect width="460" height="168" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#0596692a" stroke="#05966966" stroke-width="1" />
+      <text x="49" y="29" fill="#059669" font-size="11" font-weight="800" text-anchor="middle">FAS 43</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Perplexity Deep Research (/app/research)</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 packages/data-provider/src/research/</text>
+      <circle cx="20" cy="66" r="2" fill="#059669" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Autentisk Perplexity Deep Research systemprompt</text>
+      <circle cx="20" cy="84" r="2" fill="#059669" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Multi-hop query planner (Hop 0, Hop 1, Hop 2)</text>
+      <circle cx="20" cy="102" r="2" fill="#059669" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Klickbara citatbadges [1] och källbibliografi-kort</text>
+    </g>
+    <g transform="translate(510, 55)">
+      <rect width="460" height="168" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#0596692a" stroke="#05966966" stroke-width="1" />
+      <text x="49" y="29" fill="#059669" font-size="11" font-weight="800" text-anchor="middle">FAS 44</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Web Intelligence &amp; Connectors (/app/search, /app/atlas)</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 packages/data-provider/src/connectors/</text>
+      <circle cx="20" cy="66" r="2" fill="#059669" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">Perplexity Computer Connector Hub (list_external_tools)</text>
+      <circle cx="20" cy="84" r="2" fill="#059669" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Automatiska @mentions (@GitHub, @Slack, @Notion)</text>
+      <circle cx="20" cy="102" r="2" fill="#059669" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Brave Leo &amp; DuckAI privacy-first sökmotor</text>
+    </g>
+    <g transform="translate(995, 55)">
+      <rect width="460" height="168" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+      <rect x="14" y="14" width="70" height="22" rx="5" fill="#0596692a" stroke="#05966966" stroke-width="1" />
+      <text x="49" y="29" fill="#059669" font-size="11" font-weight="800" text-anchor="middle">FAS 45</text>
+      <text x="94" y="30" fill="#f1f5f9" font-size="14" font-weight="700">Master Smoke Test, Säkerhet &amp; Release</text>
+      <text x="16" y="52" fill="#64748b" font-size="11" font-family="monospace">📁 packages/api/ &amp; packages/client/</text>
+      <circle cx="20" cy="66" r="2" fill="#059669" />
+      <text x="28" y="70" fill="#94a3b8" font-size="11.5">100% verifiering: Ingen prompttext läcker någonsin till UI</text>
+      <circle cx="20" cy="84" r="2" fill="#059669" />
+      <text x="28" y="88" fill="#94a3b8" font-size="11.5">Modellagnostisk testning mot OpenRouter (R1, Sonnet, GPT-5)</text>
+      <circle cx="20" cy="102" r="2" fill="#059669" />
+      <text x="28" y="106" fill="#94a3b8" font-size="11.5">Noll TypeScript/Lint-fel i hela monorepot</text>
+    </g>
+  </g>
+  <g transform="translate(60, 2000)">
+    <rect width="1480" height="60" rx="10" fill="#131722" stroke="#252d3d" stroke-width="1" />
+    <text x="30" y="35" fill="#64748b" font-size="13">Arkitektur: Modellen styr resonemang och tokens; Appen styr dold systemprompt och verktyg. Se docs/tasks/026-all-in-one-app-suite-execution-plan.md för fullständig kodspecifikation.</text>
+  </g>
+</svg>

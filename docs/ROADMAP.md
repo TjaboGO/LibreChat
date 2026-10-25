@@ -237,6 +237,45 @@ Omfattande syntes av **samtliga 72 extraherade systemprompts och plattformar** (
 
 → [docs/tasks/018-reverse-engineer-all-in-one-masterplan.md](tasks/018-reverse-engineer-all-in-one-masterplan.md)
 
+## Fas 26–45 — All-in-One Multi-App Suite: Implementation av Inbyggda Appar & Dolda Systemprompter
+
+Integration av världens alla 72 AI-tjänster och modeller som inbyggda, dedikerade appar i sidomenyn (`Core`, `Agents`, `Builders`, `Research`). Varje app drivs av sin autentiska dolda systemprompt och verktygsuppsättning i API-lagret mot OpenRouter med isolerad sessionshistorik per app och samlad översikt på startsidan:
+
+### Block 1: App Registry, Prompt Store & Datamodell (Fas 26–29)
+- [ ] **Fas 26: Unified App Registry & Types Definition** (`packages/data-provider/src/apps/types.ts` & `appsRegistry.ts`)
+- [ ] **Fas 27: Authentic Prompt Store & Interpolation Engine** (`packages/data-provider/src/apps/promptStore.ts`)
+- [ ] **Fas 28: Databasschema & Session Scoping** (`appId` i `Conversation.js` och MongoDB-indexering)
+- [ ] **Fas 29: Backend Hidden Prompt Dispatcher & OpenRouter Payload Assembler** (100% dold injektion i API-lagret)
+
+### Block 2: Sidomeny, Navigation & Scoped Routing (Fas 30–33)
+- [ ] **Fas 30: Sidomeny med 4 Sektioner** (Core, Agents, Builders, Research med Lucide-ikoner & badges)
+- [ ] **Fas 31: Favoriter & Pinning System** (Pinna appar till toppen i snabbåtkomst)
+- [ ] **Fas 32: Scoped Routing & App Shell** (`/app/:appId` och `AppLayout` med `useCurrentApp()`)
+- [ ] **Fas 33: Isolerad Historik per App vs. Startsida ("All Activity")** (Scoped trådlista + global tidslinje)
+
+### Block 3: Core Apps & Frontier Prompts Integration (Fas 34–36)
+- [ ] **Fas 34: Core Claude Suite Integration** (`/app/chat`, `/app/cowork`, `/app/design`, `/app/code` med Opus 5.5 & Fable 5.1 prompts)
+- [ ] **Fas 35: OpenAI Frontier Suite Integration** (ChatGPT Atlas Browser, GPT-5.6 Sol, o3-mini)
+- [ ] **Fas 36: Frontier Open-Source & Reasoning** (DeepSeek R1/V3 `<think>`, xAI Grok Build, Qwen 2.5 Coder)
+
+### Block 4: Autonomous Agents Workspaces (Fas 37–39)
+- [ ] **Fas 37: Manus Autonomous Workspace** (`/app/manus` med 31 verktyg, `shell_write_to_process`, port manager och live terminal)
+- [ ] **Fas 38: Cognition Devin & DeepWiki Engine** (`/app/devin` med automatisk arkitektur-wiki över kodbasen)
+- [ ] **Fas 39: Coding Specialist Studios** (Cursor fast diffing, Windsurf self-healing dev server, Kiro/Traycer Spec vs Vibe TDD)
+
+### Block 5: Builders & Living Office Workspaces (Fas 40–42)
+- [ ] **Fas 40: v0 Studio Integration** (`/app/v0` med `AskUserQuestions` formulärkort, shadcn/ui och Sandpack multi-viewport)
+- [ ] **Fas 41: Lovable & Full-Stack Builders** (`/app/lovable` & `/app/bolt` med Supabase SQL schemas och live sandbox)
+- [ ] **Fas 42: Living Office & Notion AI Suite** (`/app/office` Word/Excel/PowerPoint/PDF och `/app/notion` relationsdatabaser)
+
+### Block 6: Research, Intelligence & Master Verification (Fas 43–45)
+- [ ] **Fas 43: Perplexity Deep Research Studio** (`/app/research` med multi-hop query planner och källcitatbadges)
+- [ ] **Fas 44: Web Intelligence & Connectors** (`/app/atlas` browser assistent och Perplexity Computer Connector Hub)
+- [ ] **Fas 45: Master Smoke Test, Säkerhetsgranskning & Prestandaoptimering** (Verifiering av noll prompt-läckage och typcheck)
+
+→ [docs/tasks/026-all-in-one-app-suite-execution-plan.md](tasks/026-all-in-one-app-suite-execution-plan.md)  
+→ [docs/images/all-in-one-master-phases.svg](images/all-in-one-master-phases.svg) (Visuellt arkitekturdiagram)
+
 ## Explicit ute ur scope tills vidare
 
 Team-/orgadministration, fakturering, enterprise-SSO, native mobilapp, samt
