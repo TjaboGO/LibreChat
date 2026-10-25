@@ -204,4 +204,14 @@ Kvar att göra:
 
     expect(screen.getByTestId('dev-server-view')).toBeInTheDocument();
   });
+
+  it('renders deep research tab when selected', () => {
+    mockUseParams.mockReturnValue({ conversationId: 'convo-with-plan' });
+    render(<PlansPanel />);
+    const researchTab = screen.getByRole('button', { name: /Research/i });
+    fireEvent.click(researchTab);
+
+    expect(screen.getByText('Multi-Hop Query Graph')).toBeInTheDocument();
+    expect(screen.getByText(/Authoritative Sources/i)).toBeInTheDocument();
+  });
 });

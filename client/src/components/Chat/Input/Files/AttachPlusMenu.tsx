@@ -421,6 +421,18 @@ export default function AttachPlusMenu({
                   </span>
                 </Ariakit.MenuItem>
                 <Ariakit.MenuItem
+                  onClick={() => handleSelectSkill('deep-research-engine')}
+                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  <span className="flex items-center gap-2">
+                    <Compass className="h-4 w-4 text-cyan-500" />
+                    <span>Deep Research Engine (Multi-Hop)</span>
+                  </span>
+                  <span className="rounded bg-cyan-500/10 px-1 py-0.5 text-[9px] font-semibold text-cyan-600 dark:text-cyan-400">
+                    Perplexity / OpenAI
+                  </span>
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
                   onClick={() => handleSelectSkill('live-docs-and-slides')}
                   className="flex cursor-pointer items-center rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
                 >

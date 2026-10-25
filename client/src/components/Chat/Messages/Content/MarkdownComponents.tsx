@@ -14,6 +14,7 @@ import { useCodeBlockContext, useMediaContext } from '~/Providers';
 import CodeBlock from '~/components/Messages/Content/CodeBlock';
 import useHasAccess from '~/hooks/Roles/useHasAccess';
 import { useFileDownload } from '~/data-provider';
+import CitationBadge from './CitationBadge';
 import { useLocalize } from '~/hooks';
 import store from '~/store';
 
@@ -134,17 +135,12 @@ export const a: React.ElementType = memo(function MarkdownAnchor({ href, childre
     const num = citationMatch[1];
     const cleanDomain = getCleanDomain(href);
     return (
-      <span className="inline-flex items-center align-baseline">
-        <SourceHovercard
-          source={{
-            link: href,
-            title: cleanDomain || `Source [${num}]`,
-            attribution: cleanDomain,
-            snippet: href,
-          }}
-          label={`[${num}]`}
-        />
-      </span>
+      <CitationBadge
+        index={num}
+        url={href}
+        title={cleanDomain ? `${cleanDomain} source` : `Source [${num}]`}
+        snippet={href}
+      />
     );
   }
 

@@ -90,5 +90,7 @@ export * from './modes';
 export * from './forms';
 /* full-stack web app generator & self-healing dev server */
 export * from './devserver';
+/* deep research engine & citation badges */
+export * from './research';
 
 

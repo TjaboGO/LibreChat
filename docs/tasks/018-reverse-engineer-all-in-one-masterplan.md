@@ -294,3 +294,69 @@ Fullständig specifikation finns i artefakten:
 - `DevServerView.spec.tsx`: Testade UI-toolbar, viewport-växling, felbanner, Auto-Heal trigger och konsolrensning.
 - `PlansPanel.spec.tsx`: Utökat med test för rendering av Preview-tabben.
 - Formatering med `npm run sort-imports`.
+
+---
+
+## Genomfört Arbete: Fas 22 (Deep Research Engine & Citation Badges)
+
+### 1. Kärnmotor & Rekursiv Sökplanering (`packages/data-provider/src/research/`)
+- Skapade `types.ts`:
+  - `ResearchQuery`: id, query, depth (0, 1, 2), category (`broad | subquery | gap | verification`), status, rationale, resultsCount.
+  - `ResearchSource`: id, url, domain, title, snippet, publishedDate, reliability (`academic | primary | official | news | community`), relevanceScore.
+  - `ResearchReport`: topic, executiveSummary, keyFindings, comparativeMatrix, timeline, knowledgeGaps, markdownReport, generatedAt.
+  - `DeepResearchSession`: id, topic, status, progress, currentStep, queryGraph, sources, report, stepsLog.
+- Skapade `queryPlanner.ts`:
+  - `generateResearchPlan`: Genererar ett rekursivt multi-hop sökträd med Hop 0 (Broad Discovery), Hop 1 (Subqueries för arkitektur, benchmarks, begränsningar) och Hop 2 (Verifieringsfrågor för kritik och motbevis). Integrerar även `userMemoryContext` vid behov.
+  - `expandQueryNode`: Rekursiv expansion som skapar målinriktade gap queries baserade på identifierade kunskapsluckor.
+  - `buildQueryHierarchy`: Organiserar queries i ett förälder-barn träd för visualisering.
+- Skapade `sourceCollector.ts`:
+  - `cleanUrl`: Deterministisk URL-kanonisering som rensar spårningsparametrar (`utm_*`, `fbclid`, `gclid`, `ref_`, etc.) och trailing slashes.
+  - `extractCleanDomain`: Extraherar ren domän utan `www.`.
+  - `classifySourceReliability`: Automatisk klassificering i 5 auktoritetsnivåer (`academic`, `primary`, `official`, `news`, `community`).
+  - `SourceCollector`: Samlar in, deduplicerar på kanonisk URL, tilldelar sekventiella 1-baserade citat-ID:n och formaterar fullständig källförteckning i Markdown.
+- Skapade `synthesizer.ts`:
+  - `extractCitationsFromText`: Extraherar alla citat-ID:n (`[1]`, `[2]`, `[^1]`) ur text.
+  - `injectCitationLinks`: Injicerar käll-URLs i klammercitat (`[1]` -> `[1](url "title")`).
+  - `synthesizeDeepResearch`: Bygger en komplett 6-delad djupforskningsrapport (Executive Summary, Key Thematic Findings med mening-för-mening citatankare, Comparative Matrix, Chronological Milestones, Open Knowledge Gaps, och Annotated Bibliography).
+- Skapade `researchManager.ts`:
+  - `DeepResearchManager`: Hanterar sessioner, spårar förlopp (0–100%), loggar steg, uppdaterar querystatus, expanderar noder och slutför syntesrapporter.
+- Exporterade `research`-modulen i `packages/data-provider/src/index.ts`, `dist/types/index.d.ts` och `dist/index.mjs`.
+
+### 2. Backend REST API (`api/server/routes/cowork.js`)
+- Exponerade nya endpoints för djupforskning:
+  - `POST /api/cowork/research/start`: Startar en ny forskningssession med rekursivt frågeträd och auktoritativa källor.
+  - `GET /api/cowork/research/sessions`: Hämtar samtliga sessioner med filter för `conversationId`.
+  - `GET /api/cowork/research/sessions/:id`: Hämtar fullständig sessionsdata inkl. frågeträd, källor och loggar.
+  - `POST /api/cowork/research/expand`: Skapar rekursiva gap-queries för specifik nod.
+  - `POST /api/cowork/research/synthesize`: Genererar och slutför fullständig syntesrapport.
+  - `DELETE /api/cowork/research/sessions/:id`: Tar bort session.
+
+### 3. Klient & Interaktiva Källcitat
+- **CitationBadge (`client/src/components/Chat/Messages/Content/CitationBadge.tsx`):**
+  - Perplexity-liknande pill-knapp `[1]` med domän-favicon och hovercard.
+  - Ariakit Hovercard med domännamn, favicon, auktoritetsbadge (`Academic`, `Primary Source`, `Official`, `News Outlet`), fullständig titel med extern länk, citerat textutdrag och snabbkopiering av URL.
+- **MarkdownComponents-integration (`MarkdownComponents.tsx`):**
+  - Ersatte grundläggande källankare med `CitationBadge` för alla källcitat `[1]`, `[^1]`, `citation:1` och http-länkar.
+- **ResearchProgressView (`client/src/components/SidePanel/Plans/ResearchProgressView.tsx`):**
+  - **Statusbanner:** Ämne, förloppsindikator (0–100%), stegbeskrivning och animerad statusbadge (`Synthesizing`, `Completed`).
+  - **Topic Launcher:** Sökfält för att starta ny djupforskning direkt från sidopanelen.
+  - **Multi-Hop Query Tree:** Hierarkisk visualisering av Hop 0 (Broad Discovery), Hop 1 (Subqueries för arkitektur/benchmarks) och Hop 2 (Verifiering/Fact-check), med resultaträknare och inline "+ Add Gap Query"-knapp.
+  - **Authoritative Sources Drawer:** Sökfilter, filterknappar för auktoritet (`All`, `Academic`, `Primary`, `News`), domänchips, källkort med utdrag, samt "Copy Bibliography"-knapp.
+  - **Synthesized Findings Preview:** Visar sammanfattning och erbjuder "✦ Insert into Chat"-knapp via `ChatContext.ask()`.
+- **PlansPanel-integration:** Lade till fliken `Research` bredvid `Plan`, `Workflow`, `Processes`, `Preview` och `Logs`.
+- **AttachPlusMenu Integration:** Lade till `Deep Research Engine (Multi-Hop)` under Skills med cyan `Perplexity / OpenAI`-badge.
+
+### 4. Master Skill & Dokumentation
+- Skapade `skill/deep-research-engine/SKILL.md`:
+  - Systemöversikt baserad på Perplexity Computer och OpenAI Deep Research.
+  - Riktlinjer för 4-hop frågeträd, tillförlitlighetstiers och hallucineringsskydd genom sentence-level grounding.
+
+### 5. Verifiering & Enhetstester
+- `queryPlanner.spec.ts`: Tester för generering av frågeträd, akademiskt fokus, memory context och rekursiv nodexpansion.
+- `sourceCollector.spec.ts`: Tester för URL-städning, domänextraktion, tillförlitlighetsklassificering, deduplicering och bibliografiformatering.
+- `synthesizer.spec.ts`: Tester för citatextraktion, länk-injicering och rapportgenerering med matris och tidslinje.
+- `researchManager.spec.ts`: Tester för livscykel, statusuppdateringar, källsamling, gap-expansion och rapportslutförande.
+- `CitationBadge.spec.tsx`: Tester för siffer- och strängcitat rendering, URL-länkar och tillgänglighet.
+- `ResearchProgressView.spec.tsx`: Tester för rendering, källfiltrering, ny forskningsstart och inmatning i chatten.
+- `PlansPanel.spec.tsx`: Utökat med test för rendering av Research-tabben.
+- Formatering med `npm run sort-imports`.
