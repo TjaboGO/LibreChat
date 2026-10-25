@@ -353,7 +353,38 @@ Available Connectors: GitHub, Slack, Notion, Jira, Linear, Stripe, PostgreSQL, F
 };
 
 /**
- * Retrieves the authentic system prompt for a given systemPromptId,
+ * Maps known app IDs to their respective systemPromptId if they differ.
+ */
+export const APP_ID_TO_PROMPT_ID: Record<string, string> = {
+  chat: 'claude-chat',
+  cowork: 'claude-cowork',
+  design: 'claude-design',
+  code: 'claude-code',
+  manus: 'manus-agent',
+  devin: 'cognition-devin',
+  cursor: 'cursor-composer',
+  windsurf: 'windsurf-cascade',
+  kiro: 'kiro-dual-mode',
+  replit: 'replit-agent',
+  grok: 'xai-grok-build',
+  cline: 'cline-operator',
+  v0: 'v0-generative-ui',
+  lovable: 'lovable-builder',
+  office: 'living-office',
+  notion: 'notion-studio',
+  bolt: 'bolt-new',
+  higgsfield: 'higgsfield-builder',
+  perplexity: 'perplexity-computer',
+  atlas: 'chatgpt-atlas',
+  deepsearch: 'brave-deepsearch',
+  connectors: 'connector-hub',
+};
+
+export const AUTHENTIC_SYSTEM_PROMPTS = AUTHENTIC_PROMPTS;
+export const authenticPrompts = AUTHENTIC_PROMPTS;
+
+/**
+ * Retrieves the authentic system prompt for a given systemPromptId or appId,
  * interpolating all dynamic placeholders.
  */
 export function getAuthenticPrompt(
@@ -365,19 +396,25 @@ export function getAuthenticPrompt(
   }
 
   const cleanId = promptId.trim().toLowerCase();
-  const template = AUTHENTIC_PROMPTS[cleanId] || AUTHENTIC_PROMPTS['claude-chat'];
+  const resolvedId = APP_ID_TO_PROMPT_ID[cleanId] || cleanId;
+  const template =
+    AUTHENTIC_PROMPTS[resolvedId] ||
+    AUTHENTIC_PROMPTS[cleanId] ||
+    AUTHENTIC_PROMPTS['claude-chat'];
 
   return interpolatePrompt(template, options);
 }
 
 /**
- * Checks whether a given prompt identifier exists in the prompt store.
+ * Checks whether a given prompt identifier or appId exists in the prompt store.
  */
 export function hasPrompt(promptId?: string | null): boolean {
   if (!promptId) {
     return false;
   }
-  return promptId.trim().toLowerCase() in AUTHENTIC_PROMPTS;
+  const cleanId = promptId.trim().toLowerCase();
+  const resolvedId = APP_ID_TO_PROMPT_ID[cleanId] || cleanId;
+  return resolvedId in AUTHENTIC_PROMPTS || cleanId in AUTHENTIC_PROMPTS;
 }
 
 /**

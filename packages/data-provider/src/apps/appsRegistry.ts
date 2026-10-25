@@ -687,6 +687,10 @@ export const APPS_REGISTRY: Record<string, AppDefinition> = {
   },
 };
 
+export const appsRegistry = APPS_REGISTRY;
+export const appSections = APP_SECTIONS;
+export const DEFAULT_APP_ID = 'chat';
+
 /**
  * Returns an array of all registered applications in catalog.
  */

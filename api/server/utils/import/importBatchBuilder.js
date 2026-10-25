@@ -173,6 +173,7 @@ class ImportBatchBuilder {
       overrideTimestamp: true,
       endpoint: this.endpoint,
       model: originalConvo.model ?? fallbackModel,
+      appId: originalConvo.appId ?? 'chat',
       ...this.getRetentionFields(),
     };
     convo._id && delete convo._id;

@@ -1358,21 +1358,6 @@ class BaseClient {
       return { message: savedMessage };
     }
 
-    const fieldsToKeep = {
-      conversationId: message.conversationId,
-      endpoint: options.endpoint,
-      endpointType: options.endpointType,
-      appId: endpointOptions?.appId ?? req?.body?.appId ?? existingConvo?.appId ?? 'chat',
-      ...endpointOptions,
-    };
-    const conversationCreatedAt = options?.req?.conversationCreatedAt;
-    const createdAtOnInsert =
-      conversationCreatedAt != null ? new Date(conversationCreatedAt) : undefined;
-    const validCreatedAtOnInsert =
-      createdAtOnInsert && !Number.isNaN(createdAtOnInsert.getTime())
-        ? createdAtOnInsert
-        : undefined;
-
     const skippedExistingConvoLookup = this.fetchedConvo === true;
     let existingConvo = null;
     if (!skippedExistingConvoLookup && hasResolvedConversation) {
@@ -1383,6 +1368,22 @@ class BaseClient {
     // Keep the authenticated conversation available for response, abort, and retry saves.
     // fetchedConvo already prevents repeating the conversation initialization work.
     const shouldSetCreatedAtOnInsert = !skippedExistingConvoLookup && existingConvo == null;
+
+    const conversationCreatedAt = options?.req?.conversationCreatedAt;
+    const createdAtOnInsert =
+      conversationCreatedAt != null ? new Date(conversationCreatedAt) : undefined;
+    const validCreatedAtOnInsert =
+      createdAtOnInsert && !Number.isNaN(createdAtOnInsert.getTime())
+        ? createdAtOnInsert
+        : undefined;
+
+    const fieldsToKeep = {
+      conversationId: message.conversationId,
+      endpoint: options.endpoint,
+      endpointType: options.endpointType,
+      appId: endpointOptions?.appId ?? req?.body?.appId ?? existingConvo?.appId ?? 'chat',
+      ...endpointOptions,
+    };
 
     const unsetFields = {};
     const exceptions = new Set(['spec', 'iconURL']);

@@ -1080,6 +1080,14 @@ export async function initializeAgent(
     throw new Error('initializeAgent requires db methods to be passed');
   }
 
+  const appId = resolveAppId(runtime.requestBody ?? endpointOption);
+  if (appId && (appId !== 'chat' || !agent.instructions)) {
+    applyAppScopeToAgent(agent, appId, {
+      user: user as unknown as { name?: string },
+      timezone: runtime.requestBody?.timezone,
+    });
+  }
+
   /**
    * Reject the stored agent definition before initialization performs usage
    * accounting, resource priming, tool/MCP loading, or provider setup. Inspect
@@ -2249,14 +2257,6 @@ export async function initializeAgent(
   agent.model_parameters = { ...options.llmConfig } as Agent['model_parameters'];
   if (options.configOptions) {
     (agent.model_parameters as Record<string, unknown>).configuration = options.configOptions;
-  }
-
-  const appId = resolveAppId(runtime.requestBody);
-  if (appId && appId !== 'chat') {
-    applyAppScopeToAgent(agent, appId, {
-      user: user as unknown as { name?: string },
-      timezone: runtime.requestBody?.timezone,
-    });
   }
 
   if (agent.instructions && agent.instructions !== '') {
