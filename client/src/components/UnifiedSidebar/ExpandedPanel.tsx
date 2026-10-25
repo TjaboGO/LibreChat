@@ -4,12 +4,18 @@ import { SquarePen } from 'lucide-react';
 import * as Ariakit from '@ariakit/react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Skeleton, Sidebar, Button, TooltipAnchor, DropdownPopup } from '@librechat/client';
-import { getAppSections, listAppsBySection, type SectionDefinition } from 'librechat-data-provider';
+import {
+  getAppSections,
+  listAppsBySection,
+  type AppDefinition,
+  type SectionDefinition,
+} from 'librechat-data-provider';
 import type { NavLink, MenuItemProps } from '~/common';
 import { useShortcutAriaKey, useShortcutHint } from '~/hooks/useKeyboardShortcuts';
 import { useActivePanel, resolveActivePanel, DEFAULT_PANEL } from '~/Providers';
 import AgentMarketplaceButton from '~/components/Nav/AgentMarketplaceButton';
 import { CLOSE_SIDEBAR_ID } from '~/components/Chat/Menus/OpenSidebar';
+import { usePinnedApps } from '~/store/pinnedApps';
 import useNewChat from '~/hooks/Chat/useNewChat';
 import { getAppIcon } from './appIcons';
 import { useLocalize } from '~/hooks';
@@ -17,6 +23,46 @@ import { cn } from '~/utils';
 import store from '~/store';
 
 const AccountSettings = lazy(() => import('~/components/Nav/AccountSettings'));
+
+const RailPinnedApp = memo(function RailPinnedApp({
+  app,
+}: {
+  app: AppDefinition;
+}) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const AppIcon = getAppIcon(app.icon);
+  const isActive =
+    location.pathname === app.routePath ||
+    location.pathname.startsWith(app.routePath + '/');
+
+  return (
+    <TooltipAnchor
+      side="right"
+      description={`${app.name} (${app.badge || 'App'}) — ${app.tagline}`}
+      render={
+        <button
+          type="button"
+          data-testid={`rail-pinned-app-${app.id}`}
+          onClick={() => navigate(app.routePath)}
+          className={cn(
+            'flex h-9 w-9 items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary',
+            isActive && 'bg-surface-active text-text-primary shadow-2xs',
+          )}
+        >
+          <div
+            className={cn(
+              'flex h-6 w-6 items-center justify-center rounded-md border text-xs transition-colors',
+              app.color || 'border-border-light bg-surface-active text-text-secondary',
+            )}
+          >
+            <AppIcon className="h-3.5 w-3.5" aria-hidden="true" />
+          </div>
+        </button>
+      }
+    />
+  );
+});
 
 const RailSectionFlyout = memo(function RailSectionFlyout({
   section,
@@ -200,6 +246,7 @@ function ExpandedPanel({
   const effectiveActive = resolveActivePanel(active, links);
   const isInsightsRoute = location.pathname.startsWith('/insights');
   const sections = useMemo(() => getAppSections(), []);
+  const { pinnedApps } = usePinnedApps();
 
   const toggleLabel = expanded ? 'com_nav_close_sidebar' : 'com_nav_open_sidebar';
   const toggleClick = expanded ? onCollapse : onExpand;
@@ -249,6 +296,17 @@ function ExpandedPanel({
           />
         ))}
       </div>
+
+      {pinnedApps.length > 0 && (
+        <>
+          <div className="mx-2 border-b border-border-light" />
+          <div className="flex flex-col gap-1" data-testid="rail-pinned-apps">
+            {pinnedApps.slice(0, 5).map((app) => (
+              <RailPinnedApp key={app.id} app={app} />
+            ))}
+          </div>
+        </>
+      )}
 
       <div className="mx-2 border-b border-border-light" />
       <div className="flex flex-col gap-1">

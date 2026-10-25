@@ -249,7 +249,7 @@ Integration av världens alla 72 AI-tjänster och modeller som inbyggda, dediker
 
 ### Block 2: Sidomeny, Navigation & Scoped Routing (Fas 30–33)
 - [x] **Fas 30: Sidomeny med 4 Sektioner** (Core, Agents, Builders, Research med Lucide-ikoner & badges)
-- [ ] **Fas 31: Favoriter & Pinning System** (Pinna appar till toppen i snabbåtkomst)
+- [x] **Fas 31: Favoriter & Pinning System** (Pinna appar till toppen i snabbåtkomst)
 - [ ] **Fas 32: Scoped Routing & App Shell** (`/app/:appId` och `AppLayout` med `useCurrentApp()`)
 - [ ] **Fas 33: Isolerad Historik per App vs. Startsida ("All Activity")** (Scoped trådlista + global tidslinje)
 

@@ -123,10 +123,17 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
   - `client/src/store/pinnedApps.ts` (Jotai/Recoil atom eller localStorage hook)
   - `client/src/components/UnifiedSidebar/PinnedAppsRow.tsx`
 - **Checklista:**
-  - [ ] Skapa state för `pinnedAppIds` (persisterat i `localStorage`).
-  - [ ] Lägg till "Pin to Top" / "Unpin" i apparnas kontextmeny eller via stjärnikon vid hovring.
-  - [ ] Rendera en horisontell eller vertikal snabbdocka för pinnade appar.
-- **Verifiering:** Lägg till/ta bort pinnade appar och ladda om sidan; tillståndet ska bestå.
+  - [x] Skapa state för `pinnedAppIds` (persisterat i `localStorage`).
+  - [x] Lägg till "Pin to Top" / "Unpin" i apparnas kontextmeny eller via stjärnikon vid hovring.
+  - [x] Rendera en horisontell eller vertikal snabbdocka för pinnade appar.
+- **Verifiering:** Lägg till/ta bort pinnade appar och ladda om sidan; tillståndet ska bestå (`PinnedApps.spec.tsx` och browser verification).
+- **Resultat (Fas 31 slutförd):**
+  - Skapade `client/src/store/pinnedApps.ts` med Jotai-atom `pinnedAppIdsAtom` persisterad i `localStorage` (`side:pinned-apps`) samt kurerade default-appar (`chat`, `cowork`, `manus`, `v0`, `perplexity`).
+  - Implementerade reaktiv hook `usePinnedApps()` med `pinApp`, `unpinApp`, `togglePin`, `reorderPinnedApps`, `clearAllPinned` och `resetToDefault`.
+  - Skapade snabbdocka-komponenten `PinnedAppsRow.tsx` med bärnstensfärgad pin-badge, fällbar header och 2-kolumns interaktiv grid med app-ikoner, kompakta namn, unpin-åtgärder och rika verktygstips.
+  - Integrerade pin-knappar i `AppSectionGroup.tsx` så att användare med 1 klick kan pinna/unpinna vilken som helst av de 22 apparna direkt från listan.
+  - Integrerade 1-klicks snabbdocka i minimerat läge (`ExpandedPanel.tsx`) som visar upp till 5 pinnade appar direkt i railen ovanför sektionsflyouterna.
+  - Byggde testsvit i `client/src/components/UnifiedSidebar/__tests__/PinnedApps.spec.tsx`.
 
 #### Fas 32: Scoped Routing & App Shell (`/app/:appId`)
 - **Syfte:** Etablera enhetlig URL-struktur för apparna med en dedikerad layout som injicerar aktivt app-tillstånd.

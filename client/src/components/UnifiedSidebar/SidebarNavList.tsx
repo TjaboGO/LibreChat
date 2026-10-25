@@ -18,6 +18,7 @@ import { useActivePanel, DEFAULT_PANEL } from '~/Providers';
 import { useCoworkTasksQuery } from '~/data-provider';
 import useNewChat from '~/hooks/Chat/useNewChat';
 import AppSectionGroup from './AppSectionGroup';
+import PinnedAppsRow from './PinnedAppsRow';
 import { useLocalize } from '~/hooks';
 import { cn } from '~/utils';
 
@@ -173,6 +174,11 @@ function SidebarNavList() {
       />
       <RouteRow to="/skills" icon={Sparkles} label={localize('com_ui_customize')} />
       <MoreMenu />
+
+      <div className="my-1 border-b border-border-light" />
+
+      {/* Quick Dock for Pinned/Favorite Apps */}
+      <PinnedAppsRow />
 
       <div className="my-1 border-b border-border-light" />
 

@@ -1,8 +1,9 @@
 import { memo, useCallback, useId } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Pin } from 'lucide-react';
 import { TooltipAnchor } from '@librechat/client';
 import { NavLink as RouterNavLink, useLocation } from 'react-router-dom';
 import type { AppDefinition, SectionDefinition } from 'librechat-data-provider';
+import { usePinnedApps } from '~/store/pinnedApps';
 import { Collapse } from '~/components/ui';
 import { useLocalStorage } from '~/hooks';
 import { getAppIcon } from './appIcons';
@@ -23,6 +24,7 @@ function AppSectionGroup({
 }: AppSectionGroupProps) {
   const location = useLocation();
   const sectionContentId = useId();
+  const { isPinned, togglePin } = usePinnedApps();
   const [isExpanded, setIsExpanded] = useLocalStorage<boolean>(
     `side:app-section:${section.id}`,
     defaultExpanded,
@@ -112,11 +114,42 @@ function AppSectionGroup({
                       </span>
                     </div>
 
-                    {app.badge && (
-                      <span className="ml-1 shrink-0 rounded-md border border-border-light bg-surface-tertiary px-1 py-0.5 text-[9px] font-medium text-text-tertiary transition-colors group-hover:border-border-medium group-hover:text-text-secondary">
-                        {app.badge}
-                      </span>
-                    )}
+                    <div className="flex shrink-0 items-center gap-1">
+                      {app.badge && (
+                        <span className="shrink-0 rounded-md border border-border-light bg-surface-tertiary px-1 py-0.5 text-[9px] font-medium text-text-tertiary transition-colors group-hover:border-border-medium group-hover:text-text-secondary">
+                          {app.badge}
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        data-testid={`pin-toggle-${app.id}`}
+                        aria-label={
+                          isPinned(app.id)
+                            ? `Unpin ${app.name} from Quick Dock`
+                            : `Pin ${app.name} to Quick Dock`
+                        }
+                        title={isPinned(app.id) ? 'Unpin from Quick Dock' : 'Pin to Quick Dock'}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          togglePin(app.id);
+                        }}
+                        className={cn(
+                          'rounded p-0.5 transition-all focus:opacity-100',
+                          isPinned(app.id)
+                            ? 'text-amber-500 hover:text-amber-600'
+                            : 'text-text-tertiary opacity-0 group-hover:opacity-100 hover:text-amber-500',
+                        )}
+                      >
+                        <Pin
+                          className={cn(
+                            'h-3.5 w-3.5',
+                            isPinned(app.id) && 'fill-amber-500',
+                          )}
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </div>
                   </RouterNavLink>
                 }
               />
