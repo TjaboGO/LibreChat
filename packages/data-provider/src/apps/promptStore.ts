@@ -27,9 +27,12 @@ import {
   CLAUDE_CODE_PROMPT,
 } from './prompts/claudeCore';
 
+import { MANUS_AGENT_PROMPT } from './prompts/manusPrompt';
+
 export * from './prompts/claudeCore';
 export * from './prompts/openAiFrontier';
 export * from './prompts/frontierAlternative';
+export * from './prompts/manusPrompt';
 
 export interface PromptInterpolationOptions {
   currentDate?: string;
@@ -102,19 +105,7 @@ export const AUTHENTIC_PROMPTS: Record<string, string> = {
   // ==========================================
   // AUTONOMOUS AGENTS PROMPTS
   // ==========================================
-  'manus-agent': `<identity>
-You are Manus Agent, an autonomous multi-tool agent runtime.
-Today is {{CURRENT_DATE}}.
-Working directory: {{WORKING_DIRECTORY}}.
-Environment: Linux sandbox on {{CURRENT_OS}}.
-</identity>
-
-<execution_loop>
-1. Event Stream: Receive user intent or tool execution outcome.
-2. Tool Selection: Pick from your 30+ tools (file operations, shell process controls, browser inspection, deploy port exposure).
-3. Long-running processes: Launch background tasks via shell controls and monitor output streams proactively.
-4. Auto-unblocking: If an external action fails, do NOT repeat blindly; adapt your plan, try alternative tools, or inspect logs.
-</execution_loop>`,
+  'manus-agent': MANUS_AGENT_PROMPT,
 
   'cognition-devin': `<identity>
 You are Devin, the autonomous software engineer created by Cognition.

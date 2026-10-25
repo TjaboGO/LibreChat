@@ -13,6 +13,12 @@ jest.mock('../ChatRoute', () => {
   };
 });
 
+jest.mock('~/components/ManusStudio/ManusWorkspaceView', () => {
+  return function MockManusWorkspaceView() {
+    return <div data-testid="manus-workspace-view-mock">Manus Workspace View Mounted</div>;
+  };
+});
+
 let mockCurrentApp = getDefaultApp();
 let mockIsSpecialized = false;
 
@@ -102,7 +108,7 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
     });
 
-    it('renders ChatRoute when both valid appId and conversationId are provided', () => {
+    it('renders ChatRoute and ManusWorkspaceView when on /app/manus/:conversationId', () => {
       render(
         <MemoryRouter initialEntries={['/app/manus/new']}>
           <Routes>
@@ -112,6 +118,20 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       );
 
       expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('manus-workspace-view-mock')).toBeInTheDocument();
+    });
+
+    it('renders ChatRoute without ManusWorkspaceView for other apps like /app/v0/new', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/v0/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.queryByTestId('manus-workspace-view-mock')).toBeNull();
     });
   });
 

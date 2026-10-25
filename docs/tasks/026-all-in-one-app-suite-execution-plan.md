@@ -257,13 +257,30 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
 - **Syfte:** Fullständig dedikerad miljö för Manus med dess 31 verktyg, processhanterare och dashboard.
 - **Filer:**
   - `client/src/components/ManusStudio/ManusWorkspaceView.tsx`
-  - `packages/data-provider/src/manus/manusTools.ts`
+  - `client/src/components/ManusStudio/index.ts`
+  - `client/src/components/ManusStudio/__tests__/ManusWorkspaceView.spec.tsx`
+  - `client/src/routes/AppRoute.tsx`
+  - `client/src/routes/__tests__/AppRoute.spec.tsx`
+  - `packages/data-provider/src/manus/manusPrompt.ts`
+  - `packages/data-provider/src/manus/__tests__/manusPrompt.spec.ts`
+  - `packages/data-provider/src/apps/prompts/manusPrompt.ts`
+  - `packages/data-provider/src/apps/promptStore.ts`
   - Promptkälla: `My system prompts/Manus Agent loop.txt`
 - **Checklista:**
-  - [ ] Montera den autentiska Manus Agent Loop-prompten som dold systemprompt.
-  - [ ] Injicera samtliga 31 diskreta Manus-verktyg (`shell_write_to_process`, `deploy_expose_port`, browser tools).
-  - [ ] Bygg en delad vy med Live Terminal (med interaktiv stdin-inmatning) och Browser Live Preview.
+  - [x] Montera den autentiska Manus Agent Loop-prompten som dold systemprompt.
+  - [x] Injicera samtliga 31 diskreta Manus-verktyg (`shell_write_to_process`, `deploy_expose_port`, browser tools).
+  - [x] Bygg en delad vy med Live Terminal (med interaktiv stdin-inmatning) och Browser Live Preview.
 - **Verifiering:** Kör ett autonomt bash-kommando via Manus-vy och interagera med en process via `stdin`.
+- **Resultat (Fas 37 slutförd):**
+  - Skapade `packages/data-provider/src/apps/prompts/manusPrompt.ts` och `packages/data-provider/src/manus/manusPrompt.ts` med den autentiska Manus Agent Loop-systemprompten (kompetenser, 6-stegs loop, interaktiv processhantering med `shell_write_to_process` och portexponering med `deploy_expose_port`).
+  - Kopplade in `MANUS_AGENT_PROMPT` i `packages/data-provider/src/apps/promptStore.ts` under både `manus-agent` och `manus`.
+  - Verifierade och exporterade samtliga 31 diskreta Manus-verktyg från `packages/data-provider/src/manus/manusTools.ts` och byggde dist-artefakter i `packages/data-provider/dist/manus/`.
+  - Skapade split-workspace-komponenten `client/src/components/ManusStudio/ManusWorkspaceView.tsx` med:
+    - **Live Terminal & Stdin:** Processväljare med status, mörk monospace-terminal med automatisk rullning och färgkodad loggutmatning, interaktiv stdin-kommandobar (`useSendStdinMutation`), processavslutning (`useKillProcessMutation`) och realtidsuppdatering.
+    - **Live Browser & Port Preview:** Portväljare (`useExposedPortsQuery`), snabbexponering av portar (`useExposePortMutation`), URL-fält med direktlänk i nytt fönster och inbäddad sandbox-iframe.
+    - **Responsive Dock:** Flexibel bredd (460px/540px) med kollapsknapp som minimerar vyn till en smidig vertikal sidoknapp för full bredd åt chatten vid behov.
+  - Monterade `ManusWorkspaceView` i `client/src/routes/AppRoute.tsx` så att alla som navigerar till `/app/manus/:conversationId?` direkt får den delade Manus-arbetsytan.
+  - Byggde enhetstestsviter i `packages/data-provider/src/manus/__tests__/manusPrompt.spec.ts` och `client/src/components/ManusStudio/__tests__/ManusWorkspaceView.spec.tsx` (100% gröna tester).
 
 #### Fas 38: Cognition Devin & DeepWiki Engine (`/app/devin`)
 - **Syfte:** Integrera Devins autonoma ingenjörsflöde och dess arkitektur-wiki.
