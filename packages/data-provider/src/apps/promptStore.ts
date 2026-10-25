@@ -8,6 +8,13 @@
  */
 
 import {
+  OPENAI_ATLAS_PROMPT,
+  OPENAI_GPT5_SOL_PROMPT,
+  OPENAI_O3_MINI_PROMPT,
+  OPENAI_LIVING_OFFICE_PROMPT,
+  OPENAI_OFFICE_SANDBOX_DIRECTIVES,
+} from './prompts/openAiFrontier';
+import {
   CLAUDE_CHAT_PROMPT,
   CLAUDE_COWORK_PROMPT,
   CLAUDE_DESIGN_PROMPT,
@@ -15,6 +22,7 @@ import {
 } from './prompts/claudeCore';
 
 export * from './prompts/claudeCore';
+export * from './prompts/openAiFrontier';
 
 export interface PromptInterpolationOptions {
   currentDate?: string;
@@ -215,16 +223,7 @@ Stack: React, Vite, Tailwind CSS, Supabase, PostgreSQL.
 - Keep components modular and self-contained with instant live preview compatibility.
 </fullstack_workflow>`,
 
-  'living-office': `<identity>
-You are the Living Office Suite Generator, powered by GPT-5.6 Sol and Claude Office.
-Date: {{CURRENT_DATE}}.
-</identity>
-
-<office_capabilities>
-1. Word Documents (.docx): Structured layouts, executive callouts ([!NOTE], [!WARNING], [!TIP]), formal headers, and print-ready styles.
-2. Excel Spreadsheets (.xlsx): Interactive workbooks with formula engine support (=SUM, =AVERAGE, =COUNT, =MAX, =MIN), currency formatting, and multiple sheets.
-3. PowerPoint Presentations (.pptx): 16:9 widescreen slides, KPI metric split cards, and speaker notes.
-</office_capabilities>`,
+  'living-office': OPENAI_LIVING_OFFICE_PROMPT,
 
   'notion-studio': `<identity>
 You are Notion AI Studio, workspace documentation and knowledge architect.
@@ -273,16 +272,9 @@ User: {{USER_NAME}}.
 - When an external connector is disconnected, guide the user to connect their account via the interactive connector card.
 </research_rules>`,
 
-  'chatgpt-atlas': `<identity>
-You are ChatGPT Atlas, the web browsing and document inspection engine.
-Date: {{CURRENT_DATE}}.
-Knowledge cutoff: {{KNOWLEDGE_CUTOFF}}.
-</identity>
-
-<atlas_browsing>
-- Navigate web pages, extract primary source text, and synthesize real-time data across multiple tabs.
-- Summarize live market events, release notes, and documentation without hallucinating facts.
-</atlas_browsing>`,
+  'chatgpt-atlas': OPENAI_ATLAS_PROMPT,
+  'gpt-5-sol': OPENAI_GPT5_SOL_PROMPT,
+  'o3-mini': OPENAI_O3_MINI_PROMPT,
 
   'brave-deepsearch': `<identity>
 You are Brave & Deep Search, the privacy-first independent web researcher.
@@ -332,6 +324,12 @@ export const APP_ID_TO_PROMPT_ID: Record<string, string> = {
   higgsfield: 'higgsfield-builder',
   perplexity: 'perplexity-computer',
   atlas: 'chatgpt-atlas',
+  'chatgpt-atlas': 'chatgpt-atlas',
+  'gpt-5-sol': 'gpt-5-sol',
+  gpt5: 'gpt-5-sol',
+  sol: 'gpt-5-sol',
+  'o3-mini': 'o3-mini',
+  o3: 'o3-mini',
   deepsearch: 'brave-deepsearch',
   connectors: 'connector-hub',
 };

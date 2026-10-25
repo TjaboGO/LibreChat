@@ -255,7 +255,7 @@ Integration av världens alla 72 AI-tjänster och modeller som inbyggda, dediker
 
 ### Block 3: Core Apps & Frontier Prompts Integration (Fas 34–36)
 - [x] **Fas 34: Core Claude Suite Integration** (`/app/chat`, `/app/cowork`, `/app/design`, `/app/code` med Opus 5.5 & Fable 5.1 prompts)
-- [ ] **Fas 35: OpenAI Frontier Suite Integration** (ChatGPT Atlas Browser, GPT-5.6 Sol, o3-mini)
+- [x] **Fas 35: OpenAI Frontier Suite Integration** (ChatGPT Atlas Browser, GPT-5.6 Sol, o3-mini)
 - [ ] **Fas 36: Frontier Open-Source & Reasoning** (DeepSeek R1/V3 `<think>`, xAI Grok Build, Qwen 2.5 Coder)
 
 ### Block 4: Autonomous Agents Workspaces (Fas 37–39)

@@ -205,12 +205,23 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
 - **Syfte:** Integrera OpenAIs banbrytande systemprompter och sandlådestrukturer.
 - **Filer:**
   - `packages/data-provider/src/apps/prompts/openAiFrontier.ts`
+  - `packages/data-provider/src/apps/promptStore.ts`
+  - `packages/data-provider/src/apps/__tests__/openAiFrontier.spec.ts`
   - Promptkällor: `My system prompts/OpenAI/gpt-5.6-sol.md`, `My system prompts/OpenAI/chatgpt-atlas.md`, `My system prompts/OpenAI/o3-mini.md`
 - **Checklista:**
-  - [ ] Integrera ChatGPT Atlas webbläsarprompt och multi-mode kontext.
-  - [ ] Integrera GPT-5.6 Sol resonemangs-, coding- och verktygsprioritering.
-  - [ ] Montera sandlådedirektiven för Office/Slides/Spreadsheets.
+  - [x] Integrera ChatGPT Atlas webbläsarprompt och multi-mode kontext.
+  - [x] Integrera GPT-5.6 Sol resonemangs-, coding- och verktygsprioritering.
+  - [x] Montera sandlådedirektiven för Office/Slides/Spreadsheets.
 - **Verifiering:** Verifiera att modellen strukturerar resonemang och filhantering enligt OpenAIs standarder.
+- **Resultat (Fas 35 slutförd):**
+  - Skapade `packages/data-provider/src/apps/prompts/openAiFrontier.ts` med fullständiga autentiska systemprompter:
+    - `OPENAI_ATLAS_PROMPT` (`/app/atlas`, `chatgpt-atlas`): Multimodala lägen (Full-Page Chat, Web Browsing, Web Browsing with Side Chat), strikt instruktionsprioritet 1–7, hantering av sidokontext vs. bilagor, verktygsvägledning för sökning och blockerade domäner.
+    - `OPENAI_GPT5_SOL_PROMPT` (`gpt-5-sol`, `gpt5`, `sol`): Sandlådemiljö och färdigheter (Word docx, Slides pptx, Spreadsheets openpyxl via artifact_tool), sandlådeciteringar `[Label](sandbox:/mnt/data/<filename>.<ext>)`, anti-patronizing principer (inga "let's pause" eller "let's take a breath"), förbud mot ytliga "real-talk"-flufffraser ("# My honest recommendation", "Honestly?..."), kompakta stycken och 45s Python timeout.
+    - `OPENAI_O3_MINI_PROMPT` (`o3-mini`, `o3`): Djup steg-för-steg tankekedja i privat analyskanal, verifiering siffra-för-siffra vid aritmetik/trick-frågor, rigorös STEM/algoritmverifiering och tillståndskänslig Jupyter-miljö i `/mnt/data`.
+    - `OPENAI_OFFICE_SANDBOX_DIRECTIVES` & `OPENAI_LIVING_OFFICE_PROMPT` (`/app/office`, `living-office`): Fullständiga produktionsdirektiv för Word (.docx med GitHub callouts), Excel (.xlsx med formelmotor och multi-flikar) och PowerPoint (.pptx 16:9 widescreen med talaranteckningar) levererade via `sandbox:/mnt/data/`.
+  - Integrerade och exporterade alla prompter och alias i `packages/data-provider/src/apps/promptStore.ts`.
+  - Kompilerade `packages/data-provider/dist/apps/` med `tsc`.
+  - Skapade fullständig enhetstestsvit `packages/data-provider/src/apps/__tests__/openAiFrontier.spec.ts` som verifierar alla sektioner, principer, sandlådedirektiv, alias och platshållarinterpolering. Alla tester gröna (100%).
 
 #### Fas 36: Frontier Open-Source & Alternatives (DeepSeek R1/V3, Grok Build, Qwen)
 - **Syfte:** Integrera resonemangs- och kodningsdirektiv från ledande open-source och utmanare.
