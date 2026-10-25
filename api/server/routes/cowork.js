@@ -388,4 +388,141 @@ router.delete('/ports/:port', (req, res) => {
   res.json({ ok: true, message: `Port ${portNum} closed` });
 });
 
+// --- Full-Stack Dev Server & Self-Healing Loop ---
+const devServerSessions = new Map();
+
+/**
+ * GET /api/cowork/dev-server/sessions
+ */
+router.get('/dev-server/sessions', (req, res) => {
+  res.json({ ok: true, sessions: Array.from(devServerSessions.values()) });
+});
+
+/**
+ * POST /api/cowork/dev-server/sessions
+ */
+router.post('/dev-server/sessions', (req, res) => {
+  const { id = `dev-${Date.now()}`, name = 'Web App', port = 5173, url } = req.body || {};
+  const portNum = parseInt(port, 10) || 5173;
+  const sessionUrl = url || `http://localhost:${portNum}`;
+
+  const session = {
+    id,
+    name,
+    port: portNum,
+    url: sessionUrl,
+    status: 'running',
+    logs: [],
+    healingHistory: [],
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
+
+  devServerSessions.set(id, session);
+  res.json({ ok: true, session });
+});
+
+/**
+ * POST /api/cowork/dev-server/logs
+ * Ingests browser console log and detects errors
+ */
+router.post('/dev-server/logs', (req, res) => {
+  const { sessionId = 'default', level = 'log', message = '', stack } = req.body || {};
+
+  let session = devServerSessions.get(sessionId);
+  if (!session) {
+    session = {
+      id: sessionId,
+      name: 'Default Preview',
+      port: 5173,
+      url: 'http://localhost:5173',
+      status: 'running',
+      logs: [],
+      healingHistory: [],
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+    devServerSessions.set(sessionId, session);
+  }
+
+  const logEntry = {
+    id: `log_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+    level,
+    message,
+    stack,
+    timestamp: Date.now(),
+  };
+
+  session.logs.push(logEntry);
+  if (session.logs.length > 200) {
+    session.logs.shift();
+  }
+  session.updatedAt = Date.now();
+
+  let diagnosed = null;
+  if (level === 'error') {
+    const fileMatch = `${message}\n${stack || ''}`.match(/(?:from|in|at)\s+["']?([^"'\s\n()]+\.(?:tsx|ts|jsx|js))(?::(\d+))?/i);
+    const file = fileMatch ? fileMatch[1] : undefined;
+    const line = fileMatch && fileMatch[2] ? parseInt(fileMatch[2], 10) : undefined;
+
+    diagnosed = {
+      id: `diag_${Date.now()}`,
+      errorType: message.includes('SyntaxError') ? 'SyntaxError' : message.includes('ReferenceError') ? 'ReferenceError' : 'RuntimeError',
+      rawMessage: message,
+      file,
+      line,
+      rootCause: `Runtime exception in ${file || 'application code'}`,
+      suggestedFix: `Inspect ${file || 'the error location'} and fix invalid references or imports.`,
+      canAutoHeal: true,
+      timestamp: Date.now(),
+    };
+
+    session.activeError = diagnosed;
+    session.status = 'error';
+    session.healingHistory.unshift({
+      id: `heal_${Date.now()}`,
+      diagnosedError: diagnosed,
+      status: 'detected',
+      detectedAt: Date.now(),
+    });
+  }
+
+  res.json({ ok: true, log: logEntry, diagnosed });
+});
+
+/**
+ * POST /api/cowork/dev-server/heal
+ * Triggers or confirms self-healing completion
+ */
+router.post('/dev-server/heal', (req, res) => {
+  const { sessionId = 'default', diff, fixDescription } = req.body || {};
+  const session = devServerSessions.get(sessionId);
+  if (!session) {
+    return res.status(404).json({ error: 'Session not found' });
+  }
+
+  const report = session.healingHistory.find((h) => h.status === 'detected' || h.status === 'attempting_fix');
+  if (report) {
+    report.status = 'healed';
+    report.fixedAt = Date.now();
+    report.diff = diff;
+    report.fixDescription = fixDescription || 'Code fixed by AI';
+  }
+
+  session.activeError = undefined;
+  session.status = 'running';
+  session.updatedAt = Date.now();
+
+  res.json({ ok: true, session, report });
+});
+
+/**
+ * DELETE /api/cowork/dev-server/sessions/:id
+ */
+router.delete('/dev-server/sessions/:id', (req, res) => {
+  devServerSessions.delete(req.params.id);
+  res.json({ ok: true });
+});
+
 module.exports = router;
+

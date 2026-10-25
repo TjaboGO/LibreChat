@@ -17,6 +17,7 @@ import {
   Play,
   Check,
   Cpu,
+  Laptop,
 } from 'lucide-react';
 import {
   useGetMessagesByConvoId,
@@ -25,6 +26,7 @@ import {
 } from '~/data-provider';
 import ExecutionWorkflow, { type WorkflowNode } from './ExecutionWorkflow';
 import ProcessManagerView from './ProcessManagerView';
+import DevServerView from './DevServerView';
 import ExecutionLog from './ExecutionLog';
 import { cn } from '~/utils';
 
@@ -34,7 +36,7 @@ export default function PlansPanel() {
   const { data: coworkData } = useCoworkTasksQuery();
   const createTaskMutation = useCreateCoworkTaskMutation();
 
-  const [activeTab, setActiveTab] = useState<'plan' | 'workflow' | 'processes' | 'logs'>('plan');
+  const [activeTab, setActiveTab] = useState<'plan' | 'workflow' | 'processes' | 'preview' | 'logs'>('plan');
   const [toggledSteps, setToggledSteps] = useState<Record<string, boolean>>({});
   const [completedOpen, setCompletedOpen] = useState(true);
   const [pendingOpen, setPendingOpen] = useState(true);
@@ -374,6 +376,19 @@ export default function PlansPanel() {
         </button>
         <button
           type="button"
+          onClick={() => setActiveTab('preview')}
+          className={cn(
+            'flex flex-1 items-center justify-center gap-1.5 rounded-md py-1.5 font-medium transition-colors',
+            activeTab === 'preview'
+              ? 'shadow-xs bg-surface-primary text-text-primary'
+              : 'text-text-secondary hover:text-text-primary',
+          )}
+        >
+          <Laptop className="h-3.5 w-3.5" />
+          <span>Preview</span>
+        </button>
+        <button
+          type="button"
           onClick={() => setActiveTab('logs')}
           className={cn(
             'flex flex-1 items-center justify-center gap-1.5 rounded-md py-1.5 font-medium transition-colors',
@@ -576,7 +591,10 @@ export default function PlansPanel() {
       {/* TAB 3: Interactive Process Management & Network Hub */}
       {activeTab === 'processes' && <ProcessManagerView />}
 
-      {/* TAB 4: Execution Determinism Logs */}
+      {/* TAB 4: Full-Stack Dev Server & Self-Healing Live Preview */}
+      {activeTab === 'preview' && <DevServerView />}
+
+      {/* TAB 5: Execution Determinism Logs */}
       {activeTab === 'logs' && <ExecutionLog nodes={workflowNodes} />}
     </div>
   );

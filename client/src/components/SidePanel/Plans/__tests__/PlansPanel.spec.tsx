@@ -195,4 +195,13 @@ Kvar att göra:
 
     expect(screen.getByText('Manus Process & Network Hub')).toBeInTheDocument();
   });
+
+  it('renders dev server live preview tab when selected', () => {
+    mockUseParams.mockReturnValue({ conversationId: 'convo-with-plan' });
+    render(<PlansPanel />);
+    const previewTab = screen.getByRole('button', { name: /Preview/i });
+    fireEvent.click(previewTab);
+
+    expect(screen.getByTestId('dev-server-view')).toBeInTheDocument();
+  });
 });

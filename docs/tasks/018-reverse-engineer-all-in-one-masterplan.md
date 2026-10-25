@@ -239,3 +239,58 @@ Fullständig specifikation finns i artefakten:
 - `normalizer.spec.ts`: Tester för Antigravity-, v0-, Manus- och strängformat, `(Recommended)`-detektering, och svarsformatering (100% assertions gröna).
 - `InteractiveFormCard.spec.tsx`: Tester för rendering, förval av rekommenderat svar, singel- och flervalsväxling, anpassat fritextsvar, inlämning och skip.
 - Formatering med `npm run sort-imports`.
+
+---
+
+## Genomfört Arbete: Fas 21 (Full-Stack Web App Generator med Self-Healing Dev Server)
+
+### 1. Kärnmotor & Feldiagnostik (`packages/data-provider/src/devserver/`)
+- Skapade `types.ts`:
+  - `DevServerSession`, `WebConsoleLog`, `DiagnosedError`, `SelfHealingReport`, `ScaffoldOptions`.
+  - Modell för dev server state: `'stopped' | 'starting' | 'running' | 'error' | 'healing'`.
+- Skapade `errorAnalyzer.ts`:
+  - Automatisk diagnostisering och parsing av runtime-krascher och bundler-fel:
+    - `ModuleResolutionError` (Vite importfel, saknade npm-paket, extraherar saknat bibliotek och föreslår `npm install`).
+    - `TypeError` (Undefined property access, extraherar egenskap och föreslår optional chaining `?.`).
+    - `ReferenceError` (Odeklarerade variabler, extraherar variabel och föreslår import/deklaration).
+    - `SyntaxError` (JSX och TypeScript parse-fel, lokaliserar obalanserade taggar eller klamrar).
+    - `NetworkError` & `ReactLifecycleError`.
+  - Källkods-grounding: Extraherar exakt källfil, rad och kolumn från stack traces och meddelanden.
+  - `buildSelfHealingPrompt`: Bygger en fokuserad felrapportsprompt (`[Self-Healing Dev Server Error Detected]`) för att trigga modellens patchloop.
+- Skapade `scaffolder.ts`:
+  - `generateFullStackScaffold`: Genererar en komplett modern Vite + React 19 + Tailwind CSS-struktur med scripts, konfigurationer och responsiva dashboard-komponenter.
+- Skapade `selfHealingLoop.ts`:
+  - `SelfHealingManager`: Administrerar sessioner, buffrar browser console logs, triggar feldetektering och hanterar `markHealed`.
+- Exporterade `devserver`-modulen via `packages/data-provider/src/index.ts` samt dess typer.
+
+### 2. Backend REST API (`api/server/routes/cowork.js`)
+- Exponerade nya endpoints för web preview och konsolfel:
+  - `GET /api/cowork/dev-server/sessions`: Lista alla aktiva sessioner.
+  - `POST /api/cowork/dev-server/sessions`: Registrera ny session.
+  - `POST /api/cowork/dev-server/logs`: Ingesta loggar från web preview iframe och analysera runtime errors.
+  - `POST /api/cowork/dev-server/heal`: Markera fel som läkt med diff och förklaring.
+  - `DELETE /api/cowork/dev-server/sessions/:id`: Avsluta session.
+
+### 3. Klient & Live Preview Integration
+- **DevServerView (`client/src/components/SidePanel/Plans/DevServerView.tsx`):**
+  - **Toolbar:** URL-fält, statusindikator (`Running`, `Error`, `Healing`), reload-knapp och extern fönsterlänk.
+  - **Multi-Viewport:** Växla sömlöst mellan Desktop (100%), Tablet (768px) och Mobile (375px).
+  - **Live Preview Surface:** Visar körande applikation och tillåter fel-simulering (ReferenceError, missing module) för att testa loopen.
+  - **Active Error & Self-Healing Banner:** Varning med rotorsak, föreslagen lösning och en framträdande **"✦ Auto-Heal with AI"**-knapp som skickar felrapporten direkt till chatten via `ChatContext.ask()`.
+  - **Web Console Drawer:** Filter (`All`, `Errors`), tidsstämplade färgkodade konsolloggar och rensningsfunktion.
+- **PlansPanel-integration:** Lade till fliken `Preview` bredvid `Plan`, `Workflow`, `Processes` och `Logs`.
+- **AttachPlusMenu Integration:** Lade till `Self-Healing Dev Server (Full-Stack)` under Skills med röd `Windsurf / Lovable`-badge.
+
+### 4. Master Skill & Dokumentation
+- Skapade `skill/self-healing-dev-server/SKILL.md`:
+  - Systemöversikt inspirerad av Windsurf Cascade AI Flow och Lovable.
+  - Diagnostikkatalog och felåterkopplingsregler.
+  - Kirurgisk patch-disciplin via `file_str_replace`.
+
+### 5. Verifiering & Enhetstester
+- `errorAnalyzer.spec.ts`: Testade Vite module resolution, TypeError, ReferenceError, SyntaxError och prompt-generering.
+- `scaffolder.spec.ts`: Testade generering av Vite React Tailwind-paket och struktur.
+- `selfHealingLoop.spec.ts`: Testade sessionshantering, log-ingestion och healloggar.
+- `DevServerView.spec.tsx`: Testade UI-toolbar, viewport-växling, felbanner, Auto-Heal trigger och konsolrensning.
+- `PlansPanel.spec.tsx`: Utökat med test för rendering av Preview-tabben.
+- Formatering med `npm run sort-imports`.

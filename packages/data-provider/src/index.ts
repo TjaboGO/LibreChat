@@ -88,4 +88,7 @@ export * from './manus';
 export * from './modes';
 /* interactive form cards (AskUserQuestions) */
 export * from './forms';
+/* full-stack web app generator & self-healing dev server */
+export * from './devserver';
+
 

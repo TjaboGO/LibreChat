@@ -23,6 +23,7 @@ import {
   Cpu,
   Layers,
   HelpCircle,
+  Laptop,
 } from 'lucide-react';
 import type { TConversation } from 'librechat-data-provider';
 import type { ExtendedFile, FileSetter } from '~/common';
@@ -405,6 +406,18 @@ export default function AttachPlusMenu({
                   </span>
                   <span className="rounded bg-emerald-500/10 px-1 py-0.5 text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">
                     v0 / Antigravity
+                  </span>
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
+                  onClick={() => handleSelectSkill('self-healing-dev-server')}
+                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  <span className="flex items-center gap-2">
+                    <Laptop className="h-4 w-4 text-rose-500" />
+                    <span>Self-Healing Dev Server (Full-Stack)</span>
+                  </span>
+                  <span className="rounded bg-rose-500/10 px-1 py-0.5 text-[9px] font-semibold text-rose-600 dark:text-rose-400">
+                    Windsurf / Lovable
                   </span>
                 </Ariakit.MenuItem>
                 <Ariakit.MenuItem
