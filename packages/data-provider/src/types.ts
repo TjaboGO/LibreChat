@@ -170,6 +170,8 @@ export type TPayload = Partial<TMessage> &
     codeWorkspaces?: CodeWorkspaceSelection[];
     /** Browser IANA timezone (e.g. `America/New_York`) used to resolve local-time prompt variables server-side. */
     timezone?: string;
+    /** App Suite identifier (e.g. 'chat', 'cowork', 'design', 'code') scoping the active conversation. */
+    appId?: string;
     /**
      * Stable per-submission idempotency key (uuid) generated once per `ask()`. Identical
      * across the client's start-generation network retries, unique per user action (including

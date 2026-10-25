@@ -181,13 +181,25 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
 - **Syfte:** Montera Anthropics officiella systemprompter för de 4 kärnupplevelserna.
 - **Filer:**
   - `packages/data-provider/src/apps/prompts/claudeCore.ts`
+  - `packages/data-provider/src/apps/promptStore.ts`
+  - `packages/data-provider/src/apps/__tests__/claudeCore.spec.ts`
   - Promptkällor: `Anthropic/official/2026-09-22-claude-opus-5.5.md`, `Anthropic/claude-cowork/`, `Anthropic/claude-design/`, `Anthropic/claude-code/`
 - **Checklista:**
-  - [ ] Koppla `/app/chat` till Claude Opus 5.5 Artifacts & Thinking prompt.
-  - [ ] Koppla `/app/cowork` till Claude Cowork Background Task & Subagent prompt.
-  - [ ] Koppla `/app/design` till Claude Design Canvas prompt.
-  - [ ] Koppla `/app/code` till Claude Code terminal- och diff-prompt.
-- **Verifiering:** Verifiera att XML-taggar (`<thinking>`, `:::artifact`) tolkas och renderas sömlöst.
+  - [x] Koppla `/app/chat` till Claude Opus 5.5 Artifacts & Thinking prompt.
+  - [x] Koppla `/app/cowork` till Claude Cowork Background Task & Subagent prompt.
+  - [x] Koppla `/app/design` till Claude Design Canvas prompt.
+  - [x] Koppla `/app/code` till Claude Code terminal- och diff-prompt.
+- **Verifiering:** Verifiera att XML-taggar (`<thinking>`, `:::artifact`) tolkas och renderas sömlöst, samt att alla dynamiska platshållare interpoleras (`CURRENT_DATE`, `CURRENT_TIME`, `CURRENT_OS`, `WORKING_DIRECTORY`, `APP_NAME`, `KNOWLEDGE_CUTOFF`).
+- **Resultat (Fas 34 slutförd):**
+  - Skapade `packages/data-provider/src/apps/prompts/claudeCore.ts` med fullständiga autentiska systemprompter:
+    - `CLAUDE_CHAT_PROMPT`: "Articulate & Nuanced" (anti-sycophancy, epistemic calibration, intellectual rigor, depth, artifact guidelines).
+    - `CLAUDE_COWORK_PROMPT`: "Deep Pair Programmer & Strategist" (proaktiv staff-level arkitektur, minimala kirurgiska editeringar, intermediär verktygsdisciplin, testverifiering).
+    - `CLAUDE_DESIGN_PROMPT`: "Visual Systems & Generative UI" (typografisk skala, Tailwind CSS token-paletter, färgtonsharmoni, Lucide-ikoner, tillgängliga Radix/Ariakit-primitiver).
+    - `CLAUDE_CODE_PROMPT`: "Terminal Agent" (maximal signal-till-brus, zero pleasantries, kirurgisk felanalys av stack traces, konventionell git-disciplin).
+  - Uppdaterade `packages/data-provider/src/apps/promptStore.ts` för att montera och exportera dessa prompter i `AUTHENTIC_PROMPTS` under både systemPromptId (`claude-chat`, `claude-cowork`, `claude-design`, `claude-code`) och appId (`chat`, `cowork`, `design`, `code`).
+  - Lade till `appId?: string;` i `TPayload` (`packages/data-provider/src/types.ts`) för full typintegritet i dispatchern.
+  - Kompilerade `packages/data-provider/dist/apps/` med `tsc`.
+  - Skapade komplett testsvit `packages/data-provider/src/apps/__tests__/claudeCore.spec.ts` (14/14 tester gröna) som validerar alla sektioner, principer och platshållarinterpolation.
 
 #### Fas 35: OpenAI Frontier Suite (ChatGPT Atlas, GPT-5.6 Sol, o3-mini)
 - **Syfte:** Integrera OpenAIs banbrytande systemprompter och sandlådestrukturer.
