@@ -1,19 +1,76 @@
-import { memo, useCallback, lazy, Suspense } from 'react';
+import { memo, useCallback, lazy, Suspense, useId, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { SquarePen } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
-import { Skeleton, Sidebar, Button, TooltipAnchor } from '@librechat/client';
-import type { NavLink } from '~/common';
+import * as Ariakit from '@ariakit/react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Skeleton, Sidebar, Button, TooltipAnchor, DropdownPopup } from '@librechat/client';
+import { getAppSections, listAppsBySection, type SectionDefinition } from 'librechat-data-provider';
+import type { NavLink, MenuItemProps } from '~/common';
 import { useShortcutAriaKey, useShortcutHint } from '~/hooks/useKeyboardShortcuts';
 import { useActivePanel, resolveActivePanel, DEFAULT_PANEL } from '~/Providers';
 import AgentMarketplaceButton from '~/components/Nav/AgentMarketplaceButton';
 import { CLOSE_SIDEBAR_ID } from '~/components/Chat/Menus/OpenSidebar';
 import useNewChat from '~/hooks/Chat/useNewChat';
+import { getAppIcon } from './appIcons';
 import { useLocalize } from '~/hooks';
 import { cn } from '~/utils';
 import store from '~/store';
 
 const AccountSettings = lazy(() => import('~/components/Nav/AccountSettings'));
+
+const RailSectionFlyout = memo(function RailSectionFlyout({
+  section,
+}: {
+  section: SectionDefinition;
+}) {
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const menuId = useId();
+  const SectionIcon = getAppIcon(section.icon);
+  const apps = useMemo(() => listAppsBySection(section.id), [section.id]);
+
+  const menuItems = useMemo<MenuItemProps[]>(() => {
+    return apps.map((app) => {
+      const AppIcon = getAppIcon(app.icon);
+      return {
+        id: `rail-app-${app.id}`,
+        label: `${app.name}${app.badge ? ` (${app.badge})` : ''}`,
+        icon: <AppIcon className="size-4 text-text-secondary" aria-hidden="true" />,
+        onClick: () => navigate(app.routePath),
+      };
+    });
+  }, [apps, navigate]);
+
+  return (
+    <DropdownPopup
+      portal={true}
+      focusLoop={true}
+      unmountOnHide={true}
+      menuId={menuId}
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      className="z-[125] min-w-56"
+      trigger={
+        <TooltipAnchor
+          side="right"
+          description={`${section.title} (${section.badge})`}
+          render={
+            <Ariakit.MenuButton
+              data-testid={`rail-section-${section.id}`}
+              className={cn(
+                'flex h-9 w-9 items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary',
+                isOpen && 'bg-surface-hover text-text-primary',
+              )}
+            >
+              <SectionIcon className="h-5 w-5" aria-hidden="true" />
+            </Ariakit.MenuButton>
+          }
+        />
+      }
+      items={menuItems}
+    />
+  );
+});
 
 const NewChatButton = memo(function NewChatButton({
   setActive,
@@ -142,6 +199,7 @@ function ExpandedPanel({
   const { active, setActive } = useActivePanel();
   const effectiveActive = resolveActivePanel(active, links);
   const isInsightsRoute = location.pathname.startsWith('/insights');
+  const sections = useMemo(() => getAppSections(), []);
 
   const toggleLabel = expanded ? 'com_nav_close_sidebar' : 'com_nav_open_sidebar';
   const toggleClick = expanded ? onCollapse : onExpand;
@@ -189,6 +247,13 @@ function ExpandedPanel({
             onNavigate={onNavigate}
             onLeaveInsights={isInsightsRoute ? onLeaveInsights : undefined}
           />
+        ))}
+      </div>
+
+      <div className="mx-2 border-b border-border-light" />
+      <div className="flex flex-col gap-1">
+        {sections.map((section) => (
+          <RailSectionFlyout key={section.id} section={section} />
         ))}
       </div>
 

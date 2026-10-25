@@ -1,14 +1,13 @@
 import { memo, useId, useMemo, useState } from 'react';
 import * as Ariakit from '@ariakit/react';
 import { DropdownPopup } from '@librechat/client';
+import { getAppSections, listAppsBySection } from 'librechat-data-provider';
 import { NavLink as RouterNavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   SquarePen,
   FolderKanban,
   Boxes,
   Clock,
-  Terminal,
-  Palette,
   Sparkles,
   MoreHorizontal,
   MessagesSquare,
@@ -18,6 +17,7 @@ import useUnifiedSidebarLinks from '~/hooks/Nav/useUnifiedSidebarLinks';
 import { useActivePanel, DEFAULT_PANEL } from '~/Providers';
 import { useCoworkTasksQuery } from '~/data-provider';
 import useNewChat from '~/hooks/Chat/useNewChat';
+import AppSectionGroup from './AppSectionGroup';
 import { useLocalize } from '~/hooks';
 import { cn } from '~/utils';
 
@@ -158,6 +158,8 @@ function SidebarNavList() {
     [coworkData],
   );
 
+  const sections = useMemo(() => getAppSections(), []);
+
   return (
     <div className="flex flex-col gap-0.5 px-2 pb-2.5">
       <NewChatRow />
@@ -169,10 +171,22 @@ function SidebarNavList() {
         label={localize('com_ui_scheduled')}
         showDot={hasActiveTasks}
       />
-      <RouteRow to="/code" icon={Terminal} label="Code" />
-      <RouteRow to="/design" icon={Palette} label={localize('com_ui_design')} />
       <RouteRow to="/skills" icon={Sparkles} label={localize('com_ui_customize')} />
       <MoreMenu />
+
+      <div className="my-1 border-b border-border-light" />
+
+      {/* 4 App Sections with Badges & Collapsible Groups */}
+      <div className="flex flex-col gap-0.5">
+        {sections.map((section) => (
+          <AppSectionGroup
+            key={section.id}
+            section={section}
+            apps={listAppsBySection(section.id)}
+            defaultExpanded={true}
+          />
+        ))}
+      </div>
     </div>
   );
 }

@@ -106,10 +106,16 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
   - `client/src/components/UnifiedSidebar/ExpandedPanel.tsx`
   - `client/src/components/UnifiedSidebar/AppSectionGroup.tsx`
 - **Checklista:**
-  - [ ] Skapa sektionsrubriker med diskreta badges och kollapsmöjlighet: Core Apps, Autonomous Agents, Builders & Productivity, Research & Browsing.
-  - [ ] Mappa varje app till en distinkt Lucide-ikon (t.ex. Terminal för Manus, Palette för Design, Search för Perplexity, Code för Cursor).
-  - [ ] Lägg till hover-kort och verktygstips med appens beskrivning.
-- **Verifiering:** Visuell inspektion av sidomenyn i både expanderat och minimerat läge.
+  - [x] Skapa sektionsrubriker med diskreta badges och kollapsmöjlighet: Core Apps, Autonomous Agents, Builders & Productivity, Research & Browsing.
+  - [x] Mappa varje app till en distinkt Lucide-ikon (t.ex. Terminal för Manus, Palette för Design, Search för Perplexity, Code för Cursor).
+  - [x] Lägg till hover-kort och verktygstips med appens beskrivning.
+- **Verifiering:** Visuell inspektion av sidomenyn i både expanderat och minimerat läge (`AppSectionGroup.spec.tsx` och `RailSectionFlyout`).
+- **Resultat (Fas 30 slutförd):**
+  - Implementerade `AppSectionGroup.tsx` med Ariakit/Collapse, animerade pilar, sektionsbadges (`4 Apps`, `8 Agents`, `6 Studios`, `4 Hubs`), och per-sektion `localStorage`-persistering (`side:app-section:${id}`).
+  - Skapade `appIcons.ts` med deterministisk mapping för samtliga 22 appar och sektionsikoner.
+  - Integrerade 4 sektioner i `SidebarNavList.tsx` ovanför konversationer/historik med rika hover-kort och verktygstips via `TooltipAnchor`.
+  - Uppdaterade `ExpandedPanel.tsx` med flyout-menyer (`RailSectionFlyout`) för blixtsnabb åtkomst till alla 22 appar även när sidomenyn är kollapsad.
+  - Skapade testsvit `AppSectionGroup.spec.tsx` som verifierar rendering, struktur och kollapsbeteende för alla sektioner.
 
 #### Fas 31: Favoriter & Pinning System
 - **Syfte:** Tillåt användaren att stjärnmärka eller pinna sina favoritappar till en snabbåtkomst-rad högst upp i sidomenyn.

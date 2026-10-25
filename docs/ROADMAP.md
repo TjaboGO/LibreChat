@@ -248,7 +248,7 @@ Integration av världens alla 72 AI-tjänster och modeller som inbyggda, dediker
 - [x] **Fas 29: Backend Hidden Prompt Dispatcher & OpenRouter Payload Assembler** (100% dold injektion i API-lagret)
 
 ### Block 2: Sidomeny, Navigation & Scoped Routing (Fas 30–33)
-- [ ] **Fas 30: Sidomeny med 4 Sektioner** (Core, Agents, Builders, Research med Lucide-ikoner & badges)
+- [x] **Fas 30: Sidomeny med 4 Sektioner** (Core, Agents, Builders, Research med Lucide-ikoner & badges)
 - [ ] **Fas 31: Favoriter & Pinning System** (Pinna appar till toppen i snabbåtkomst)
 - [ ] **Fas 32: Scoped Routing & App Shell** (`/app/:appId` och `AppLayout` med `useCurrentApp()`)
 - [ ] **Fas 33: Isolerad Historik per App vs. Startsida ("All Activity")** (Scoped trådlista + global tidslinje)
