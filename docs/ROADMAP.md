@@ -242,7 +242,7 @@ Omfattande syntes av **samtliga 72 extraherade systemprompts och plattformar** (
 Integration av världens alla 72 AI-tjänster och modeller som inbyggda, dedikerade appar i sidomenyn (`Core`, `Agents`, `Builders`, `Research`). Varje app drivs av sin autentiska dolda systemprompt och verktygsuppsättning i API-lagret mot OpenRouter med isolerad sessionshistorik per app och samlad översikt på startsidan:
 
 ### Block 1: App Registry, Prompt Store & Datamodell (Fas 26–29)
-- [ ] **Fas 26: Unified App Registry & Types Definition** (`packages/data-provider/src/apps/types.ts` & `appsRegistry.ts`)
+- [x] **Fas 26: Unified App Registry & Types Definition** (`packages/data-provider/src/apps/types.ts` & `appsRegistry.ts`)
 - [ ] **Fas 27: Authentic Prompt Store & Interpolation Engine** (`packages/data-provider/src/apps/promptStore.ts`)
 - [ ] **Fas 28: Databasschema & Session Scoping** (`appId` i `Conversation.js` och MongoDB-indexering)
 - [ ] **Fas 29: Backend Hidden Prompt Dispatcher & OpenRouter Payload Assembler** (100% dold injektion i API-lagret)

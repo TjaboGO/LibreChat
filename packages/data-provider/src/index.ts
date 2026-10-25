@@ -98,5 +98,8 @@ export * from './office';
 export * from './styles';
 /* perplexity computer connector hub (mcp dynamic tool hub) */
 export * from './connectors';
+/* unified app registry & types (all-in-one multi-app suite) */
+export * from './apps';
+
 
 

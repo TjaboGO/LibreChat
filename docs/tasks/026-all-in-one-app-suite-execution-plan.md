@@ -43,10 +43,10 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
   - `packages/data-provider/src/apps/appsRegistry.ts`
   - `packages/data-provider/src/apps/appsRegistry.spec.ts`
 - **Checklista:**
-  - [ ] Definiera `AppDefinition`, `AppSection` (`'core' | 'agents' | 'builders' | 'research'`), `AppCapability`.
-  - [ ] Implementera `appsRegistry` med metadata för samtliga 20+ appar.
-  - [ ] Skapa hjälpfunktioner: `getAppDefinition(appId)`, `listAppsBySection(section)`, `isValidAppId(id)`.
-  - [ ] Skriv 100% täckande enhetstester.
+  - [x] Definiera `AppDefinition`, `AppSection` (`'core' | 'agents' | 'builders' | 'research'`), `AppCapability`.
+  - [x] Implementera `appsRegistry` med metadata för samtliga 20+ appar.
+  - [x] Skapa hjälpfunktioner: `getAppDefinition(appId)`, `listAppsBySection(section)`, `isValidAppId(id)`.
+  - [x] Skriv 100% täckande enhetstester.
 - **Verifiering:** `npm test packages/data-provider/src/apps/appsRegistry.spec.ts`.
 
 #### Fas 27: Authentic Prompt Store & Placeholder Engine
@@ -314,3 +314,41 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
 | `research` | Perplexity Research | Research | `My system prompts/PERPLEXITY/Perplexity_Deep_Research.txt` | Multi-hop planner, citation badges |
 | `atlas` | ChatGPT Atlas | Research | `My system prompts/OpenAI/chatgpt-atlas.md` | Full-page browser, side chat |
 | `search` | Brave & Deep Search | Research | `My system prompts/Brave Leo/` | Privacy search, on-demand MCP tools |
+
+---
+
+## Genomfört Arbete: Fas 26 (Unified App Registry & Types Definition)
+
+### 1. Kärnmotor & Datamodeller (`packages/data-provider/src/apps/`)
+- Skapade `types.ts`:
+  - `AppSection`: `'core' | 'agents' | 'builders' | 'research'`.
+  - `AppCapability`: `artifacts`, `code_execution`, `web_search`, `terminal`, `file_editing`, `multi_hop_research`, `living_office`, `connectors`, `generative_ui`, `diff_viewer`, `browser_control`, `fullstack_preview`, `dual_mode`.
+  - `AppStarterPrompt`: `label`, `prompt`, `description`.
+  - `AppDefinition`: `id`, `name`, `section`, `tagline`, `description`, `icon`, `badge`, `color`, `systemPromptId`, `capabilities`, `defaultTools`, `suggestedStarters`, `order`, `isPinnedDefault`, `routePath`.
+  - `SectionDefinition`: `id`, `title`, `description`, `icon`, `badge`, `order`.
+- Skapade `appsRegistry.ts`:
+  - `APP_SECTIONS`: 4 sektioner med metadata och display badges (`Core Apps`, `Autonomous Agents`, `Builders & Productivity`, `Research & Browsing`).
+  - `APPS_REGISTRY`: Samtliga 22 specialiserade applikationer registrerade med unika metadata, färger, starter prompts och förmågor:
+    - **Core Apps (4 st):** `chat` (Claude Chat), `cowork` (Claude Cowork), `design` (Claude Design), `code` (Claude Code).
+    - **Autonomous Agents (8 st):** `manus` (Manus Workspace), `devin` (Cognition Devin), `cursor` (Cursor Studio), `windsurf` (Windsurf Wave), `kiro` (Kiro / Traycer), `replit` (Replit Studio), `grok` (xAI Grok Build), `cline` (Cline Autonomous).
+    - **Builders & Productivity (6 st):** `v0` (v0 Studio), `lovable` (Lovable Studio), `office` (Living Office Suite), `notion` (Notion AI Studio), `bolt` (Bolt.new), `higgsfield` (Higgsfield Website Builder).
+    - **Research & Browsing (4 st):** `perplexity` (Perplexity Research), `atlas` (ChatGPT Atlas), `deepsearch` (Brave & Deep Search), `connectors` (Perplexity Computer Connector Hub).
+  - Hjälpfunktioner:
+    - `getAllApps()`: Returnerar alla appar sorterade efter sektionsordning och intern prioritet.
+    - `getAppDefinition(appId)`: Hämtar app case-insensitivt.
+    - `getRequiredAppDefinition(appId)`: Hämtar app med fallback till `'chat'`.
+    - `listAppsBySection(section)`: Filtrerar appar per sektion.
+    - `isValidAppId(appId)`: Validerar app-ID.
+    - `getDefaultApp()`: Returnerar standardappen (`Claude Chat`).
+    - `getPinnedDefaultApps()`: Returnerar standardpinnade appar för snabbåtkomst.
+    - `getAppSections()`: Returnerar alla sektioner i visningsordning.
+    - `searchApps(query)`: Söker över namn, taglines, beskrivningar och förmågor.
+- Re-exporterade modulen i `packages/data-provider/src/index.ts`, `dist/types/index.d.ts` och `dist/index.mjs`.
+
+### 2. Verifiering & Enhetstester
+- `appsRegistry.spec.ts`:
+  - 100% godkända tester för alla 22 appar och 4 sektioner.
+  - Verifierar strukturell integritet (strängar, arrays, starters, routePath `/app/:appId`).
+  - Verifierar sökning, sektionsfiltrering, fallbacks och pinning.
+- Formatering med `npm run sort-imports`.
+
