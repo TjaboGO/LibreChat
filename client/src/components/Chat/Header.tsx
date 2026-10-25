@@ -16,6 +16,7 @@ import { useGetStartupConfig } from '~/data-provider';
 import ExportAndShareMenu from './ExportAndShareMenu';
 import SubagentThreadLink from './SubagentThreadLink';
 import BookmarkMenu from './Menus/BookmarkMenu';
+import AppHeaderBadge from './AppHeaderBadge';
 import AddMultiConvo from './AddMultiConvo';
 import { useHasAccess } from '~/hooks';
 import { cn } from '~/utils';
@@ -93,6 +94,7 @@ function Header({
         {parentConversationId != null && (
           <SubagentThreadLink threadId={parentConversationId} labelClassName="hidden lg:inline" />
         )}
+        <AppHeaderBadge />
         {!readOnly && <ModelSelector startupConfig={startupConfig} />}
         <SubagentActivityButton />
         {!readOnly && interfaceConfig.presets === true && interfaceConfig.modelSelect === true && (

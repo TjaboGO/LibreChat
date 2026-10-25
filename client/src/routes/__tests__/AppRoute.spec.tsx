@@ -1,0 +1,163 @@
+import React from 'react';
+import '@testing-library/jest-dom/extend-expect';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { getAppDefinition, getDefaultApp, isValidAppId } from 'librechat-data-provider';
+import AppHeaderBadge from '~/components/Chat/AppHeaderBadge';
+import AppRoute from '../AppRoute';
+
+// Mock ChatRoute for testing AppRoute routing behavior
+jest.mock('../ChatRoute', () => {
+  return function MockChatRoute() {
+    return <div data-testid="chat-route-mock">Scoped Chat Route Mounted</div>;
+  };
+});
+
+let mockCurrentApp = getDefaultApp();
+let mockIsSpecialized = false;
+
+jest.mock('~/hooks/useCurrentApp', () => ({
+  __esModule: true,
+  default: () => ({
+    appId: mockCurrentApp.id,
+    app: mockCurrentApp,
+    section: { id: mockCurrentApp.section, title: 'Section Title', badge: 'Badge', icon: 'Sparkles', order: 1 },
+    isAppRoute: true,
+    isSpecializedApp: mockIsSpecialized,
+    icon: () => <span data-testid="app-icon-mock" />,
+    name: mockCurrentApp.name,
+    badge: mockCurrentApp.badge,
+    tagline: mockCurrentApp.tagline,
+    description: mockCurrentApp.description,
+    color: mockCurrentApp.color,
+    capabilities: mockCurrentApp.capabilities,
+    routePath: mockCurrentApp.routePath,
+    newChatPath: `/app/${mockCurrentApp.id}/new`,
+    navigateToApp: jest.fn(),
+    startNewAppChat: jest.fn(),
+  }),
+}));
+
+describe('Scoped Routing & App Shell (Fas 32)', () => {
+  beforeEach(() => {
+    mockCurrentApp = getDefaultApp();
+    mockIsSpecialized = false;
+    jest.clearAllMocks();
+  });
+
+  describe('App Definition & Route Validation', () => {
+    it('validates registered apps for scoped routing', () => {
+      expect(isValidAppId('manus')).toBe(true);
+      expect(isValidAppId('v0')).toBe(true);
+      expect(isValidAppId('devin')).toBe(true);
+      expect(isValidAppId('perplexity')).toBe(true);
+      expect(isValidAppId('office')).toBe(true);
+      expect(isValidAppId('non-existent-app')).toBe(false);
+    });
+
+    it('retrieves app metadata for Manus, v0, and Perplexity', () => {
+      const manus = getAppDefinition('manus');
+      expect(manus?.name).toBe('Manus Workspace');
+      expect(manus?.routePath).toBe('/app/manus');
+      expect(manus?.badge).toBe('30+ Tools');
+
+      const v0 = getAppDefinition('v0');
+      expect(v0?.name).toBe('v0 Studio');
+      expect(v0?.routePath).toBe('/app/v0');
+      expect(v0?.badge).toBe('Generative UI');
+
+      const perplexity = getAppDefinition('perplexity');
+      expect(perplexity?.name).toBe('Perplexity Research');
+      expect(perplexity?.routePath).toBe('/app/perplexity');
+      expect(perplexity?.badge).toBe('Multi-Hop');
+    });
+  });
+
+  describe('AppRoute Navigation & Scoping', () => {
+    it('redirects invalid appId to /c/new', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/invalid-app-123/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+            <Route path="/c/new" element={<div data-testid="fallback-new-convo">Fallback</div>} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('fallback-new-convo')).toBeInTheDocument();
+      expect(screen.queryByTestId('chat-route-mock')).not.toBeInTheDocument();
+    });
+
+    it('redirects /app/:appId to /app/:appId/new when conversationId is omitted', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/manus']}>
+          <Routes>
+            <Route path="/app/:appId" element={<AppRoute />} />
+            <Route path="/app/:appId/:conversationId" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      // Successfully redirected and mounted ChatRoute
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+    });
+
+    it('renders ChatRoute when both valid appId and conversationId are provided', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/manus/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+    });
+  });
+
+  describe('AppHeaderBadge', () => {
+    it('renders nothing when not in a specialized app (regular chat)', () => {
+      mockCurrentApp = getDefaultApp(); // chat
+      mockIsSpecialized = false;
+
+      const { container } = render(
+        <MemoryRouter>
+          <AppHeaderBadge />
+        </MemoryRouter>,
+      );
+
+      expect(container.firstChild).toBeNull();
+    });
+
+    it('renders app scope badge with name, badge, and new session button for Manus', () => {
+      mockCurrentApp = getAppDefinition('manus')!;
+      mockIsSpecialized = true;
+
+      render(
+        <MemoryRouter>
+          <AppHeaderBadge />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('app-header-scope-badge')).toBeInTheDocument();
+      expect(screen.getByText('Manus Workspace')).toBeInTheDocument();
+      expect(screen.getByText('30+ Tools')).toBeInTheDocument();
+      expect(screen.getByTestId('new-app-session-btn')).toBeInTheDocument();
+    });
+
+    it('renders app scope badge for v0 Studio', () => {
+      mockCurrentApp = getAppDefinition('v0')!;
+      mockIsSpecialized = true;
+
+      render(
+        <MemoryRouter>
+          <AppHeaderBadge />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('app-header-scope-badge')).toBeInTheDocument();
+      expect(screen.getByText('v0 Studio')).toBeInTheDocument();
+      expect(screen.getByText('Generative UI')).toBeInTheDocument();
+    });
+  });
+});

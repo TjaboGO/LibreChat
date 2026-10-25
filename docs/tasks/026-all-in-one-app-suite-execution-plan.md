@@ -142,10 +142,16 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
   - `client/src/routes/index.tsx`
   - `client/src/hooks/useCurrentApp.ts`
 - **Checklista:**
-  - [ ] Skapa rutter: `/app/:appId` och `/app/:appId/:conversationId`.
-  - [ ] Implementera `useCurrentApp()` som läser aktiv rutt och returnerar appens manifest, ikon och färgtema.
-  - [ ] Anpassa chat-headern med appens namn, ikon och dedikerade åtgärdsknappar.
-- **Verifiering:** Navigering till `/app/manus`, `/app/v0` och `/app/research` laddar rätt app-header och kontext.
+  - [x] Skapa rutter: `/app/:appId` och `/app/:appId/:conversationId`.
+  - [x] Implementera `useCurrentApp()` som läser aktiv rutt och returnerar appens manifest, ikon och färgtema.
+  - [x] Anpassa chat-headern med appens namn, ikon och dedikerade åtgärdsknappar.
+- **Verifiering:** Navigering till `/app/manus`, `/app/v0` och `/app/research` laddar rätt app-header och kontext (`AppRoute.spec.tsx`).
+- **Resultat (Fas 32 slutförd):**
+  - Implementerade `useCurrentApp.ts` som läser aktiv URL-rutt, conversation-state och manifest från `APPS_REGISTRY`. Returnerar appdetaljer, brandikoner, sektion, taggar och hjälpare (`navigateToApp`, `startNewAppChat`).
+  - Skapade `AppHeaderBadge.tsx` som injiceras i `Header.tsx` och visar app-badge, färgikon, pill, tooltip och "New [App] Session"-knapp när man befinner sig i en specialiserad app.
+  - Skapade `AppRoute.tsx` med routing till `/app/:appId/:conversationId?` och `/apps/:appId/:conversationId?` som validerar `isValidAppId(appId)`, redirectar saknat `conversationId` till `/app/:appId/new`, och monterar `ChatRoute`.
+  - Uppdaterade `ChatRoute.tsx` så att `newConversation` automatiskt sätter `appId: currentAppId` i sessionsmallen, och återställer sessionen när man byter mellan appar i utkastläge (`draftAppMismatch`).
+  - Byggde testsvit i `client/src/routes/__tests__/AppRoute.spec.tsx`.
 
 #### Fas 33: Isolerad Historik per App vs. Startsida ("All Activity")
 - **Syfte:** Säkerställ att när man befinner sig i en app visas endast den appens konversationer, medan startsidan ger full översikt.

@@ -19,6 +19,7 @@ import dashboardRoutes from './Dashboard';
 import WithRum from '~/lib/rum/WithRum';
 import ShareRoute from './ShareRoute';
 import ChatRoute from './ChatRoute';
+import AppRoute from './AppRoute';
 import Search from './Search';
 import Root from './Root';
 
@@ -159,6 +160,14 @@ export const router = createBrowserRouter(
             {
               path: 'c/:conversationId?',
               element: <ChatRoute />,
+            },
+            {
+              path: 'app/:appId/:conversationId?',
+              element: <AppRoute />,
+            },
+            {
+              path: 'apps/:appId/:conversationId?',
+              element: <AppRoute />,
             },
             {
               path: 'search',

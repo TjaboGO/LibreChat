@@ -10,6 +10,7 @@ import {
   PermissionBits,
   isAgentsEndpoint,
   isEphemeralAgentId,
+  isValidAppId,
 } from 'librechat-data-provider';
 import type { TPreset, TAgentsMap } from 'librechat-data-provider';
 import {
@@ -63,7 +64,11 @@ export default function ChatRoute() {
   );
   const index = 0;
   const [searchParams, setSearchParams] = useSearchParams();
-  const { conversationId = '' } = useParams();
+  const { conversationId = '', appId: routeAppId } = useParams<{
+    conversationId?: string;
+    appId?: string;
+  }>();
+  const currentAppId = routeAppId && isValidAppId(routeAppId) ? routeAppId : 'chat';
   const projectIdParam = searchParams.get('projectId');
   const chatProjectId = isValidChatProjectId(projectIdParam) ? projectIdParam : null;
   useIdChangeEffect(conversationId);
@@ -97,8 +102,11 @@ export default function ChatRoute() {
   const verifiedChatProjectId =
     !projectNotFound && projectQuery.data?._id === chatProjectId ? chatProjectId : null;
   const projectTemplate = useMemo(
-    () => (verifiedChatProjectId ? { chatProjectId: verifiedChatProjectId } : {}),
-    [verifiedChatProjectId],
+    () => ({
+      ...(verifiedChatProjectId ? { chatProjectId: verifiedChatProjectId } : {}),
+      ...(currentAppId ? { appId: currentAppId } : {}),
+    }),
+    [verifiedChatProjectId, currentAppId],
   );
 
   /**
@@ -169,8 +177,9 @@ export default function ChatRoute() {
     const draftProjectMismatch = verifiedChatProjectId
       ? conversation?.chatProjectId !== verifiedChatProjectId
       : conversation?.chatProjectId != null;
+    const draftAppMismatch = (conversation?.appId ?? 'chat') !== currentAppId;
     const newConvoNeedsInit =
-      isNewConvo && (!conversation || (isDraftNewConvo && draftProjectMismatch));
+      isNewConvo && (!conversation || (isDraftNewConvo && (draftProjectMismatch || draftAppMismatch)));
     const shouldSetConvo =
       (startupConfig &&
         rolesLoaded &&
@@ -323,6 +332,8 @@ export default function ChatRoute() {
     projectQuery.isLoading,
     projectTemplate,
     queryClient,
+    currentAppId,
+    conversation?.appId,
     conversation?.chatProjectId,
     conversation?.conversationId,
   ]);
