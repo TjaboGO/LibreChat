@@ -16,6 +16,7 @@ import {
   Terminal,
   Play,
   Check,
+  Cpu,
 } from 'lucide-react';
 import {
   useGetMessagesByConvoId,
@@ -23,6 +24,7 @@ import {
   useCreateCoworkTaskMutation,
 } from '~/data-provider';
 import ExecutionWorkflow, { type WorkflowNode } from './ExecutionWorkflow';
+import ProcessManagerView from './ProcessManagerView';
 import ExecutionLog from './ExecutionLog';
 import { cn } from '~/utils';
 
@@ -32,7 +34,7 @@ export default function PlansPanel() {
   const { data: coworkData } = useCoworkTasksQuery();
   const createTaskMutation = useCreateCoworkTaskMutation();
 
-  const [activeTab, setActiveTab] = useState<'plan' | 'workflow' | 'logs'>('plan');
+  const [activeTab, setActiveTab] = useState<'plan' | 'workflow' | 'processes' | 'logs'>('plan');
   const [toggledSteps, setToggledSteps] = useState<Record<string, boolean>>({});
   const [completedOpen, setCompletedOpen] = useState(true);
   const [pendingOpen, setPendingOpen] = useState(true);
@@ -359,6 +361,19 @@ export default function PlansPanel() {
         </button>
         <button
           type="button"
+          onClick={() => setActiveTab('processes')}
+          className={cn(
+            'flex flex-1 items-center justify-center gap-1.5 rounded-md py-1.5 font-medium transition-colors',
+            activeTab === 'processes'
+              ? 'shadow-xs bg-surface-primary text-text-primary'
+              : 'text-text-secondary hover:text-text-primary',
+          )}
+        >
+          <Cpu className="h-3.5 w-3.5" />
+          <span>Processes</span>
+        </button>
+        <button
+          type="button"
           onClick={() => setActiveTab('logs')}
           className={cn(
             'flex flex-1 items-center justify-center gap-1.5 rounded-md py-1.5 font-medium transition-colors',
@@ -558,7 +573,10 @@ export default function PlansPanel() {
         <ExecutionWorkflow nodes={workflowNodes} activeTaskTitle={activeTask?.title} />
       )}
 
-      {/* TAB 3: Execution Determinism Logs */}
+      {/* TAB 3: Interactive Process Management & Network Hub */}
+      {activeTab === 'processes' && <ProcessManagerView />}
+
+      {/* TAB 4: Execution Determinism Logs */}
       {activeTab === 'logs' && <ExecutionLog nodes={workflowNodes} />}
     </div>
   );

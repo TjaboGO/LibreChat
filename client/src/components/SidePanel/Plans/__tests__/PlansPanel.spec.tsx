@@ -28,6 +28,19 @@ jest.mock('~/data-provider', () => ({
   }),
 }));
 
+jest.mock('~/data-provider/Manus/queries', () => ({
+  useProcessesQuery: () => ({
+    data: { ok: true, processes: [] },
+    refetch: jest.fn(),
+    isLoading: false,
+  }),
+  useProcessOutputQuery: () => ({ data: { ok: true, output: '' } }),
+  useExposedPortsQuery: () => ({ data: { ok: true, ports: [] } }),
+  useSendStdinMutation: () => ({ mutate: jest.fn(), isLoading: false }),
+  useKillProcessMutation: () => ({ mutate: jest.fn(), isLoading: false }),
+  useClosePortMutation: () => ({ mutate: jest.fn(), isLoading: false }),
+}));
+
 describe('PlansPanel', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -172,5 +185,14 @@ Kvar att göra:
     expect(screen.getByText('Total Latency')).toBeInTheDocument();
     expect(screen.getByText('Success Rate')).toBeInTheDocument();
     expect(screen.getByText(/Action: database_query/)).toBeInTheDocument();
+  });
+
+  it('renders interactive processes tab when selected', () => {
+    mockUseParams.mockReturnValue({ conversationId: 'convo-with-plan' });
+    render(<PlansPanel />);
+    const processesTab = screen.getByRole('button', { name: /Processes/i });
+    fireEvent.click(processesTab);
+
+    expect(screen.getByText('Manus Process & Network Hub')).toBeInTheDocument();
   });
 });

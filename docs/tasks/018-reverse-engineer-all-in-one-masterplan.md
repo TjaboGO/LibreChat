@@ -80,3 +80,65 @@ Fullständig specifikation finns i artefakten:
 - Kärnsuperkrafterna har isolerats och förenats till en koherent arkitektur.
 - En master-systempromptmall har skapats.
 - Roadmapen har utökats från Fas 17 till Fas 25 för framtida implementationer.
+
+---
+
+## Genomfört Arbete: Fas 18 (Manus-Grade 30+ Tools & Interaktiv Process-Management)
+
+### 1. 30+ Manus-Grade Tools Specifikation & Registry
+- Implementerade hela katalogen av 31 diskreta verktyg i `packages/data-provider/src/manus/manusTools.ts` med fullständiga OpenAI/OpenRouter function-calling JSON-schemas:
+  - **Meddelanden:** `message_notify_user`, `message_ask_user`
+  - **Filer:** `file_read`, `file_write`, `file_str_replace`, `file_find_in_content`, `file_find_by_name`
+  - **Shell & Interaktiva Processer:** `shell_exec`, `shell_view`, `shell_wait`, `shell_write_to_process`, `shell_kill_process`
+  - **Webbläsare & Konsol:** `browser_view`, `browser_navigate`, `browser_restart`, `browser_click`, `browser_input`, `browser_move_mouse`, `browser_press_key`, `browser_select_option`, `browser_scroll_up`, `browser_scroll_down`, `browser_console_exec`, `browser_console_view`
+  - **Sökning:** `info_search_web`
+  - **Nätverk & Portar:** `deploy_expose_port`, `deploy_get_exposed_ports`, `deploy_close_port`, `deploy_apply_deployment`
+  - **Leverans & Standby:** `make_manus_page`, `idle`
+- Lade till validerings- och hjälparfunktioner: `validateManusToolCall`, `isManusTool`, `getManusTool`, `getAllManusTools`.
+
+### 2. Interaktiv Bakgrundsprocess-Hantering (`ProcessManager`)
+- Skapade `packages/data-provider/src/manus/processManager.ts`:
+  - Registrering och sessionstabell med ring-buffer för loggar (`outputBuffer`).
+  - `shell_view`: Hämtar tail-loggar med status och tidsstämplar.
+  - `shell_write_to_process`: Skriver interaktiv text och styrsignaler till processens `stdin` (t.ex. svar på `y/n`-prompter, lösenord eller REPL-kommandon).
+  - `shell_wait`: Asynkron timeout- och slutförandelyssnare.
+  - `shell_kill_process`: Skickar `SIGTERM`/`SIGKILL` för att avsluta hängande processer.
+
+### 3. Deterministisk Nätverks- och Portexponeringsmotor (`PortExposer`)
+- Skapade `packages/data-provider/src/manus/portExposer.ts`:
+  - `deploy_expose_port`: Mappar lokala dev-portar (3000, 5173, 8000) med TTL och returnerar förhandsgransknings-URL:er.
+  - `deploy_get_exposed_ports`: Listar alla aktiva exponerade portar och deras status.
+  - `deploy_close_port`: Avslutar portforwarding.
+
+### 4. Manus Agent State Machine & Event Stream Protocol
+- Skapade `packages/data-provider/src/manus/manusStateMachine.ts`:
+  - Modellerar den autonoma 6-fasiga loopen: `IDLE` -> `ANALYZE_EVENTS` -> `SELECT_TOOL` -> `WAIT_EXECUTION` -> `ITERATE` -> `SUBMIT_RESULTS` -> `STANDBY`.
+  - Upprätthåller *Single-Tool Iteration Discipline* (exakt ett verktyg per iteration).
+  - Inkluderar tvåvägs-synkronisering med `todo.md`-checklistor via `syncTodoMd`.
+
+### 5. Backend REST API (`api/server/routes/cowork.js`)
+- Exponerade nya endpoints:
+  - `GET /api/cowork/processes` & `POST /api/cowork/processes/exec`
+  - `GET /api/cowork/processes/:id` & `POST /api/cowork/processes/:id/stdin` & `POST /api/cowork/processes/:id/kill`
+  - `GET /api/cowork/ports` & `POST /api/cowork/ports/expose` & `DELETE /api/cowork/ports/:port`
+
+### 6. Klient & UI-Integration
+- **React Query Hooks:** `client/src/data-provider/Manus/queries.ts` för realtidsdata av processer och portar.
+- **ProcessManagerView:** `client/src/components/SidePanel/Plans/ProcessManagerView.tsx` med:
+  - Processkort (ID, PID, status, starttid).
+  - Terminalvy för stdout/stderr med automatisk skrollning.
+  - Interaktiv `stdin`-inmatningsrad för att skicka svar till pågående processer.
+  - "Kill Process"-knapp (`SIGTERM`).
+  - Exponerade port-chips med direktlänkar och stängknappar.
+- **PlansPanel-integration:** Lade till subnavigering till `Processes` bredvid `Plan`, `Workflow` och `Logs`.
+- **AttachPlusMenu:** Lade till `Manus Agent (30+ Tools)` i Skills-menyn med lila `Autonomous`-badge.
+- **Master Skill:** Skapade `skill/manus-agent-orchestrator/SKILL.md`.
+
+### 7. Verifiering & Enhetstester
+- `manusTools.spec.ts` (31 verktyg, schema, validering).
+- `processManager.spec.ts` (registrering, output-tail, stdin writing, kill, filter).
+- `portExposer.spec.ts` (portexponering, TTL, listning, stängning).
+- `manusStateMachine.spec.ts` (agentloop, event stream, todo.md sync, standby).
+- `ProcessManagerView.spec.tsx` (rendering, stdin submit, processavslut).
+- `PlansPanel.spec.tsx` (utökat med processes-tabben).
+- Formatering med `npm run sort-imports`.

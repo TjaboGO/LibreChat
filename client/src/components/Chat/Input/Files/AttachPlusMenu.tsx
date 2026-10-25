@@ -20,6 +20,7 @@ import {
   Check,
   Lightbulb,
   BookOpen,
+  Cpu,
 } from 'lucide-react';
 import type { TConversation } from 'librechat-data-provider';
 import type { ExtendedFile, FileSetter } from '~/common';
@@ -366,6 +367,18 @@ export default function AttachPlusMenu({
                   </span>
                   <span className="rounded bg-lime-500/10 px-1 py-0.5 text-[9px] font-semibold text-lime-600 dark:text-lime-400">
                     Superhero
+                  </span>
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
+                  onClick={() => handleSelectSkill('manus-agent-orchestrator')}
+                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  <span className="flex items-center gap-2">
+                    <Cpu className="h-4 w-4 text-purple-500" />
+                    <span>Manus Agent (30+ Tools)</span>
+                  </span>
+                  <span className="rounded bg-purple-500/10 px-1 py-0.5 text-[9px] font-semibold text-purple-600 dark:text-purple-400">
+                    Autonomous
                   </span>
                 </Ariakit.MenuItem>
                 <Ariakit.MenuItem

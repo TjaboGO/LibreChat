@@ -82,3 +82,5 @@ export * from './code/approval';
 export * from './code/workspace';
 /* browser operator */
 export * from './browser/actionParser';
+/* manus agent tools & process management */
+export * from './manus';

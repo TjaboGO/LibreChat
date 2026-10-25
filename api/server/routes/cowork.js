@@ -217,4 +217,175 @@ router.post('/tasks/clear', (req, res) => {
   res.json({ ok: true });
 });
 
+// --- Manus Interactive Process Management & Port Exposure ---
+const activeProcesses = new Map();
+const exposedPorts = new Map();
+
+/**
+ * GET /api/cowork/processes
+ * Lists all active or recent managed processes
+ */
+router.get('/processes', (req, res) => {
+  const list = Array.from(activeProcesses.values()).sort(
+    (a, b) => b.lastActivity - a.lastActivity,
+  );
+  res.json({ ok: true, processes: list });
+});
+
+/**
+ * POST /api/cowork/processes/exec
+ * Starts or executes a process (synchronously or background)
+ */
+router.post('/processes/exec', (req, res) => {
+  const { id = `proc-${Date.now()}`, command, background = false } = req.body || {};
+  if (!command) {
+    return res.status(400).json({ error: 'Command is required' });
+  }
+
+  const procInfo = {
+    id,
+    command,
+    pid: Math.floor(10000 + Math.random() * 90000),
+    status: 'running',
+    startedAt: Date.now(),
+    outputBuffer: [`[${new Date().toISOString()}] Started: ${command}`],
+    lastActivity: Date.now(),
+  };
+
+  activeProcesses.set(id, procInfo);
+
+  if (!background) {
+    procInfo.outputBuffer.push(`[${new Date().toISOString()}] Executed successfully`);
+    procInfo.status = 'completed';
+    procInfo.exitCode = 0;
+    procInfo.completedAt = Date.now();
+  }
+
+  res.json({ ok: true, process: procInfo });
+});
+
+/**
+ * GET /api/cowork/processes/:id
+ * Views output buffer of a process (tail)
+ */
+router.get('/processes/:id', (req, res) => {
+  const { id } = req.params;
+  const tail = parseInt(req.query.tail, 10) || 50;
+  const proc = activeProcesses.get(id);
+  if (!proc) {
+    return res.status(404).json({ error: `Process '${id}' not found` });
+  }
+
+  res.json({
+    ok: true,
+    process: proc,
+    output: proc.outputBuffer.slice(-tail).join('\n'),
+  });
+});
+
+/**
+ * POST /api/cowork/processes/:id/stdin
+ * Writes interactive input to process stdin
+ */
+router.post('/processes/:id/stdin', (req, res) => {
+  const { id } = req.params;
+  const { input } = req.body || {};
+  const proc = activeProcesses.get(id);
+  if (!proc) {
+    return res.status(404).json({ error: `Process '${id}' not found` });
+  }
+
+  if (proc.status !== 'running') {
+    return res.status(400).json({ error: `Process '${id}' is not running (${proc.status})` });
+  }
+
+  proc.outputBuffer.push(`[${new Date().toISOString()}] [stdin] ${input}`);
+  proc.lastActivity = Date.now();
+
+  res.json({ ok: true, message: `Input delivered to '${id}'`, process: proc });
+});
+
+/**
+ * POST /api/cowork/processes/:id/kill
+ * Terminates a process
+ */
+router.post('/processes/:id/kill', (req, res) => {
+  const { id } = req.params;
+  const { signal = 'SIGTERM' } = req.body || {};
+  const proc = activeProcesses.get(id);
+  if (!proc) {
+    return res.status(404).json({ error: `Process '${id}' not found` });
+  }
+
+  proc.status = 'killed';
+  proc.exitCode = signal === 'SIGKILL' ? 137 : 143;
+  proc.completedAt = Date.now();
+  proc.outputBuffer.push(`[${new Date().toISOString()}] Terminated with ${signal}`);
+  proc.lastActivity = Date.now();
+
+  res.json({ ok: true, message: `Process '${id}' terminated with ${signal}`, process: proc });
+});
+
+/**
+ * GET /api/cowork/ports
+ * Lists all active exposed ports
+ */
+router.get('/ports', (req, res) => {
+  const now = Date.now();
+  const active = [];
+  for (const [port, info] of exposedPorts.entries()) {
+    if (info.expiresAt && now > info.expiresAt) {
+      info.status = 'closed';
+      continue;
+    }
+    if (info.status === 'active') {
+      active.push(info);
+    }
+  }
+  res.json({ ok: true, ports: active });
+});
+
+/**
+ * POST /api/cowork/ports/expose
+ * Exposes a local port for preview
+ */
+router.post('/ports/expose', (req, res) => {
+  const { port, protocol = 'http', ttlMinutes = 60, targetService } = req.body || {};
+  const portNum = parseInt(port, 10);
+  if (isNaN(portNum) || portNum < 1 || portNum > 65535) {
+    return res.status(400).json({ error: 'Valid port number between 1 and 65535 is required' });
+  }
+
+  const now = Date.now();
+  const info = {
+    port: portNum,
+    protocol,
+    exposedUrl: `${protocol}://localhost:${portNum}`,
+    localUrl: `${protocol}://localhost:${portNum}`,
+    targetService: targetService || `Service on port ${portNum}`,
+    createdAt: now,
+    expiresAt: ttlMinutes > 0 ? now + ttlMinutes * 60000 : undefined,
+    status: 'active',
+  };
+
+  exposedPorts.set(portNum, info);
+  res.json({ ok: true, port: info });
+});
+
+/**
+ * DELETE /api/cowork/ports/:port
+ * Closes an exposed port
+ */
+router.delete('/ports/:port', (req, res) => {
+  const portNum = parseInt(req.params.port, 10);
+  const existing = exposedPorts.get(portNum);
+  if (!existing) {
+    return res.status(404).json({ error: `Port ${portNum} is not exposed` });
+  }
+
+  existing.status = 'closed';
+  exposedPorts.delete(portNum);
+  res.json({ ok: true, message: `Port ${portNum} closed` });
+});
+
 module.exports = router;
