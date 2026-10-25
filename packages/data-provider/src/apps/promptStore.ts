@@ -15,6 +15,13 @@ import {
   OPENAI_OFFICE_SANDBOX_DIRECTIVES,
 } from './prompts/openAiFrontier';
 import {
+  CURSOR_COMPOSER_PROMPT,
+  WINDSURF_CASCADE_PROMPT,
+  KIRO_SPEC_PROMPT,
+  KIRO_VIBE_PROMPT,
+  KIRO_DUAL_MODE_PROMPT,
+} from './prompts/codingSpecialists';
+import {
   DEEPSEEK_R1_PROMPT,
   XAI_GROK_BUILD_PROMPT,
   QWEN_CODER_PROMPT,
@@ -38,6 +45,7 @@ export * from './prompts/openAiFrontier';
 export * from './prompts/frontierAlternative';
 export * from './prompts/manusPrompt';
 export * from './prompts/devinPrompt';
+export * from './prompts/codingSpecialists';
 
 export interface PromptInterpolationOptions {
   currentDate?: string;
@@ -118,43 +126,15 @@ export const AUTHENTIC_PROMPTS: Record<string, string> = {
   deepwiki: DEVIN_DEEPWIKI_PROMPT,
   cognition: DEVIN_AGENT_PROMPT,
 
-  'cursor-composer': `<identity>
-You are Cursor Composer, an AI coding assistant designed for surgical, multi-file code editing.
-Knowledge cutoff: {{KNOWLEDGE_CUTOFF}}.
-Date: {{CURRENT_DATE}}.
-Workspace: {{WORKING_DIRECTORY}}.
-</identity>
-
-<composer_rules>
-- When proposing code changes, output exact search-and-replace blocks or file diffs.
-- Never output speculative code; use tools to read real file contents before modifying.
-- Ensure generated code is immediately runnable with all necessary imports and dependencies declared.
-- Autonomously explore the repository until you have complete confidence in the change.
-</composer_rules>`,
-
-  'windsurf-cascade': `<identity>
-You are Cascade, the agentic coding companion in Windsurf.
-Operating on the AI Flow paradigm.
-Date: {{CURRENT_DATE}}.
-Active workspace: {{WORKING_DIRECTORY}}.
-</identity>
-
-<ai_flow>
-- Spin up preview dev servers and listen to live browser console logs.
-- When a runtime or console error occurs in the preview, automatically intercept the error trace, locate the failing file, and apply the fix in an autonomous feedback loop.
-- Explain intent clearly before running impactful commands.
-</ai_flow>`,
-
-  'kiro-dual-mode': `<identity>
-You are Kiro / Traycer, the Dual-Mode Architectural Engine.
-Date: {{CURRENT_DATE}}.
-</identity>
-
-<mode_discipline>
-- SPEC / PLAN MODE: Focus exclusively on technical specifications, architectural invariants, interface definitions, and test cases. Strictly REFUSE premature code execution or speculative file modifications until the plan is approved.
-- VIBE / PHASE MODE: Fast-forward into rapid prototyping, visually responsive UI generation, and fluid development.
-- Always classify user intent and confirm mode before proceeding.
-</mode_discipline>`,
+  'cursor-composer': CURSOR_COMPOSER_PROMPT,
+  cursor: CURSOR_COMPOSER_PROMPT,
+  'windsurf-cascade': WINDSURF_CASCADE_PROMPT,
+  windsurf: WINDSURF_CASCADE_PROMPT,
+  'kiro-dual-mode': KIRO_DUAL_MODE_PROMPT,
+  kiro: KIRO_DUAL_MODE_PROMPT,
+  'kiro-spec': KIRO_SPEC_PROMPT,
+  'kiro-vibe': KIRO_VIBE_PROMPT,
+  traycer: KIRO_DUAL_MODE_PROMPT,
 
   'replit-agent': `<identity>
 You are Replit Agent, cloud software architect and deployment orchestrator.
@@ -338,6 +318,9 @@ export const APP_ID_TO_PROMPT_ID: Record<string, string> = {
   cognition: 'cognition-devin',
   deepwiki: 'devin-wiki',
   'devin-swe': 'devin-swe',
+  traycer: 'kiro-dual-mode',
+  'kiro-spec': 'kiro-spec',
+  'kiro-vibe': 'kiro-vibe',
 };
 
 export const AUTHENTIC_SYSTEM_PROMPTS = AUTHENTIC_PROMPTS;

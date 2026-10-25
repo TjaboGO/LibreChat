@@ -25,6 +25,12 @@ jest.mock('~/components/DevinStudio/DevinWorkspaceView', () => {
   };
 });
 
+jest.mock('~/components/CodeStudios/CodingStudioWorkspaceView', () => {
+  return function MockCodingStudioWorkspaceView({ appId }: { appId: string }) {
+    return <div data-testid={`coding-studio-view-mock-${appId}`}>Coding Studio View Mounted ({appId})</div>;
+  };
+});
+
 let mockCurrentApp = getDefaultApp();
 let mockIsSpecialized = false;
 
@@ -140,7 +146,46 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       expect(screen.getByTestId('devin-workspace-view-mock')).toBeInTheDocument();
     });
 
-    it('renders ChatRoute without ManusWorkspaceView or DevinWorkspaceView for other apps like /app/v0/new', () => {
+    it('renders ChatRoute and CodingStudioWorkspaceView when on /app/cursor/:conversationId', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/cursor/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('coding-studio-view-mock-cursor')).toBeInTheDocument();
+    });
+
+    it('renders ChatRoute and CodingStudioWorkspaceView when on /app/windsurf/:conversationId', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/windsurf/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('coding-studio-view-mock-windsurf')).toBeInTheDocument();
+    });
+
+    it('renders ChatRoute and CodingStudioWorkspaceView when on /app/kiro/:conversationId', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/kiro/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('coding-studio-view-mock-kiro')).toBeInTheDocument();
+    });
+
+    it('renders ChatRoute without studio views for other apps like /app/v0/new', () => {
       render(
         <MemoryRouter initialEntries={['/app/v0/new']}>
           <Routes>

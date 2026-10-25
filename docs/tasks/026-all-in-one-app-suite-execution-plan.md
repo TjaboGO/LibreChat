@@ -322,13 +322,38 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
 #### Fas 39: Coding Specialist Studios (Cursor, Windsurf, Kiro/Traycer)
 - **Syfte:** Specialiserade kodningsmiljöer med snabba diffar, TDD-disciplin och självläkande dev-servers.
 - **Filer:**
-  - `client/src/components/CodeStudios/`
+  - `client/src/components/CodeStudios/CursorDiffStudio.tsx`
+  - `client/src/components/CodeStudios/WindsurfDevServerStudio.tsx`
+  - `client/src/components/CodeStudios/KiroDualModeStudio.tsx`
+  - `client/src/components/CodeStudios/CodingStudioWorkspaceView.tsx`
+  - `client/src/components/CodeStudios/index.ts`
+  - `client/src/components/CodeStudios/__tests__/CursorDiffStudio.spec.tsx`
+  - `client/src/components/CodeStudios/__tests__/WindsurfDevServerStudio.spec.tsx`
+  - `client/src/components/CodeStudios/__tests__/KiroDualModeStudio.spec.tsx`
+  - `client/src/components/CodeStudios/__tests__/CodingStudioWorkspaceView.spec.tsx`
+  - `client/src/routes/AppRoute.tsx`
+  - `client/src/routes/__tests__/AppRoute.spec.tsx`
+  - `packages/data-provider/src/apps/prompts/codingSpecialists.ts`
+  - `packages/data-provider/src/apps/promptStore.ts`
+  - `packages/data-provider/src/apps/__tests__/codingSpecialists.spec.ts`
   - Promptkällor: `Cursor Prompts/Agent Prompt 2.0.txt`, `Windsurf/Prompt Wave 11.txt`, `Kiro/Spec_Prompt.txt`, `Traycer/`
 - **Checklista:**
-  - [ ] `/app/cursor`: Monaco DiffEditor med blixtsnabb search/replace och cherry-pick accept/reject.
-  - [ ] `/app/windsurf`: Live Dev Server preview med automatisk konsolfelsfångare och auto-healing loop.
-  - [ ] `/app/kiro`: Dual-Mode väljare (Spec Mode för arkitektur/TDD vs. Vibe Mode för snabb UI-kod).
+  - [x] `/app/cursor`: Monaco DiffEditor med blixtsnabb search/replace och cherry-pick accept/reject.
+  - [x] `/app/windsurf`: Live Dev Server preview med automatisk konsolfelsfångare och auto-healing loop.
+  - [x] `/app/kiro`: Dual-Mode väljare (Spec Mode för arkitektur/TDD vs. Vibe Mode för snabb UI-kod).
 - **Verifiering:** Testa att växla mellan Spec Mode och Vibe Mode i composern.
+- **Resultat (Fas 39 slutförd):**
+  - Monterade autentiska systemprompter för Coding Specialists i `packages/data-provider/src/apps/prompts/codingSpecialists.ts` och `promptStore.ts`:
+    - `CURSOR_COMPOSER_PROMPT`: Kirurgisk multi-file diff-redigering, semantisk `codebase_search` och atomic diff-regler.
+    - `WINDSURF_CASCADE_PROMPT`: Windsurf AI Flow paradigm, proaktiv konsolfelsavlyssning och självläkande dev-server loop.
+    - `KIRO_SPEC_PROMPT`, `KIRO_VIBE_PROMPT`, `KIRO_DUAL_MODE_PROMPT`: Dual-mode väljare med TDD/minimal-code invariant för Spec Mode och snabb scaffolding för Vibe Mode.
+  - Byggde specialiserade komponenter i `client/src/components/CodeStudios/`:
+    - **Cursor Studio (`CursorDiffStudio`):** Röd/grön diffvy (Original vs Proposed), filväljare, snabb search/replace i ändringsblock och cherry-pick accept/reject med visual statusindikering (`PENDING`, `ACCEPTED`, `REJECTED`).
+    - **Windsurf Wave (`WindsurfDevServerStudio`):** Integrerad med `/api/cowork/dev-server/*`, live sandboxed preview-iframe, realtidsavlyssnare för webbläsarkonsolloggar samt interaktiv "Auto-Heal"-åtgärd.
+    - **Kiro / Traycer (`KiroDualModeStudio`):** Direkt omkopplare mellan Spec Mode (arkitekturinvarianter, TDD-checklista) och Vibe Mode (snabbkomponentmallar).
+    - **Unified Dock (`CodingStudioWorkspaceView`):** Delad split-vy med responsiv 32px vertikal dockningsknapp som frigör full bredd åt chatten vid behov.
+  - Integrerade i `client/src/routes/AppRoute.tsx` under `/app/cursor`, `/app/windsurf` och `/app/kiro`.
+  - Skapade fullständiga enhetstester med 100% gröna resultat i samtliga sviter.
 
 ---
 
