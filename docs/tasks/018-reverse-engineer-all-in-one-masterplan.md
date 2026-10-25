@@ -191,3 +191,51 @@ Fullständig specifikation finns i artefakten:
 - `ModeToggle.spec.tsx`: Tester för rendering, menyöppning, val av Spec/Vibe Mode, localStorage-persistens och disabled-läge.
 - Verifierade assertions med 100% framgång via direkt testkörning.
 - Formatering med `npm run sort-imports`.
+
+---
+
+## Genomfört Arbete: Fas 20 (Interactive In-Chat Form Cards: AskUserQuestions / Generative UI)
+
+### 1. Universell Normaliseringsmotor (`packages/data-provider/src/forms/`)
+- Skapade `types.ts`:
+  - `FormCardOption`: Alternativ med `label`, `value`, `isRecommended` och valfri `description`.
+  - `FormCardQuestion`: Fråga med `id`, `question`, `header`, `description`, `options`, `isMultiSelect`, `allowOther`.
+  - `FormCardData` & `FormCardSubmission`: Samlad modell för formulärkort och användarsvar.
+- Skapade `normalizer.ts`:
+  - `normalizeFormCardQuestions`: Flexibel normalisering som förenar indata från:
+    1. **Google Antigravity:** `{ questions: [{ question, options: string[], is_multi_select }] }` med automatisk `(Recommended)`-detektering.
+    2. **v0:** `{ questions: [{ question, options: [{label, value}], multiSelect }] }`.
+    3. **LibreChat HITL:** `{ questions: [{ id, header, question, description, options, multiSelect }] }`.
+    4. **Manus:** `{ text, options }` från `message_ask_user`.
+    5. **Rå JSON eller strängar.**
+  - `isInteractiveFormTool`: Känner igen samtliga verktygsanrop: `ask_user_question`, `ask_question`, `AskUserQuestions`, `ask_user_questions`, `message_ask_user`.
+  - `formatFormSubmissionResponse`: Formaterar strukturerade användarsvar till Markdown för sömlös återupptagning i modellen.
+- Exporterade `forms`-modulen i `packages/data-provider/src/index.ts` samt dess `dist/types/index.d.ts` och `dist/index.mjs`.
+
+### 2. Generative UI In-Chat Formulärkomponent
+- Skapade `client/src/components/Chat/Messages/Content/FormCard/InteractiveFormCard.tsx`:
+  - Modern v0/Antigravity-design med rundade hörn (`rounded-2xl`), subtil ram och skuggning.
+  - Header med `Sparkles`-ikon, titel, beskrivning och fråga-badge.
+  - Interaktiva valbara alternativ (cards med hover/active state, radio pills för singelval och checkboxes för flerval).
+  - Förval av rekommenderade alternativ (`✦ Recommended` tagg i violett/emerald).
+  - "+ Write custom answer"-knapp och textfält per fråga för fri textinmatning utan begränsning.
+  - "Submit Answers"- och "Skip & Use Defaults"-knappar.
+  - Permanent låst läge efter inlämning (`✓ Answers Submitted`) som bevarar användarens val i historiken.
+  - Tvåvägs-inlämning: anropar `onSubmit` eller skickar direkt i konversationen via `chatContext.ask()`.
+
+### 3. Container & Tool-Call Routing
+- **Verktygsrouting i `Part.tsx`:** Utökade tool-call-renderingen så att alla interaktiva frågeverktyg (`ask_question`, `AskUserQuestions`, `message_ask_user`, etc.) renderar `InteractiveFormCard` istället för generiska anropskort.
+- **Markdown Containers i `Text.tsx`:** Lade till stöd för `:::form-card` och `:::question` i markdown så att LLMs utan native function calling (Claude, DeepSeek, OpenRouter) kan generera interaktiva formulärkort direkt i chatten.
+- **AttachPlusMenu Integration:** Lade till `In-Chat Form Cards (Ask Questions)` under Skills med grön `v0 / Antigravity`-badge.
+
+### 4. Master Skill & Dokumentation
+- Skapade `skill/interactive-form-cards/SKILL.md`:
+  - Systemöversikt och jämförelse mellan v0 och Antigravity.
+  - Verktygsanropsstandarder (`ask_question`, `AskUserQuestions`).
+  - Markdown container specifikation (`:::form-card`).
+  - Riktlinjer för att undvika triviala frågor och formulera 2-6 skarpa val.
+
+### 5. Verifiering & Enhetstester
+- `normalizer.spec.ts`: Tester för Antigravity-, v0-, Manus- och strängformat, `(Recommended)`-detektering, och svarsformatering (100% assertions gröna).
+- `InteractiveFormCard.spec.tsx`: Tester för rendering, förval av rekommenderat svar, singel- och flervalsväxling, anpassat fritextsvar, inlämning och skip.
+- Formatering med `npm run sort-imports`.

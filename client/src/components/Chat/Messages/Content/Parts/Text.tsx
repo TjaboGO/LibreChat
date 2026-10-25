@@ -1,5 +1,7 @@
-import { memo, useMemo, ReactElement } from 'react';
+import React, { memo, useMemo, ReactElement } from 'react';
 import { useRecoilValue } from 'recoil';
+import { normalizeFormCardQuestions } from 'librechat-data-provider';
+import InteractiveFormCard from '~/components/Chat/Messages/Content/FormCard/InteractiveFormCard';
 import MarkdownLite from '~/components/Chat/Messages/Content/MarkdownLite';
 import useSmoothStreaming from '~/hooks/Messages/useSmoothStreaming';
 import Markdown from '~/components/Chat/Messages/Content/Markdown';
@@ -14,10 +16,51 @@ type TextPartProps = {
   isCreatedByUser: boolean;
 };
 
-type ContentType =
-  | ReactElement<React.ComponentProps<typeof Markdown>>
-  | ReactElement<React.ComponentProps<typeof MarkdownLite>>
-  | ReactElement;
+const FORM_CONTAINER_REGEX = /:::(?:form-card|question)(?:\{[^}]*\})?\s*\n([\s\S]*?)\n:::/g;
+
+function renderTextWithFormCards(text: string, isLatestMessage?: boolean) {
+  if (!text.includes(':::form-card') && !text.includes(':::question')) {
+    return <Markdown content={text} isLatestMessage={isLatestMessage} />;
+  }
+
+  const elements: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  FORM_CONTAINER_REGEX.lastIndex = 0;
+
+  while ((match = FORM_CONTAINER_REGEX.exec(text)) !== null) {
+    const preText = text.slice(lastIndex, match.index);
+    if (preText.trim()) {
+      elements.push(
+        <Markdown key={`pre-${match.index}`} content={preText} isLatestMessage={false} />,
+      );
+    }
+
+    const formContent = match[1];
+    const normalizedData = normalizeFormCardQuestions(formContent);
+    if (normalizedData) {
+      elements.push(
+        <InteractiveFormCard key={`form-${match.index}`} data={normalizedData} />,
+      );
+    } else {
+      elements.push(
+        <Markdown key={`raw-${match.index}`} content={match[0]} isLatestMessage={false} />,
+      );
+    }
+
+    lastIndex = match.index + match[0].length;
+  }
+
+  const remainingText = text.slice(lastIndex);
+  if (remainingText.trim()) {
+    elements.push(
+      <Markdown key={`post-${lastIndex}`} content={remainingText} isLatestMessage={isLatestMessage} />,
+    );
+  }
+
+  return <>{elements}</>;
+}
 
 const TextPart = memo(function TextPart({ text, isCreatedByUser, showCursor }: TextPartProps) {
   const { isSubmitting = false, isLatestMessage = false } = useMessageContext();
@@ -31,9 +74,9 @@ const TextPart = memo(function TextPart({ text, isCreatedByUser, showCursor }: T
     [showCursor, isSubmitting, smoothStreaming, isCreatedByUser],
   );
 
-  const content: ContentType = useMemo(() => {
+  const content = useMemo(() => {
     if (!isCreatedByUser) {
-      return <Markdown content={text} isLatestMessage={isLatestMessage} />;
+      return renderTextWithFormCards(text, isLatestMessage);
     } else if (enableUserMsgMarkdown) {
       return <MarkdownLite content={text} />;
     } else {

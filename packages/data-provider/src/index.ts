@@ -86,3 +86,6 @@ export * from './browser/actionParser';
 export * from './manus';
 /* dual-mode engine (spec vs vibe) */
 export * from './modes';
+/* interactive form cards (AskUserQuestions) */
+export * from './forms';
+

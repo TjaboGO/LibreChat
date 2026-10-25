@@ -228,7 +228,7 @@ Omfattande syntes av **samtliga 72 extraherade systemprompts och plattformar** (
 
 - [x] **Fas 18: Manus-Grade 30+ Tools & Interaktiv Process-Management** (`shell_write_to_process`, `deploy_expose_port`, Manus Agent State Machine)
 - [x] **Fas 19: Dual-Mode Engine** (Spec Mode / Plan Mode vs. Vibe Mode / Phase Mode med Intent Classifier från Kiro & Traycer)
-- [ ] **Fas 20: Interactive In-Chat Form Cards** (`AskUserQuestions` / Generative UI form cards i chatten inspirerat av v0 och Antigravity)
+- [x] **Fas 20: Interactive In-Chat Form Cards** (`AskUserQuestions` / Generative UI form cards i chatten inspirerat av v0 och Antigravity)
 - [ ] **Fas 21: Full-Stack Web App Generator med Self-Healing Dev Server** (Live preview + Web console error feedback loop från Windsurf & Lovable)
 - [ ] **Fas 22: Deep Research Engine & Citation Badges** (Rekursiv sök-expansion och källcitatbadges från Perplexity & OpenAI Deep Research)
 - [ ] **Fas 23: Living Office Artifacts Generator** (Word `.docx`, Excel `.xlsx`, PowerPoint `.pptx`, PDF generator från GPT-5.6 Sol & Claude Office)

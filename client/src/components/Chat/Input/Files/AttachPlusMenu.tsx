@@ -22,6 +22,7 @@ import {
   BookOpen,
   Cpu,
   Layers,
+  HelpCircle,
 } from 'lucide-react';
 import type { TConversation } from 'librechat-data-provider';
 import type { ExtendedFile, FileSetter } from '~/common';
@@ -392,6 +393,18 @@ export default function AttachPlusMenu({
                   </span>
                   <span className="rounded bg-cyan-500/10 px-1 py-0.5 text-[9px] font-semibold text-cyan-600 dark:text-cyan-400">
                     Kiro / Traycer
+                  </span>
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
+                  onClick={() => handleSelectSkill('interactive-form-cards')}
+                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  <span className="flex items-center gap-2">
+                    <HelpCircle className="h-4 w-4 text-emerald-500" />
+                    <span>In-Chat Form Cards (Ask Questions)</span>
+                  </span>
+                  <span className="rounded bg-emerald-500/10 px-1 py-0.5 text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">
+                    v0 / Antigravity
                   </span>
                 </Ariakit.MenuItem>
                 <Ariakit.MenuItem

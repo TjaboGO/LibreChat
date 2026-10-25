@@ -6,6 +6,7 @@ import {
   ToolCallTypes,
   imageGenTools,
   isImageVisionTool,
+  isInteractiveFormTool,
 } from 'librechat-data-provider';
 import type { TMessageContentParts, TAttachment } from 'librechat-data-provider';
 import {
@@ -26,6 +27,7 @@ import {
   SteerPart,
 } from './Parts';
 import { getCachedPreview, getActivityLabelPart, getActivityLabelText } from '~/utils';
+import InteractiveFormCard from './FormCard/InteractiveFormCard';
 import { getAskUserQuestionPart } from '~/utils/approval';
 import AskUserQuestionCall from './AskUserQuestionCall';
 import { isBashProgrammaticToolCall } from './routing';
@@ -268,6 +270,14 @@ const Part = memo(function Part({
               showCursor={showCursor}
               failed={'inputValidationError' in toolCall && toolCall.inputValidationError === true}
               onExpand={onToolExpand}
+            />
+          );
+        } else if (isInteractiveFormTool(toolCall.name)) {
+          return (
+            <InteractiveFormCard
+              rawArgs={toolCall.args}
+              actionId={toolCall.id}
+              isSubmitting={isSubmitting}
             />
           );
         } else if (toolCall.name === 'skill') {
