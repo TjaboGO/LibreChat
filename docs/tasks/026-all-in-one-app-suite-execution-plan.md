@@ -363,12 +363,32 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
 - **Syfte:** Blixtsnabb generering av moderna React 19 UI-komponenter med interaktiva form-kort och live preview.
 - **Filer:**
   - `client/src/components/v0Studio/v0StudioView.tsx`
+  - `client/src/components/v0Studio/v0AskUserQuestionsCard.tsx`
+  - `client/src/components/v0Studio/index.ts`
+  - `client/src/components/v0Studio/__tests__/v0StudioView.spec.tsx`
+  - `client/src/routes/AppRoute.tsx`
+  - `client/src/routes/__tests__/AppRoute.spec.tsx`
+  - `packages/data-provider/src/apps/prompts/v0Prompt.ts`
+  - `packages/data-provider/src/apps/promptStore.ts`
+  - `packages/data-provider/src/apps/__tests__/v0Prompt.spec.ts`
   - Promptkälla: `My system prompts/v0 Prompts and Tools/Prompt.txt`
 - **Checklista:**
-  - [ ] Montera den officiella v0-systemprompten och dess shadcn/ui komponentstandarder.
-  - [ ] Koppla verktyget `AskUserQuestions` som automatiskt renderar interaktiva formulärkort i chatten vid otydliga specifikationer.
-  - [ ] Integrera Sandpack React 19 Runner med responsiv multi-viewport (Desktop, Tablet, Mobile) i högerpanelen.
+  - [x] Montera den officiella v0-systemprompten och dess shadcn/ui komponentstandarder.
+  - [x] Koppla verktyget `AskUserQuestions` som automatiskt renderar interaktiva formulärkort i chatten vid otydliga specifikationer.
+  - [x] Integrera Sandpack React 19 Runner med responsiv multi-viewport (Desktop, Tablet, Mobile) i högerpanelen.
 - **Verifiering:** Be v0 bygga en "Dashboard" och besvara de genererade formulärkorten direkt i chatten.
+- **Resultat (Fas 40 slutförd):**
+  - Monterade den officiella v0-systemprompten (48 kB) i `packages/data-provider/src/apps/prompts/v0Prompt.ts` och `promptStore.ts`:
+    - Innehåller shadcn/ui komponentregler, Next.js App Router, Tailwind CSS, Radix UI-primitiver och Lucide Icons.
+    - Fullständig integrering av verktyget `AskUserQuestions` (prohibition mot parallella anrop, formulärkort med flervalsfrågor och rekommendationer).
+    - React 19 / Next.js 16 cachingdirektiv (`use cache`, `revalidateTag`, `updateTag`) och dubbeldollar-LaTeX (`$$`).
+  - Byggde v0 Studio i `client/src/components/v0Studio/`:
+    - **Multi-Viewport Runner:** Desktop (100% Fluid), Tablet (768px) och Mobile (375px) med direkt växling och responsiv visning.
+    - **Interactive Clarification Card (`v0AskUserQuestionsCard`):** Fullt interaktivt formulärkort för `AskUserQuestions` med flervalsalternativ, radioknappar och "Submit Answers to v0"-flöde som matar in svaren i chatten.
+    - **Component Presets & TSX Code:** Färdiga moderna komponentmallar (Dashboard Analytics, SaaS Pricing Cards) samt syntax-kopiering.
+    - **Responsive Dock:** Kollapsbar sidopanel med 32px vertikal dockningsknapp (`v0-studio-expand-btn`).
+  - Monterade `v0StudioView` i `client/src/routes/AppRoute.tsx` under `/app/v0/:conversationId?`.
+  - Byggde fullständiga enhetstester i `packages/data-provider/src/apps/__tests__/v0Prompt.spec.ts`, `client/src/components/v0Studio/__tests__/v0StudioView.spec.tsx` och `client/src/routes/__tests__/AppRoute.spec.tsx` (100% gröna tester).
 
 #### Fas 41: Lovable & Full-Stack App Builders (`/app/lovable` & `/app/bolt`)
 - **Syfte:** Full-stack app-generering med databasscheman och live molndriftsättning.

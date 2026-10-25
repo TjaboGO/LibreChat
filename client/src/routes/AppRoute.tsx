@@ -4,6 +4,7 @@ import { Navigate, useParams, useLocation } from 'react-router-dom';
 import CodingStudioWorkspaceView from '~/components/CodeStudios/CodingStudioWorkspaceView';
 import ManusWorkspaceView from '~/components/ManusStudio/ManusWorkspaceView';
 import DevinWorkspaceView from '~/components/DevinStudio/DevinWorkspaceView';
+import v0StudioView from '~/components/v0Studio/v0StudioView';
 import ChatRoute from './ChatRoute';
 
 /**
@@ -61,6 +62,17 @@ function AppRoute() {
           <ChatRoute />
         </div>
         <CodingStudioWorkspaceView appId={appId} />
+      </div>
+    );
+  }
+
+  if (appId === 'v0') {
+    return (
+      <div className="relative flex h-full w-full overflow-hidden">
+        <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
+          <ChatRoute />
+        </div>
+        <v0StudioView />
       </div>
     );
   }

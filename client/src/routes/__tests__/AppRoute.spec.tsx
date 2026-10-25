@@ -31,6 +31,12 @@ jest.mock('~/components/CodeStudios/CodingStudioWorkspaceView', () => {
   };
 });
 
+jest.mock('~/components/v0Studio/v0StudioView', () => {
+  return function Mockv0StudioView() {
+    return <div data-testid="v0-studio-view-mock">v0 Studio View Mounted</div>;
+  };
+});
+
 let mockCurrentApp = getDefaultApp();
 let mockIsSpecialized = false;
 
@@ -185,7 +191,7 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       expect(screen.getByTestId('coding-studio-view-mock-kiro')).toBeInTheDocument();
     });
 
-    it('renders ChatRoute without studio views for other apps like /app/v0/new', () => {
+    it('renders ChatRoute and v0StudioView when on /app/v0/:conversationId', () => {
       render(
         <MemoryRouter initialEntries={['/app/v0/new']}>
           <Routes>
@@ -195,7 +201,21 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       );
 
       expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('v0-studio-view-mock')).toBeInTheDocument();
+    });
+
+    it('renders ChatRoute without studio views for other apps like /app/office/new', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/office/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
       expect(screen.queryByTestId('manus-workspace-view-mock')).toBeNull();
+      expect(screen.queryByTestId('v0-studio-view-mock')).toBeNull();
     });
   });
 

@@ -264,7 +264,7 @@ Integration av världens alla 72 AI-tjänster och modeller som inbyggda, dediker
 - [x] **Fas 39: Coding Specialist Studios** (Cursor fast diffing, Windsurf self-healing dev server, Kiro/Traycer Spec vs Vibe TDD)
 
 ### Block 5: Builders & Living Office Workspaces (Fas 40–42)
-- [ ] **Fas 40: v0 Studio Integration** (`/app/v0` med `AskUserQuestions` formulärkort, shadcn/ui och Sandpack multi-viewport)
+- [x] **Fas 40: v0 Studio Integration** (`/app/v0` med `AskUserQuestions` formulärkort, shadcn/ui och Sandpack multi-viewport)
 - [ ] **Fas 41: Lovable & Full-Stack Builders** (`/app/lovable` & `/app/bolt` med Supabase SQL schemas och live sandbox)
 - [ ] **Fas 42: Living Office & Notion AI Suite** (`/app/office` Word/Excel/PowerPoint/PDF och `/app/notion` relationsdatabaser)
 

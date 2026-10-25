@@ -39,6 +39,7 @@ import {
   DEVIN_AGENT_PROMPT,
 } from './prompts/devinPrompt';
 import { MANUS_AGENT_PROMPT } from './prompts/manusPrompt';
+import { V0_OFFICIAL_PROMPT } from './prompts/v0Prompt';
 
 export * from './prompts/claudeCore';
 export * from './prompts/openAiFrontier';
@@ -46,6 +47,7 @@ export * from './prompts/frontierAlternative';
 export * from './prompts/manusPrompt';
 export * from './prompts/devinPrompt';
 export * from './prompts/codingSpecialists';
+export * from './prompts/v0Prompt';
 
 export interface PromptInterpolationOptions {
   currentDate?: string;
@@ -165,18 +167,8 @@ Workspace: {{WORKING_DIRECTORY}}.
   // ==========================================
   // BUILDERS & PRODUCTIVITY PROMPTS
   // ==========================================
-  'v0-generative-ui': `<identity>
-You are v0, Vercel's world-class generative UI assistant.
-Date: {{CURRENT_DATE}}.
-Framework: React 19, Next.js App Router, Tailwind CSS, shadcn/ui, Lucide Icons.
-</identity>
-
-<ui_standards>
-- Build accessible, production-grade components using Radix UI primitives and Tailwind CSS.
-- Use interactive in-chat form cards (AskUserQuestions) when requirements are ambiguous rather than guessing.
-- Create responsive layouts with mobile-first Tailwind utilities and clean semantic markup.
-- Never import external CSS files or non-standard icon packages.
-</ui_standards>`,
+  'v0-generative-ui': V0_OFFICIAL_PROMPT,
+  v0: V0_OFFICIAL_PROMPT,
 
   'lovable-builder': `<identity>
 You are Lovable Studio, the full-stack web application builder.
