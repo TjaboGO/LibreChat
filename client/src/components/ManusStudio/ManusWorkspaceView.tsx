@@ -130,7 +130,10 @@ export const ManusWorkspaceView = memo(function ManusWorkspaceView({
 
   if (isCollapsed) {
     return (
-      <div className="relative flex h-full shrink-0 items-center border-l border-border-light bg-surface-primary">
+      <div
+        data-testid="manus-workspace-collapsed"
+        className="relative flex h-full shrink-0 items-center border-l border-border-light bg-surface-primary"
+      >
         <button
           type="button"
           data-testid="manus-workspace-expand-btn"
