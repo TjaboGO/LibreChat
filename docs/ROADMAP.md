@@ -222,6 +222,21 @@ Systematisk integration av styrkorna från marknadens bästa verktyg (Cursor, Pe
 
 → [docs/tasks/017-video-critique-masterplan.md](tasks/017-video-critique-masterplan.md)
 
+## Fas 18–25 — Reverse Engineering All-in-One Superpower Architecture
+
+Omfattande syntes av **samtliga 72 extraherade systemprompts och plattformar** (omfattande över 2 285 filer och 1 685 verktyg): Anthropic (Claude 1.0 till Opus 5.5/Fable 5.1, 39 skills), OpenAI (GPT-3.5 till GPT-6 Astra/Sol, Atlas, o3), Google (Gemini 1.5 till 3.7 Flash, Nano Banana 2, Jules, Antigravity), xAI (Grok 1 till 4.7-CLI, Grok Build), Meta (Llama 4, Muse Spark 1.0–1.2), DeepSeek (V3, R1), GLM-4/ZCode, Moonshot Kimi, Mistral, Qwen, MiniMax, Doubao, samt samtliga 60 agenter och verktyg (Manus, Cursor, Windsurf, Devin, Trae, Replit, Kiro, Traycer, Augment, Same.dev, Cline, Blackbox, Xcode, v0, Lovable, Bolt, Perplexity, Notion, Docker Gordon, DuckAI, Atlassian Rovo, Roblox, Clyde, Opera, Proton, Hume m.fl.):
+
+- [ ] **Fas 18: Manus-Grade 30+ Tools & Interaktiv Process-Management** (`shell_write_to_process`, `deploy_expose_port`, Manus Agent State Machine)
+- [ ] **Fas 19: Dual-Mode Engine** (Spec Mode / Plan Mode vs. Vibe Mode / Phase Mode med Intent Classifier från Kiro & Traycer)
+- [ ] **Fas 20: Interactive In-Chat Form Cards** (`AskUserQuestions` / Generative UI form cards i chatten inspirerat av v0 och Antigravity)
+- [ ] **Fas 21: Full-Stack Web App Generator med Self-Healing Dev Server** (Live preview + Web console error feedback loop från Windsurf & Lovable)
+- [ ] **Fas 22: Deep Research Engine & Citation Badges** (Rekursiv sök-expansion och källcitatbadges från Perplexity & OpenAI Deep Research)
+- [ ] **Fas 23: Living Office Artifacts Generator** (Word `.docx`, Excel `.xlsx`, PowerPoint `.pptx`, PDF generator från GPT-5.6 Sol & Claude Office)
+- [ ] **Fas 24: Kognitiva Output Styles & Persona Switcher** (`/concise`, `/learning`, `/explanatory`, `/proactive` från Claude Code)
+- [ ] **Fas 25: Perplexity Computer Connector Hub** (MCP Dynamic Tool Hub och on-demand `list_external_tools`)
+
+→ [docs/tasks/018-reverse-engineer-all-in-one-masterplan.md](tasks/018-reverse-engineer-all-in-one-masterplan.md)
+
 ## Explicit ute ur scope tills vidare
 
 Team-/orgadministration, fakturering, enterprise-SSO, native mobilapp, samt
