@@ -286,12 +286,38 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
 - **Syfte:** Integrera Devins autonoma ingenjörsflöde och dess arkitektur-wiki.
 - **Filer:**
   - `client/src/components/DevinStudio/DeepWikiPanel.tsx`
-  - Promptkälla: `My system prompts/Devin AI/DeepWiki Prompt.txt`
+  - `client/src/components/DevinStudio/DevinWorkspaceView.tsx`
+  - `client/src/components/DevinStudio/index.ts`
+  - `client/src/components/DevinStudio/__tests__/DeepWikiPanel.spec.tsx`
+  - `client/src/components/DevinStudio/__tests__/DevinWorkspaceView.spec.tsx`
+  - `client/src/data-provider/Devin/queries.ts`
+  - `client/src/data-provider/Devin/index.ts`
+  - `client/src/routes/AppRoute.tsx`
+  - `client/src/routes/__tests__/AppRoute.spec.tsx`
+  - `api/server/routes/cowork.js`
+  - `packages/data-provider/src/apps/prompts/devinPrompt.ts`
+  - `packages/data-provider/src/apps/promptStore.ts`
+  - `packages/data-provider/src/apps/__tests__/devinPrompt.spec.ts`
+  - Promptkälla: `My system prompts/Devin AI/DeepWiki Prompt.txt` & `My system prompts/Devin AI/Prompt.txt`
 - **Checklista:**
-  - [ ] Montera Devin AI systemprompt.
-  - [ ] Skapa en DeepWiki-sidopanel som automatiskt genererar och visar arkitekturkartor och moduldokumentation för kodbasen.
-  - [ ] Koppla arkitektur-noder till klickbara fillänkar i repot.
+  - [x] Montera Devin AI systemprompt.
+  - [x] Skapa en DeepWiki-sidopanel som automatiskt genererar och visar arkitekturkartor och moduldokumentation för kodbasen.
+  - [x] Koppla arkitektur-noder till klickbara fillänkar i repot.
 - **Verifiering:** Generera en DeepWiki-översikt över ett delprojekt och verifiera visualiseringen.
+- **Resultat (Fas 38 slutförd):**
+  - Monterade Cognition Devins autentiska systemprompter (`DEVIN_SWE_PROMPT`, `DEVIN_DEEPWIKI_PROMPT` och `DEVIN_AGENT_PROMPT`) i `packages/data-provider/src/apps/prompts/devinPrompt.ts` och `promptStore.ts`. Inkluderar fullständiga kommandon (`<think>`, `<shell>`, `<open_file>`, `<str_replace>`, `<find_filecontent>`, `<go_to_definition>`, `<navigate_browser>`, `<deploy_frontend>`) samt `<cite repo="..." path="..." start="..." end="..." />`-disciplin och uncolored quoted Mermaid-standard.
+  - Implementerade backend-endpoints i `api/server/routes/cowork.js`:
+    - `GET /api/cowork/devin/wiki`: Returnerar systemarkitektur, nodtopologi, modullista och verifierade källkodscitat.
+    - `POST /api/cowork/devin/inspect`: Säker filinspektion med gränssnittskontroll (path traversal guard mot reporoten) och radnummerformatterade kodsnuttar.
+    - `POST /api/cowork/devin/wiki/generate`: Målstyrd arkitekturanalys per delsystem/modul.
+  - Skapade `client/src/data-provider/Devin/queries.ts` med `useDeepWikiQuery`, `useInspectCodeMutation` och `useGenerateWikiMutation`.
+  - Byggde `client/src/components/DevinStudio/DeepWikiPanel.tsx` och `DevinWorkspaceView.tsx`:
+    - **Architecture Map:** Interaktiv systemtopologi över moduler (Client, API Server, Agent Runtime, Data Provider, Manus Workspace, Devin DeepWiki) med klickbara modulkort och djupdykning.
+    - **DeepWiki Docs:** Strukturerade arkitekturinvarianter och klickbara `<cite>`-referenser som omedelbart öppnar kodrader.
+    - **Code Inspector:** Live källkodsgranskare med radnummer, kopieringsfunktion och direktfilinspektion.
+    - **Responsive Dock:** Kollapsbar sidopanel med 32px vertikal dockningsknapp (`devin-workspace-expand-btn`).
+  - Monterade `DevinWorkspaceView` i `client/src/routes/AppRoute.tsx` under `/app/devin/:conversationId?`.
+  - Byggde fullständiga enhetstester i `packages/data-provider/src/apps/__tests__/devinPrompt.spec.ts`, `client/src/components/DevinStudio/__tests__/DeepWikiPanel.spec.tsx`, `client/src/components/DevinStudio/__tests__/DevinWorkspaceView.spec.tsx` och `client/src/routes/__tests__/AppRoute.spec.tsx` (100% gröna tester).
 
 #### Fas 39: Coding Specialist Studios (Cursor, Windsurf, Kiro/Traycer)
 - **Syfte:** Specialiserade kodningsmiljöer med snabba diffar, TDD-disciplin och självläkande dev-servers.

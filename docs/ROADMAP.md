@@ -260,7 +260,7 @@ Integration av världens alla 72 AI-tjänster och modeller som inbyggda, dediker
 
 ### Block 4: Autonomous Agents Workspaces (Fas 37–39)
 - [x] **Fas 37: Manus Autonomous Workspace** (`/app/manus` med 31 verktyg, `shell_write_to_process`, port manager och live terminal)
-- [ ] **Fas 38: Cognition Devin & DeepWiki Engine** (`/app/devin` med automatisk arkitektur-wiki över kodbasen)
+- [x] **Fas 38: Cognition Devin & DeepWiki Engine** (`/app/devin` med automatisk arkitektur-wiki över kodbasen)
 - [ ] **Fas 39: Coding Specialist Studios** (Cursor fast diffing, Windsurf self-healing dev server, Kiro/Traycer Spec vs Vibe TDD)
 
 ### Block 5: Builders & Living Office Workspaces (Fas 40–42)

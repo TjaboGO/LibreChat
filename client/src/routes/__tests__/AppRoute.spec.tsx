@@ -19,6 +19,12 @@ jest.mock('~/components/ManusStudio/ManusWorkspaceView', () => {
   };
 });
 
+jest.mock('~/components/DevinStudio/DevinWorkspaceView', () => {
+  return function MockDevinWorkspaceView() {
+    return <div data-testid="devin-workspace-view-mock">Devin Workspace View Mounted</div>;
+  };
+});
+
 let mockCurrentApp = getDefaultApp();
 let mockIsSpecialized = false;
 
@@ -121,7 +127,20 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       expect(screen.getByTestId('manus-workspace-view-mock')).toBeInTheDocument();
     });
 
-    it('renders ChatRoute without ManusWorkspaceView for other apps like /app/v0/new', () => {
+    it('renders ChatRoute and DevinWorkspaceView when on /app/devin/:conversationId', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/devin/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('devin-workspace-view-mock')).toBeInTheDocument();
+    });
+
+    it('renders ChatRoute without ManusWorkspaceView or DevinWorkspaceView for other apps like /app/v0/new', () => {
       render(
         <MemoryRouter initialEntries={['/app/v0/new']}>
           <Routes>

@@ -26,13 +26,18 @@ import {
   CLAUDE_DESIGN_PROMPT,
   CLAUDE_CODE_PROMPT,
 } from './prompts/claudeCore';
-
+import {
+  DEVIN_SWE_PROMPT,
+  DEVIN_DEEPWIKI_PROMPT,
+  DEVIN_AGENT_PROMPT,
+} from './prompts/devinPrompt';
 import { MANUS_AGENT_PROMPT } from './prompts/manusPrompt';
 
 export * from './prompts/claudeCore';
 export * from './prompts/openAiFrontier';
 export * from './prompts/frontierAlternative';
 export * from './prompts/manusPrompt';
+export * from './prompts/devinPrompt';
 
 export interface PromptInterpolationOptions {
   currentDate?: string;
@@ -106,19 +111,12 @@ export const AUTHENTIC_PROMPTS: Record<string, string> = {
   // AUTONOMOUS AGENTS PROMPTS
   // ==========================================
   'manus-agent': MANUS_AGENT_PROMPT,
-
-  'cognition-devin': `<identity>
-You are Devin, the autonomous software engineer created by Cognition.
-Date: {{CURRENT_DATE}}.
-Workspace: {{WORKING_DIRECTORY}}.
-</identity>
-
-<engineering_invariants>
-- Autonomously resolve coding tasks from start to finish before yielding control back to the user.
-- Always reproduce bugs first with an isolated test case before attempting to patch code.
-- Read codebase context, trace symbol definitions, and respect existing architectural conventions.
-- Confirm all tests pass cleanly before announcing completion.
-</engineering_invariants>`,
+  'cognition-devin': DEVIN_AGENT_PROMPT,
+  devin: DEVIN_AGENT_PROMPT,
+  'devin-swe': DEVIN_SWE_PROMPT,
+  'devin-wiki': DEVIN_DEEPWIKI_PROMPT,
+  deepwiki: DEVIN_DEEPWIKI_PROMPT,
+  cognition: DEVIN_AGENT_PROMPT,
 
   'cursor-composer': `<identity>
 You are Cursor Composer, an AI coding assistant designed for surgical, multi-file code editing.
@@ -336,6 +334,10 @@ export const APP_ID_TO_PROMPT_ID: Record<string, string> = {
   qwen: 'qwen-coder',
   'moonshot-kimi': 'moonshot-kimi',
   kimi: 'moonshot-kimi',
+  'devin-ai': 'cognition-devin',
+  cognition: 'cognition-devin',
+  deepwiki: 'devin-wiki',
+  'devin-swe': 'devin-swe',
 };
 
 export const AUTHENTIC_SYSTEM_PROMPTS = AUTHENTIC_PROMPTS;
