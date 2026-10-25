@@ -1,4 +1,5 @@
 import React from 'react';
+import CognitiveStyleSelector from './CognitiveStyleSelector';
 import ProjectPickerDropdown from './ProjectPickerDropdown';
 import AutoApprovalDropdown from './AutoApprovalDropdown';
 import OutputFormatDropdown from './OutputFormatDropdown';
@@ -15,6 +16,8 @@ export default function ComposerQuickToggles({ index = 0 }: ComposerQuickToggles
       <AutoApprovalDropdown index={index} />
       <span className="text-text-tertiary/40">·</span>
       <OutputFormatDropdown index={index} />
+      <span className="text-text-tertiary/40">·</span>
+      <CognitiveStyleSelector index={index} />
     </div>
   );
 }

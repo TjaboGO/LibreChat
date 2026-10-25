@@ -330,6 +330,13 @@ export const engineModeFamily = atomFamily<EngineMode, string | number | null>({
   default: 'auto',
 });
 
+export type CognitiveStyleType = 'default' | 'concise' | 'learning' | 'explanatory' | 'proactive';
+
+export const cognitiveStyleFamily = atomFamily<CognitiveStyleType, string | number | null>({
+  key: 'cognitiveStyleByIndex',
+  default: 'default',
+});
+
 export const researchModeFamily = atomFamily<boolean, string | number | null>({
   key: 'researchModeByIndex',
   default: false,
@@ -857,6 +864,7 @@ export default {
   composerModeFamily,
   permissionModeFamily,
   engineModeFamily,
+  cognitiveStyleFamily,
   researchModeFamily,
   outputFormatFamily,
   autoApprovalFamily,

@@ -424,3 +424,45 @@ Fullständig specifikation finns i artefakten:
 - `exporters.spec.ts`: Tester för Word HTML, CSV, Excel XML och Presentation HTML.
 - `ArtifactOfficeStudio.spec.tsx`: Tester för Word-rendering, växling till Excel och PowerPoint, samt nedladdningstrigger.
 - Formatering med `npm run sort-imports`.
+
+---
+
+## Genomfört Arbete: Fas 24 (Kognitiva Output Styles & Persona Switcher)
+
+### 1. Kärnmotor & Datamodeller (`packages/data-provider/src/styles/`)
+- Skapade `types.ts`:
+  - `CognitiveStyle`: `'default' | 'concise' | 'learning' | 'explanatory' | 'proactive'`.
+  - `StyleDefinition`: id, name, label, description, slashCommand, iconName, tag, color, directive.
+  - `SlashStyleDetectionResult`: `cleanText`, `detectedStyle`, `hadSlashCommand`.
+- Skapade `styleEngine.ts`:
+  - `COGNITIVE_STYLES`: Kompletta definitioner och prompt-direktiv för samtliga 5 stilar:
+    - `/concise`: Claude Code-persona med maximal informationstäthet, noll fluff eller artighetsfraser, kod-först.
+    - `/learning`: Sokratisk mentor med progressiv disclosure, underliggande mekanismer före kod och avslutande förståelsefråga.
+    - `/explanatory`: Djup arkitekturanalys, historiska avvägningar, före/efter-kontraster och felmodeller.
+    - `/proactive`: Förutseende ingenjör som tänker tre steg framåt, identifierar odokumenterade beroenden och ger konkreta nästa steg.
+    - `/default`: Balanserad standarddialog.
+  - `detectSlashStyle`: Känner igen slash-kommandon (`/concise`, `/learning`, `/explanatory`, `/proactive`, samt `/style <name>`) i början av meddelanden och returnerar rensad text samt identifierad stil.
+  - `getStyleDirective`: Returnerar systemdirektivet för given stil.
+  - `injectCognitiveStyle`: Injicerar stilens systemdirektiv i meddelandet utan att dubblera om det redan finns.
+- Exporterade `styles`-modulen i `packages/data-provider/src/index.ts`, `dist/types/index.d.ts` och `dist/index.mjs`.
+
+### 2. Klient & Tillståndshantering
+- **Recoil State (`client/src/store/families.ts`):**
+  - Skapade `cognitiveStyleFamily`: atomFamily med standardvärdet `'default'`.
+- **CognitiveStyleSelector (`client/src/components/Chat/Input/CognitiveStyleSelector.tsx`):**
+  - Dropdown-väljare med ikon, stiletikett och beskrivning för samtliga personas.
+  - Visar aktuell stil med specifik accentfärg (bärnsten för concise, smaragdgrön för learning, blå för explanatory, lila för proactive).
+- **Composer Integration:**
+  - `ComposerQuickToggles.tsx`: Lade till `CognitiveStyleSelector` i verktygsraden intill Project Picker, Auto Approval och Output Format.
+  - `ChatForm.tsx`: Intercepterar slash-kommandon i `submitComposerText`, uppdaterar Recoil-tillståndet till den valda stilen, rensar slash-kommandot från prompten så användarhistoriken förblir ren, och injicerar stildirektivet i meddelandet.
+  - `AttachPlusMenu.tsx`: Lade till `Cognitive Persona Styles (/concise, /learning)` i Skills-undermenyn med lila `Claude Code`-märke.
+
+### 3. Master Skill & Dokumentation
+- Skapade `skill/cognitive-output-styles/SKILL.md`:
+  - Detaljerad guide över de 5 personorna, deras promptdirektiv och interaktionsmönster i chatten.
+
+### 4. Verifiering & Enhetstester
+- `styleEngine.spec.ts`: Tester för samtliga 5 stilar, slash-kommandodetektering och direktivinjicering.
+- `CognitiveStyleSelector.spec.tsx`: Tester för triggerknapp, öppning av dropdown, visning av alla 5 stilar och Recoil-tillståndsuppdatering.
+- Formatering med `npm run sort-imports`.
+

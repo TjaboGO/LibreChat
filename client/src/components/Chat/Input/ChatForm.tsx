@@ -1,6 +1,7 @@
 import { memo, useRef, useMemo, useEffect, useState, useCallback } from 'react';
 import { useWatch } from 'react-hook-form';
 import { useRecoilState, useRecoilValue, useRecoilCallback } from 'recoil';
+import { detectSlashStyle, injectCognitiveStyle } from 'librechat-data-provider';
 import { composerSurfaceClasses, composerSurfaceShadow, TextareaAutosize } from '@librechat/client';
 import { Constants, isAssistantsEndpoint, isAgentsEndpoint, classifyIntent, getModeDirective } from 'librechat-data-provider';
 import type { TChatProject, TMessage, TConversation } from 'librechat-data-provider';
@@ -34,11 +35,11 @@ import {
   useAssistantsMapContext,
   BadgeRowProvider,
 } from '~/Providers';
+import { outputFormatFamily, type OutputFormat, engineModeFamily, cognitiveStyleFamily } from '~/store/families';
 import {
   PendingToolApprovalButton,
   PendingToolApprovalPanel,
 } from '~/components/Chat/approval/Review';
-import { outputFormatFamily, type OutputFormat, engineModeFamily } from '~/store/families';
 import PendingManualSkillsChips from './PendingManualSkillsChips';
 import usePastedTextEdit from '~/hooks/Files/usePastedTextEdit';
 import useAskAnswerMode from '~/hooks/Input/useAskAnswerMode';
@@ -188,6 +189,7 @@ const ChatForm = memo(function ChatForm({
   const isTemporary = useRecoilValue(store.isTemporary);
   const outputFormat = useRecoilValue(outputFormatFamily(index));
   const engineMode = useRecoilValue(engineModeFamily(index));
+  const [cognitiveStyle, setCognitiveStyle] = useRecoilState(cognitiveStyleFamily(index));
 
   const [badges, setBadges] = useRecoilState(store.chatBadges);
   const [isEditingBadges, setIsEditingBadges] = useRecoilState(store.isEditingBadges);
@@ -674,6 +676,19 @@ const ChatForm = memo(function ChatForm({
         }
       }
 
+      // Cognitive Output Styles Interception (/concise, /learning, /explanatory, /proactive)
+      const slashResult = detectSlashStyle(textToSend);
+      let activeStyle = cognitiveStyle;
+      if (slashResult.hadSlashCommand && slashResult.detectedStyle) {
+        activeStyle = slashResult.detectedStyle;
+        setCognitiveStyle(activeStyle);
+        textToSend = slashResult.cleanText;
+      }
+
+      if (activeStyle && activeStyle !== 'default') {
+        textToSend = injectCognitiveStyle(textToSend, activeStyle);
+      }
+
       return submitFromComposer(
         {
           answerMode,
@@ -684,7 +699,7 @@ const ChatForm = memo(function ChatForm({
         { text: textToSend },
       );
     },
-    [answerMode, steering, submitMessage, methods, outputFormat, engineMode],
+    [answerMode, steering, submitMessage, methods, outputFormat, engineMode, cognitiveStyle, setCognitiveStyle],
   );
 
   return (

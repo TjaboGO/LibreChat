@@ -94,5 +94,7 @@ export * from './devserver';
 export * from './research';
 /* living office artifacts (word, excel, powerpoint) */
 export * from './office';
+/* cognitive output styles (/concise, /learning) */
+export * from './styles';
 
 

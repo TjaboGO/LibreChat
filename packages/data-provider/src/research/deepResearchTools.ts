@@ -1,4 +1,4 @@
-import type { FunctionTool } from '../types';
+import { Tools, type FunctionTool } from '../types/tools';
 
 export const DEEP_RESEARCH_TOOL_NAMES = [
   'deep_research',
@@ -28,7 +28,7 @@ export function isDeepResearchTool(name?: string | null): boolean {
  */
 export const deepResearchTools: Record<string, FunctionTool> = {
   deep_research: {
-    type: 'function',
+    type: Tools.function,
     function: {
       name: 'deep_research',
       description:
@@ -59,7 +59,7 @@ export const deepResearchTools: Record<string, FunctionTool> = {
     },
   },
   research_plan_queries: {
-    type: 'function',
+    type: Tools.function,
     function: {
       name: 'research_plan_queries',
       description:
@@ -84,7 +84,7 @@ export const deepResearchTools: Record<string, FunctionTool> = {
     },
   },
   research_expand_query: {
-    type: 'function',
+    type: Tools.function,
     function: {
       name: 'research_expand_query',
       description:
@@ -107,7 +107,7 @@ export const deepResearchTools: Record<string, FunctionTool> = {
     },
   },
   research_synthesize: {
-    type: 'function',
+    type: Tools.function,
     function: {
       name: 'research_synthesize',
       description:

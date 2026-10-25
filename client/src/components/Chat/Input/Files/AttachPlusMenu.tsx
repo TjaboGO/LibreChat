@@ -25,6 +25,7 @@ import {
   HelpCircle,
   Laptop,
   FileSpreadsheet,
+  Zap,
 } from 'lucide-react';
 import type { TConversation } from 'librechat-data-provider';
 import type { ExtendedFile, FileSetter } from '~/common';
@@ -443,6 +444,18 @@ export default function AttachPlusMenu({
                   </span>
                   <span className="rounded bg-emerald-500/10 px-1 py-0.5 text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">
                     GPT-5.6 / Claude Office
+                  </span>
+                </Ariakit.MenuItem>
+                <Ariakit.MenuItem
+                  onClick={() => handleSelectSkill('cognitive-output-styles')}
+                  className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm text-text-primary hover:bg-surface-hover"
+                >
+                  <span className="flex items-center gap-2">
+                    <Zap className="h-4 w-4 text-purple-500" />
+                    <span>Cognitive Persona Styles (/concise, /learning)</span>
+                  </span>
+                  <span className="rounded bg-purple-500/10 px-1 py-0.5 text-[9px] font-semibold text-purple-600 dark:text-purple-400">
+                    Claude Code
                   </span>
                 </Ariakit.MenuItem>
                 <Ariakit.MenuItem
