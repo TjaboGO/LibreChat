@@ -37,6 +37,12 @@ jest.mock('~/components/v0Studio/v0StudioView', () => {
   };
 });
 
+jest.mock('~/components/Builders', () => ({
+  FullStackStudio: function MockFullStackStudio({ appId }: { appId: string }) {
+    return <div data-testid={`fullstack-studio-mock-${appId}`}>FullStack Studio Mounted ({appId})</div>;
+  },
+}));
+
 let mockCurrentApp = getDefaultApp();
 let mockIsSpecialized = false;
 
@@ -204,6 +210,32 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       expect(screen.getByTestId('v0-studio-view-mock')).toBeInTheDocument();
     });
 
+    it('renders ChatRoute and FullStackStudio when on /app/lovable/:conversationId', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/lovable/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('fullstack-studio-mock-lovable')).toBeInTheDocument();
+    });
+
+    it('renders ChatRoute and FullStackStudio when on /app/bolt/:conversationId', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/bolt/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('fullstack-studio-mock-bolt')).toBeInTheDocument();
+    });
+
     it('renders ChatRoute without studio views for other apps like /app/office/new', () => {
       render(
         <MemoryRouter initialEntries={['/app/office/new']}>
@@ -216,6 +248,7 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
       expect(screen.queryByTestId('manus-workspace-view-mock')).toBeNull();
       expect(screen.queryByTestId('v0-studio-view-mock')).toBeNull();
+      expect(screen.queryByTestId('fullstack-studio-mock-lovable')).toBeNull();
     });
   });
 

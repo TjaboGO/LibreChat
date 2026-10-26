@@ -5,6 +5,7 @@ import CodingStudioWorkspaceView from '~/components/CodeStudios/CodingStudioWork
 import ManusWorkspaceView from '~/components/ManusStudio/ManusWorkspaceView';
 import DevinWorkspaceView from '~/components/DevinStudio/DevinWorkspaceView';
 import v0StudioView from '~/components/v0Studio/v0StudioView';
+import { FullStackStudio } from '~/components/Builders';
 import ChatRoute from './ChatRoute';
 
 /**
@@ -73,6 +74,17 @@ function AppRoute() {
           <ChatRoute />
         </div>
         <v0StudioView />
+      </div>
+    );
+  }
+
+  if (appId === 'lovable' || appId === 'bolt') {
+    return (
+      <div className="relative flex h-full w-full overflow-hidden">
+        <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
+          <ChatRoute />
+        </div>
+        <FullStackStudio appId={appId} />
       </div>
     );
   }

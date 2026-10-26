@@ -393,13 +393,30 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
 #### Fas 41: Lovable & Full-Stack App Builders (`/app/lovable` & `/app/bolt`)
 - **Syfte:** Full-stack app-generering med databasscheman och live molndriftsättning.
 - **Filer:**
+  - `packages/data-provider/src/apps/prompts/fullStackBuilders.ts`
+  - `packages/data-provider/src/apps/promptStore.ts`
+  - `packages/data-provider/src/apps/__tests__/fullStackBuilders.spec.ts`
   - `client/src/components/Builders/FullStackStudio.tsx`
-  - Promptkällor: `My system prompts/Lovable/Agent Prompt.txt`, `My system prompts/Bolt/`
+  - `client/src/components/Builders/index.ts`
+  - `client/src/components/Builders/__tests__/FullStackStudio.spec.tsx`
+  - `client/src/routes/AppRoute.tsx`
+  - `client/src/routes/__tests__/AppRoute.spec.tsx`
+  - Promptkällor: `My system prompts/senast uppdaterad 2 veckor sedan/Lovable/Agent Prompt.txt`, `My system prompts/senaste uppdatering förra månaden/LOVABLE/Lovable_2.0.txt`, `My system prompts/senast uppdaterad 2 veckor sedan/Open Source prompts/Bolt/Prompt.txt`
 - **Checklista:**
-  - [ ] Montera Lovable Agent prompt med Supabase SQL schema design och realtids-prenumerationer.
-  - [ ] Bolt.new snabbstartsmallar för Vite + Tailwind.
-  - [ ] Fullskärms iframe-preview med konsolloggar.
+  - [x] Montera Lovable Agent prompt med Supabase SQL schema design och realtids-prenumerationer.
+  - [x] Bolt.new snabbstartsmallar för Vite + Tailwind.
+  - [x] Fullskärms iframe-preview med konsolloggar.
 - **Verifiering:** Generera ett Supabase SQL-schema och se komponenten uppdateras i förhandsgranskningen.
+- **Resultat & Genomförande:**
+  - Skapade `packages/data-provider/src/apps/prompts/fullStackBuilders.ts` med fullständiga autentiska `LOVABLE_BUILDER_PROMPT` och `BOLT_BUILDER_PROMPT` samt dynamiska miljövariabler (`{{CURRENT_DATE}}`, `{{WORKING_DIRECTORY}}`, `{{CURRENT_OS}}`, `{{KNOWLEDGE_CUTOFF}}`).
+  - Registrerade och monterade prompts i `promptStore.ts` för nycklarna `lovable`, `lovable-builder`, `bolt`, `bolt-new`.
+  - Byggde `FullStackStudio.tsx` med:
+    - **Live Sandboxed App Preview:** Responsive viewport (Desktop 100%, Tablet 768px, Mobile 375px), URL bar (`http://localhost:5173/`), port-väljare och realtids konsolfeed med rensningsmöjlighet.
+    - **Supabase SQL Schema Studio:** Interaktiv tabellväljare (`profiles`, `products`, `messages`), kolumndefinitioner med datatyper/nycklar, RLS policy viewer med aktiva säkerhetsregler (`auth.uid() = id`), och simulerad "Run SQL Migration" med animerad bekräftelsenotis och export.
+    - **Starter Templates:** Snabbstartsmallar för SaaS Supabase Auth, Real-Time Chat och E-Commerce Marketplace med "Use Starter"-injektion.
+    - **Collapsible Responsive Dock:** Samma 32px slimmade vertikala dockningsknapp som i Devin och v0 (`lovable-studio-expand-btn` / `bolt-studio-expand-btn`).
+  - Monterade i `client/src/routes/AppRoute.tsx` för både `/app/lovable` och `/app/bolt`.
+  - Skapade fullständiga enhetstester i `fullStackBuilders.spec.ts`, `FullStackStudio.spec.tsx` och `AppRoute.spec.tsx` med 100% testtäckning.
 
 #### Fas 42: Living Office & Notion AI Suite (`/app/office` & `/app/notion`)
 - **Syfte:** Interaktiv kontorssvit och relationsdatabaser direkt i appen.

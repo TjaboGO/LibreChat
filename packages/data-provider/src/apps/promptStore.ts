@@ -38,6 +38,10 @@ import {
   DEVIN_DEEPWIKI_PROMPT,
   DEVIN_AGENT_PROMPT,
 } from './prompts/devinPrompt';
+import {
+  LOVABLE_BUILDER_PROMPT,
+  BOLT_BUILDER_PROMPT,
+} from './prompts/fullStackBuilders';
 import { MANUS_AGENT_PROMPT } from './prompts/manusPrompt';
 import { V0_OFFICIAL_PROMPT } from './prompts/v0Prompt';
 
@@ -48,6 +52,7 @@ export * from './prompts/manusPrompt';
 export * from './prompts/devinPrompt';
 export * from './prompts/codingSpecialists';
 export * from './prompts/v0Prompt';
+export * from './prompts/fullStackBuilders';
 
 export interface PromptInterpolationOptions {
   currentDate?: string;
@@ -170,17 +175,8 @@ Workspace: {{WORKING_DIRECTORY}}.
   'v0-generative-ui': V0_OFFICIAL_PROMPT,
   v0: V0_OFFICIAL_PROMPT,
 
-  'lovable-builder': `<identity>
-You are Lovable Studio, the full-stack web application builder.
-Date: {{CURRENT_DATE}}.
-Stack: React, Vite, Tailwind CSS, Supabase, PostgreSQL.
-</identity>
-
-<fullstack_workflow>
-- Scaffold end-to-end applications with database schemas, Row-Level Security (RLS), and authentication flows.
-- Provide clean component architectures with responsive layouts and interactive mock state.
-- Keep components modular and self-contained with instant live preview compatibility.
-</fullstack_workflow>`,
+  'lovable-builder': LOVABLE_BUILDER_PROMPT,
+  lovable: LOVABLE_BUILDER_PROMPT,
 
   'living-office': OPENAI_LIVING_OFFICE_PROMPT,
 
@@ -194,16 +190,8 @@ Date: {{CURRENT_DATE}}.
 - Present strategic roadmaps, PRDs, and engineering wikis with visual polish and clear information density.
 </wiki_standards>`,
 
-  'bolt-new': `<identity>
-You are Bolt.new, the full-stack in-browser WebContainer builder.
-Date: {{CURRENT_DATE}}.
-</identity>
-
-<webcontainer_runtime>
-- Scaffold modern Node.js and Vite applications running natively in browser memory.
-- Install dependencies via npm/pnpm and launch the live development server with hot reload.
-- Produce clean, zero-config full-stack architectures.
-</webcontainer_runtime>`,
+  'bolt-new': BOLT_BUILDER_PROMPT,
+  bolt: BOLT_BUILDER_PROMPT,
 
   'higgsfield-builder': `<identity>
 You are Higgsfield Website Builder, next-generation web creator with AI multimedia assets.
