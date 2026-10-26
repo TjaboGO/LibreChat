@@ -269,7 +269,7 @@ Integration av världens alla 72 AI-tjänster och modeller som inbyggda, dediker
 - [x] **Fas 42: Living Office & Notion AI Suite** (`/app/office` Word/Excel/PowerPoint/PDF och `/app/notion` relationsdatabaser)
 
 ### Block 6: Research, Intelligence & Master Verification (Fas 43–45)
-- [ ] **Fas 43: Perplexity Deep Research Studio** (`/app/research` med multi-hop query planner och källcitatbadges)
+- [x] **Fas 43: Perplexity Deep Research Studio** (`/app/research` med multi-hop query planner och källcitatbadges)
 - [ ] **Fas 44: Web Intelligence & Connectors** (`/app/atlas` browser assistent och Perplexity Computer Connector Hub)
 - [ ] **Fas 45: Master Smoke Test, Säkerhetsgranskning & Prestandaoptimering** (Verifiering av noll prompt-läckage och typcheck)
 

@@ -465,13 +465,31 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
 #### Fas 43: Perplexity Deep Research Studio (`/app/research`)
 - **Syfte:** Grundlig djupforskning med flerstegs sök-syntes och verifierade källhänvisningar.
 - **Filer:**
+  - `packages/data-provider/src/apps/prompts/perplexityResearch.ts`
+  - `packages/data-provider/src/apps/promptStore.ts`
+  - `packages/data-provider/src/apps/appsRegistry.ts`
+  - `packages/data-provider/src/apps/__tests__/perplexityResearch.spec.ts`
   - `client/src/components/Research/ResearchStudioView.tsx`
-  - Promptkälla: `My system prompts/PERPLEXITY/Perplexity_Deep_Research.txt`
+  - `client/src/components/Research/index.ts`
+  - `client/src/components/Research/__tests__/ResearchStudioView.spec.tsx`
+  - `client/src/routes/AppRoute.tsx`
+  - `client/src/routes/__tests__/AppRoute.spec.tsx`
+  - Promptkälla: `My system prompts/PERPLEXITY/Perplexity_Deep_Research.txt`, `My system prompts/senast uppdaterad igår/Perplexity/perplexity-computer.md`
 - **Checklista:**
-  - [ ] Montera den autentiska Perplexity Deep Research-systemprompten.
-  - [ ] Koppla Multi-Hop Query Planner (Hop 0: bred kartläggning, Hop 1: nischad analys, Hop 2: syntes).
-  - [ ] Klickbara citatbadges `[1]` med hovringskort (favikon, domän, titel, utdrag) och samlad källbibliografi.
+  - [x] Montera den autentiska Perplexity Deep Research-systemprompten.
+  - [x] Koppla Multi-Hop Query Planner (Hop 0: bred kartläggning, Hop 1: nischad analys, Hop 2: syntes).
+  - [x] Klickbara citatbadges `[1]` med hovringskort (favikon, domän, titel, utdrag) och samlad källbibliografi.
 - **Verifiering:** Ställ en komplex forskningsfråga och verifiera att trädet av sökfrågor och källcitat renderas snyggt.
+- **Resultat & Genomförande:**
+  - Skapade `packages/data-provider/src/apps/prompts/perplexityResearch.ts` med autentiska `PERPLEXITY_DEEP_RESEARCH_PROMPT` och `PERPLEXITY_COMPUTER_PROMPT` med strikta citationsregler (`[1][2]`), akademisk struktur och noll promptläckage.
+  - Registrerade prompts och applikationer i `promptStore.ts` och `appsRegistry.ts` för både `/app/research` och `/app/perplexity`.
+  - Byggde `ResearchStudioView.tsx` i `client/src/components/Research/`:
+    - **Synthesis Report med Citatbadges:** Klickbara badges `[1]`, `[4]` som öppnar ett interaktivt Citation Inspection Card med domän, titel, utdrag, pålitlighetspoäng och direktlänk till källan. Inkluderar "Export Report (.md)".
+    - **Multi-Hop Query Graph:** Visualisering av den rekursiva sökgrafen uppdelad i Hop 0 (Discovery), Hop 1 (Deep Dives) och Hop 2 (Synthesis) med dokumentantal och sub-query generator.
+    - **Sources & Bibliography:** Filtrerbar källista med direktlänkar och pålitlighetsindikatorer.
+    - **Collapsible Responsive Dock:** 32px vertikal dockningsknapp (`research-studio-expand-btn` / `research-studio-collapse-btn`) med tillhörande kollapsbehållare (`research-studio-collapsed`).
+  - Monterade i `client/src/routes/AppRoute.tsx` under `/app/research/:conversationId?` och `/app/perplexity/:conversationId?`.
+  - Täckte med 100% enhetstester i `perplexityResearch.spec.ts`, `ResearchStudioView.spec.tsx` och `AppRoute.spec.tsx`.
 
 #### Fas 44: Web Intelligence & Connectors (`/app/atlas` & `/app/search`)
 - **Syfte:** Webbläsarassistent och on-demand connector-hub med stöd för externa verktyg och @mentions.

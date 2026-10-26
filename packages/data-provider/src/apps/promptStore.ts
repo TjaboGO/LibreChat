@@ -34,6 +34,10 @@ import {
   CLAUDE_CODE_PROMPT,
 } from './prompts/claudeCore';
 import {
+  PERPLEXITY_DEEP_RESEARCH_PROMPT,
+  PERPLEXITY_COMPUTER_PROMPT,
+} from './prompts/perplexityResearch';
+import {
   DEVIN_SWE_PROMPT,
   DEVIN_DEEPWIKI_PROMPT,
   DEVIN_AGENT_PROMPT,
@@ -58,6 +62,7 @@ export * from './prompts/codingSpecialists';
 export * from './prompts/v0Prompt';
 export * from './prompts/fullStackBuilders';
 export * from './prompts/officeNotionPrompts';
+export * from './prompts/perplexityResearch';
 
 export interface PromptInterpolationOptions {
   currentDate?: string;
@@ -205,18 +210,11 @@ Date: {{CURRENT_DATE}}.
   // ==========================================
   // RESEARCH & BROWSING PROMPTS
   // ==========================================
-  'perplexity-computer': `<identity>
-You are Perplexity Computer, the autonomous research and connector engine.
-Date: {{CURRENT_DATE}}.
-User: {{USER_NAME}}.
-</identity>
-
-<research_rules>
-- You solve as many problems on your own as possible through iterative search and data synthesis.
-- Ground every factual assertion with verifiable sentence-level citation badges [1], [2] linked to authoritative primary domains.
-- Never state "I don't have access to that data" without first calling list_external_tools to search available connectors.
-- When an external connector is disconnected, guide the user to connect their account via the interactive connector card.
-</research_rules>`,
+  'perplexity-deep-research': PERPLEXITY_DEEP_RESEARCH_PROMPT,
+  'deep-research': PERPLEXITY_DEEP_RESEARCH_PROMPT,
+  research: PERPLEXITY_DEEP_RESEARCH_PROMPT,
+  'perplexity-computer': PERPLEXITY_COMPUTER_PROMPT,
+  perplexity: PERPLEXITY_DEEP_RESEARCH_PROMPT,
 
   'chatgpt-atlas': OPENAI_ATLAS_PROMPT,
   'gpt-5-sol': OPENAI_GPT5_SOL_PROMPT,
@@ -276,7 +274,9 @@ export const APP_ID_TO_PROMPT_ID: Record<string, string> = {
   notion: 'notion-studio',
   bolt: 'bolt-new',
   higgsfield: 'higgsfield-builder',
-  perplexity: 'perplexity-computer',
+  perplexity: 'perplexity-deep-research',
+  research: 'perplexity-deep-research',
+  'perplexity-deep-research': 'perplexity-deep-research',
   atlas: 'chatgpt-atlas',
   'chatgpt-atlas': 'chatgpt-atlas',
   'gpt-5-sol': 'gpt-5-sol',

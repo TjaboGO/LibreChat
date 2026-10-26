@@ -55,6 +55,12 @@ jest.mock('~/components/NotionStudio/NotionWorkspaceView', () => {
   };
 });
 
+jest.mock('~/components/Research', () => ({
+  ResearchStudioView: function MockResearchStudioView() {
+    return <div data-testid="research-studio-view-mock">Research Studio View Mounted</div>;
+  },
+}));
+
 let mockCurrentApp = getDefaultApp();
 let mockIsSpecialized = false;
 
@@ -274,6 +280,32 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       expect(screen.getByTestId('notion-workspace-view-mock')).toBeInTheDocument();
     });
 
+    it('renders ChatRoute and ResearchStudioView when on /app/research/:conversationId', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/research/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('research-studio-view-mock')).toBeInTheDocument();
+    });
+
+    it('renders ChatRoute and ResearchStudioView when on /app/perplexity/:conversationId', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/perplexity/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('research-studio-view-mock')).toBeInTheDocument();
+    });
+
     it('renders ChatRoute without studio views for other apps like /app/higgsfield/new', () => {
       render(
         <MemoryRouter initialEntries={['/app/higgsfield/new']}>
@@ -289,6 +321,7 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       expect(screen.queryByTestId('fullstack-studio-mock-lovable')).toBeNull();
       expect(screen.queryByTestId('office-workspace-view-mock')).toBeNull();
       expect(screen.queryByTestId('notion-workspace-view-mock')).toBeNull();
+      expect(screen.queryByTestId('research-studio-view-mock')).toBeNull();
     });
   });
 

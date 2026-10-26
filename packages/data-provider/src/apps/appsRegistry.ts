@@ -573,17 +573,17 @@ export const APPS_REGISTRY: Record<string, AppDefinition> = {
   // ==========================================
   // RESEARCH & BROWSING
   // ==========================================
-  perplexity: {
-    id: 'perplexity',
-    name: 'Perplexity Research',
+  research: {
+    id: 'research',
+    name: 'Perplexity Deep Research',
     section: 'research',
-    tagline: 'Recursive 4-Hop Deep Research with Citation Badges',
+    tagline: 'Recursive Multi-Hop Research with Citation Badges',
     description:
       'Grounded fact-extraction engine. Deconstructs ambiguous topics into multi-hop queries and synthesizes reports with sentence-level citations.',
     icon: 'Search',
-    badge: 'Multi-Hop',
+    badge: 'Deep Research',
     color: 'text-teal-500 bg-teal-500/10 border-teal-500/20',
-    systemPromptId: 'perplexity-computer',
+    systemPromptId: 'perplexity-deep-research',
     capabilities: ['multi_hop_research', 'web_search', 'artifacts', 'connectors'],
     defaultTools: ['deep_research', 'list_external_tools', 'tavily_web_search'],
     suggestedStarters: [
@@ -601,6 +601,37 @@ export const APPS_REGISTRY: Record<string, AppDefinition> = {
       },
     ],
     order: 1,
+    isPinnedDefault: true,
+    routePath: '/app/research',
+  },
+  perplexity: {
+    id: 'perplexity',
+    name: 'Perplexity Research',
+    section: 'research',
+    tagline: 'Recursive 4-Hop Deep Research with Citation Badges',
+    description:
+      'Grounded fact-extraction engine. Deconstructs ambiguous topics into multi-hop queries and synthesizes reports with sentence-level citations.',
+    icon: 'Search',
+    badge: 'Multi-Hop',
+    color: 'text-teal-500 bg-teal-500/10 border-teal-500/20',
+    systemPromptId: 'perplexity-deep-research',
+    capabilities: ['multi_hop_research', 'web_search', 'artifacts', 'connectors'],
+    defaultTools: ['deep_research', 'list_external_tools', 'tavily_web_search'],
+    suggestedStarters: [
+      {
+        label: 'Deep market research',
+        prompt: 'Conduct a multi-hop deep research report on state-of-the-art inference optimization in 2026.',
+      },
+      {
+        label: 'Compare competitors',
+        prompt: 'Research and construct an authoritative comparison matrix of vector database engines.',
+      },
+      {
+        label: 'Verify factual claims',
+        prompt: 'Synthesize verified academic findings regarding context length scaling laws with citations.',
+      },
+    ],
+    order: 2,
     isPinnedDefault: true,
     routePath: '/app/perplexity',
   },
