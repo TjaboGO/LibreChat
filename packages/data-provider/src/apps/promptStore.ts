@@ -266,6 +266,7 @@ export const APP_ID_TO_PROMPT_ID: Record<string, string> = {
   kiro: 'kiro-dual-mode',
   replit: 'replit-agent',
   grok: 'xai-grok-build',
+  'grok-build': 'xai-grok-build',
   'xai-grok-build': 'xai-grok-build',
   cline: 'cline-operator',
   v0: 'v0-generative-ui',
