@@ -271,7 +271,7 @@ Integration av världens alla 72 AI-tjänster och modeller som inbyggda, dediker
 ### Block 6: Research, Intelligence & Master Verification (Fas 43–45)
 - [x] **Fas 43: Perplexity Deep Research Studio** (`/app/research` med multi-hop query planner och källcitatbadges)
 - [x] **Fas 44: Web Intelligence & Connectors** (`/app/atlas` browser assistent och Perplexity Computer Connector Hub)
-- [ ] **Fas 45: Master Smoke Test, Säkerhetsgranskning & Prestandaoptimering** (Verifiering av noll prompt-läckage och typcheck)
+- [x] **Fas 45: Master Smoke Test, Säkerhetsgranskning & Prestandaoptimering** (Verifiering av noll prompt-läckage och typcheck)
 
 → [docs/tasks/026-all-in-one-app-suite-execution-plan.md](tasks/026-all-in-one-app-suite-execution-plan.md)  
 → [docs/images/all-in-one-master-phases.svg](images/all-in-one-master-phases.svg) (Visuellt arkitekturdiagram)

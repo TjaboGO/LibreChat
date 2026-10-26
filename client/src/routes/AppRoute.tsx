@@ -1,17 +1,44 @@
-import { memo } from 'react';
+import { memo, lazy, Suspense } from 'react';
 import { isValidAppId } from 'librechat-data-provider';
 import { Navigate, useParams, useLocation } from 'react-router-dom';
-import CodingStudioWorkspaceView from '~/components/CodeStudios/CodingStudioWorkspaceView';
-import OfficeWorkspaceView from '~/components/OfficeStudio/OfficeWorkspaceView';
-import NotionWorkspaceView from '~/components/NotionStudio/NotionWorkspaceView';
-import ManusWorkspaceView from '~/components/ManusStudio/ManusWorkspaceView';
-import DevinWorkspaceView from '~/components/DevinStudio/DevinWorkspaceView';
-import v0StudioView from '~/components/v0Studio/v0StudioView';
-import { ConnectorHubStudio } from '~/components/Connectors';
-import { ResearchStudioView } from '~/components/Research';
-import { AtlasWorkspaceView } from '~/components/Atlas';
-import { FullStackStudio } from '~/components/Builders';
 import ChatRoute from './ChatRoute';
+
+// Lazy-loaded specialized studio workspaces for instant app switching and reduced bundle size
+const ManusWorkspaceView = lazy(() => import('~/components/ManusStudio/ManusWorkspaceView'));
+const DevinWorkspaceView = lazy(() => import('~/components/DevinStudio/DevinWorkspaceView'));
+const CodingStudioWorkspaceView = lazy(() => import('~/components/CodeStudios/CodingStudioWorkspaceView'));
+const v0StudioView = lazy(() => import('~/components/v0Studio/v0StudioView'));
+const FullStackStudio = lazy(() =>
+  import('~/components/Builders').then((m) => ({ default: m.FullStackStudio })),
+);
+const OfficeWorkspaceView = lazy(() => import('~/components/OfficeStudio/OfficeWorkspaceView'));
+const NotionWorkspaceView = lazy(() => import('~/components/NotionStudio/NotionWorkspaceView'));
+const ResearchStudioView = lazy(() =>
+  import('~/components/Research').then((m) => ({ default: m.ResearchStudioView })),
+);
+const AtlasWorkspaceView = lazy(() =>
+  import('~/components/Atlas').then((m) => ({ default: m.AtlasWorkspaceView })),
+);
+const ConnectorHubStudio = lazy(() =>
+  import('~/components/Connectors').then((m) => ({ default: m.ConnectorHubStudio })),
+);
+
+/**
+ * Lightweight loading fallback rendered while a specialized studio chunk is fetched on-demand.
+ */
+function StudioLoadingFallback() {
+  return (
+    <div
+      data-testid="studio-loading-fallback"
+      className="w-[500px] xl:w-[600px] border-l border-border bg-card/60 backdrop-blur-sm flex flex-col items-center justify-center h-full shrink-0 select-none animate-pulse text-muted-foreground text-sm"
+    >
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-5 h-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+        <span className="font-medium tracking-wide">Loading workspace...</span>
+      </div>
+    </div>
+  );
+}
 
 /**
  * AppRoute: Scoped Application Shell route component.
@@ -20,7 +47,7 @@ import ChatRoute from './ChatRoute';
  * - `/app/:appId` -> redirects to `/app/:appId/new`
  * - `/app/:appId/:conversationId` -> renders ChatRoute scoped to the target application
  * - Validates appId against APPS_REGISTRY, gracefully falling back to `/c/new` if invalid
- * - Mounts specialized studio views (Manus, Devin, Cursor, Windsurf, Kiro)
+ * - Mounts specialized studio views (Manus, Devin, Cursor, Windsurf, Kiro, v0, Lovable, Office, Notion, Bolt, Research, Atlas, Connectors)
  */
 function AppRoute() {
   const location = useLocation();
@@ -45,7 +72,9 @@ function AppRoute() {
         <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
           <ChatRoute />
         </div>
-        <ManusWorkspaceView />
+        <Suspense fallback={<StudioLoadingFallback />}>
+          <ManusWorkspaceView />
+        </Suspense>
       </div>
     );
   }
@@ -56,7 +85,9 @@ function AppRoute() {
         <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
           <ChatRoute />
         </div>
-        <DevinWorkspaceView />
+        <Suspense fallback={<StudioLoadingFallback />}>
+          <DevinWorkspaceView />
+        </Suspense>
       </div>
     );
   }
@@ -67,7 +98,9 @@ function AppRoute() {
         <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
           <ChatRoute />
         </div>
-        <CodingStudioWorkspaceView appId={appId} />
+        <Suspense fallback={<StudioLoadingFallback />}>
+          <CodingStudioWorkspaceView appId={appId} />
+        </Suspense>
       </div>
     );
   }
@@ -78,7 +111,9 @@ function AppRoute() {
         <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
           <ChatRoute />
         </div>
-        <v0StudioView />
+        <Suspense fallback={<StudioLoadingFallback />}>
+          <v0StudioView />
+        </Suspense>
       </div>
     );
   }
@@ -89,7 +124,9 @@ function AppRoute() {
         <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
           <ChatRoute />
         </div>
-        <FullStackStudio appId={appId} />
+        <Suspense fallback={<StudioLoadingFallback />}>
+          <FullStackStudio appId={appId} />
+        </Suspense>
       </div>
     );
   }
@@ -100,7 +137,9 @@ function AppRoute() {
         <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
           <ChatRoute />
         </div>
-        <OfficeWorkspaceView />
+        <Suspense fallback={<StudioLoadingFallback />}>
+          <OfficeWorkspaceView />
+        </Suspense>
       </div>
     );
   }
@@ -111,7 +150,9 @@ function AppRoute() {
         <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
           <ChatRoute />
         </div>
-        <NotionWorkspaceView />
+        <Suspense fallback={<StudioLoadingFallback />}>
+          <NotionWorkspaceView />
+        </Suspense>
       </div>
     );
   }
@@ -122,7 +163,9 @@ function AppRoute() {
         <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
           <ChatRoute />
         </div>
-        <ResearchStudioView />
+        <Suspense fallback={<StudioLoadingFallback />}>
+          <ResearchStudioView />
+        </Suspense>
       </div>
     );
   }
@@ -133,7 +176,9 @@ function AppRoute() {
         <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
           <ChatRoute />
         </div>
-        <AtlasWorkspaceView />
+        <Suspense fallback={<StudioLoadingFallback />}>
+          <AtlasWorkspaceView />
+        </Suspense>
       </div>
     );
   }
@@ -144,7 +189,9 @@ function AppRoute() {
         <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
           <ChatRoute />
         </div>
-        <ConnectorHubStudio />
+        <Suspense fallback={<StudioLoadingFallback />}>
+          <ConnectorHubStudio />
+        </Suspense>
       </div>
     );
   }
