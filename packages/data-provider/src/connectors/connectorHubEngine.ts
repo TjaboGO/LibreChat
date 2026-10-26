@@ -8,6 +8,7 @@ import type {
   MentionDetectionResult,
   ConnectorAuthStatus,
   ConnectorDefinition,
+  ConnectorToolSchema,
 } from './types';
 import {
   getAllConnectors,
@@ -77,7 +78,7 @@ export function listExternalTools(params: ListExternalToolsParams = {}): ListExt
  */
 export function describeExternalTools(params: DescribeExternalToolsParams): DescribeExternalToolsResult {
   const { tool_names = [] } = params;
-  const tools = [];
+  const tools: ConnectorToolSchema[] = [];
 
   for (const name of tool_names) {
     const schema = getToolSchema(name);

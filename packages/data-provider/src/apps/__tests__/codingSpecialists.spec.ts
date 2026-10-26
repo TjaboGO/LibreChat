@@ -36,7 +36,7 @@ describe('Coding Specialist Studios Prompts (Fas 39)', () => {
         knowledgeCutoff: 'June 2024',
       });
       expect(prompt).not.toContain('{{CURRENT_DATE}}');
-      expect(prompt).toContain('Today is 2026-10-26' || 'Date: 2026-10-26');
+      expect(prompt.includes('Today is 2026-10-26') || prompt.includes('Date: 2026-10-26')).toBe(true);
       expect(prompt).toContain('/home/ubuntu/claude-copycat');
     });
   });

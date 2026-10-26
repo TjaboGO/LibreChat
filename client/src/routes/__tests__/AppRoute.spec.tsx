@@ -61,6 +61,18 @@ jest.mock('~/components/Research', () => ({
   },
 }));
 
+jest.mock('~/components/Atlas', () => ({
+  AtlasWorkspaceView: function MockAtlasWorkspaceView() {
+    return <div data-testid="atlas-workspace-view-mock">Atlas Workspace View Mounted</div>;
+  },
+}));
+
+jest.mock('~/components/Connectors', () => ({
+  ConnectorHubStudio: function MockConnectorHubStudio() {
+    return <div data-testid="connectors-studio-mock">Connector Hub Studio Mounted</div>;
+  },
+}));
+
 let mockCurrentApp = getDefaultApp();
 let mockIsSpecialized = false;
 
@@ -306,6 +318,32 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       expect(screen.getByTestId('research-studio-view-mock')).toBeInTheDocument();
     });
 
+    it('renders ChatRoute and AtlasWorkspaceView when on /app/atlas/:conversationId', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/atlas/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('atlas-workspace-view-mock')).toBeInTheDocument();
+    });
+
+    it('renders ChatRoute and ConnectorHubStudio when on /app/connectors/:conversationId', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/connectors/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('connectors-studio-mock')).toBeInTheDocument();
+    });
+
     it('renders ChatRoute without studio views for other apps like /app/higgsfield/new', () => {
       render(
         <MemoryRouter initialEntries={['/app/higgsfield/new']}>
@@ -322,6 +360,8 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       expect(screen.queryByTestId('office-workspace-view-mock')).toBeNull();
       expect(screen.queryByTestId('notion-workspace-view-mock')).toBeNull();
       expect(screen.queryByTestId('research-studio-view-mock')).toBeNull();
+      expect(screen.queryByTestId('atlas-workspace-view-mock')).toBeNull();
+      expect(screen.queryByTestId('connectors-studio-mock')).toBeNull();
     });
   });
 

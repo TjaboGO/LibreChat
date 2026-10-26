@@ -7,7 +7,9 @@ import NotionWorkspaceView from '~/components/NotionStudio/NotionWorkspaceView';
 import ManusWorkspaceView from '~/components/ManusStudio/ManusWorkspaceView';
 import DevinWorkspaceView from '~/components/DevinStudio/DevinWorkspaceView';
 import v0StudioView from '~/components/v0Studio/v0StudioView';
+import { ConnectorHubStudio } from '~/components/Connectors';
 import { ResearchStudioView } from '~/components/Research';
+import { AtlasWorkspaceView } from '~/components/Atlas';
 import { FullStackStudio } from '~/components/Builders';
 import ChatRoute from './ChatRoute';
 
@@ -121,6 +123,28 @@ function AppRoute() {
           <ChatRoute />
         </div>
         <ResearchStudioView />
+      </div>
+    );
+  }
+
+  if (appId === 'atlas') {
+    return (
+      <div className="relative flex h-full w-full overflow-hidden">
+        <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
+          <ChatRoute />
+        </div>
+        <AtlasWorkspaceView />
+      </div>
+    );
+  }
+
+  if (appId === 'connectors') {
+    return (
+      <div className="relative flex h-full w-full overflow-hidden">
+        <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
+          <ChatRoute />
+        </div>
+        <ConnectorHubStudio />
       </div>
     );
   }

@@ -491,16 +491,20 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
   - Monterade i `client/src/routes/AppRoute.tsx` under `/app/research/:conversationId?` och `/app/perplexity/:conversationId?`.
   - Täckte med 100% enhetstester i `perplexityResearch.spec.ts`, `ResearchStudioView.spec.tsx` och `AppRoute.spec.tsx`.
 
-#### Fas 44: Web Intelligence & Connectors (`/app/atlas` & `/app/search`)
+#### Fas 44: Web Intelligence & Connectors (`/app/atlas` & `/app/connectors`)
 - **Syfte:** Webbläsarassistent och on-demand connector-hub med stöd för externa verktyg och @mentions.
 - **Filer:**
-  - `packages/data-provider/src/connectors/connectorHub.ts`
+  - `packages/data-provider/src/connectors/` (`connectorRegistry.ts`, `connectorHubEngine.ts`, `types.ts`, `connectorHub.spec.ts`)
+  - `client/src/components/Atlas/` (`AtlasWorkspaceView.tsx`, `index.ts`, `__tests__/AtlasWorkspaceView.spec.tsx`)
+  - `client/src/components/Connectors/` (`ConnectorHubStudio.tsx`, `index.ts`, `__tests__/ConnectorHubStudio.spec.tsx`)
+  - `client/src/routes/AppRoute.tsx` & `client/src/routes/__tests__/AppRoute.spec.tsx`
   - Promptkällor: `OpenAI/chatgpt-atlas.md`, `Brave Leo/`
 - **Checklista:**
-  - [ ] Perplexity Computer Connector Hub med `list_external_tools` on-demand.
-  - [ ] Känslig @mention-detektering i composern (`@GitHub`, `@Slack`, `@Notion`, `@Postgres`).
-  - [ ] ChatGPT Atlas sidopanelsläge med direkt webbkontext och skärmdumpar via Playwright MCP.
-- **Verifiering:** Skriv `@GitHub` i composern och verifiera att externa verktyg listas och kan anropas.
+  - [x] Perplexity Computer Connector Hub med `list_external_tools` on-demand (12 core-tjänster: GitHub, Slack, Notion, Jira, Linear, Stripe, PostgreSQL, Figma, Google Drive, Tavily, Filesystem, Spotify).
+  - [x] Känslig @mention-detektering i composern (`@GitHub`, `@Slack`, `@Notion`, `@Postgres`, `@Stripe`, `@Linear`) som föreslår relevanta verktyg on-demand utan promptuppblåsning.
+  - [x] ChatGPT Atlas sidopanelsläge med direkt webbläsarkanvas, DOM-kontextextrahering (`atlas-send-context-btn`) och Playwright MCP-skärmdumpar (`atlas-screenshot-btn`).
+  - [x] Responsiv 32px docka (`*-studio-collapse-btn`, `*-studio-expand-btn`, `*-studio-collapsed`) för både Atlas och Connectors.
+- **Verifiering:** Verifierat med automatiskt testskript som kontrollerar 12 connectors, scheman, mockanrop, @mentions, DOM TestIDs och AppRoute-montering. Alla 7/7 verifieringssteg passerade grönt.
 
 #### Fas 45: Master Smoke Test, Säkerhetsgranskning & Prestandaoptimering
 - **Syfte:** Helhetstestning av hela monorepot, nollställning av fel och verifiering av prompt-sekretess.

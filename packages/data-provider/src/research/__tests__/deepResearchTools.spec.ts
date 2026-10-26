@@ -21,11 +21,11 @@ describe('deepResearchTools', () => {
   it('provides complete OpenAI/Anthropic tool definitions', () => {
     const dr = deepResearchTools.deep_research;
     expect(dr.type).toBe('function');
-    expect(dr.function.name).toBe('deep_research');
-    expect(dr.function.parameters.required).toContain('topic');
+    expect(dr.function?.name).toBe('deep_research');
+    expect(dr.function?.parameters.required).toContain('topic');
 
     const expand = deepResearchTools.research_expand_query;
-    expect(expand.function.parameters.required).toContain('parentQueryId');
-    expect(expand.function.parameters.required).toContain('gaps');
+    expect(expand.function?.parameters.required).toContain('parentQueryId');
+    expect(expand.function?.parameters.required).toContain('gaps');
   });
 });
