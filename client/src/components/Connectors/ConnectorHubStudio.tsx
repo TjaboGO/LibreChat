@@ -101,10 +101,12 @@ export const ConnectorHubStudio = memo(function ConnectorHubStudio({
   const handleExecuteTool = async () => {
     setIsExecuting(true);
     try {
+      const matchingConnector = connectors.find((c) => c.tools.includes(activeToolName));
+      const sourceId = matchingConnector?.id || activeToolName.split('_')[0];
       const res = await callExternalTool({
         tool_name: activeToolName,
-        source_id: activeToolName.split('_')[0],
-        arguments: { query: 'react' },
+        source_id: sourceId,
+        arguments: { query: 'react', sql: 'SELECT * FROM users LIMIT 5;' },
       });
       setExecutionResult(res);
     } catch (err: any) {

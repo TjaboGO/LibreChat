@@ -1,4 +1,23 @@
-import { Tools, type FunctionTool } from '../types/tools';
+export interface FunctionTool {
+  type: string;
+  function: {
+    name: string;
+    description: string;
+    parameters: {
+      type: string;
+      properties?: Record<string, any>;
+      required?: string[];
+      enum?: string[];
+      items?: any;
+      [key: string]: any;
+    };
+    strict?: boolean;
+  };
+}
+
+export const Tools = {
+  function: 'function',
+} as const;
 
 export const DEEP_RESEARCH_TOOL_NAMES = [
   'deep_research',
