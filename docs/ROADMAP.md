@@ -266,7 +266,7 @@ Integration av världens alla 72 AI-tjänster och modeller som inbyggda, dediker
 ### Block 5: Builders & Living Office Workspaces (Fas 40–42)
 - [x] **Fas 40: v0 Studio Integration** (`/app/v0` med `AskUserQuestions` formulärkort, shadcn/ui och Sandpack multi-viewport)
 - [x] **Fas 41: Lovable & Full-Stack Builders** (`/app/lovable` & `/app/bolt` med Supabase SQL schemas och live sandbox)
-- [ ] **Fas 42: Living Office & Notion AI Suite** (`/app/office` Word/Excel/PowerPoint/PDF och `/app/notion` relationsdatabaser)
+- [x] **Fas 42: Living Office & Notion AI Suite** (`/app/office` Word/Excel/PowerPoint/PDF och `/app/notion` relationsdatabaser)
 
 ### Block 6: Research, Intelligence & Master Verification (Fas 43–45)
 - [ ] **Fas 43: Perplexity Deep Research Studio** (`/app/research` med multi-hop query planner och källcitatbadges)

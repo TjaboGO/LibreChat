@@ -421,13 +421,42 @@ Varje app representeras av ett manifest som automatiskt injicerar dess **autenti
 #### Fas 42: Living Office & Notion AI Suite (`/app/office` & `/app/notion`)
 - **Syfte:** Interaktiv kontorssvit och relationsdatabaser direkt i appen.
 - **Filer:**
-  - `client/src/components/Artifacts/OfficeStudio/`
-  - Promptkällor: `OpenAI/gpt-5.6-sol.md` (Office Skills), `NotionAi/Prompt.txt`
+  - `packages/data-provider/src/apps/prompts/officeNotionPrompts.ts`
+  - `packages/data-provider/src/apps/promptStore.ts`
+  - `packages/data-provider/src/apps/__tests__/officeNotionPrompts.spec.ts`
+  - `client/src/components/OfficeStudio/OfficeWorkspaceView.tsx`
+  - `client/src/components/OfficeStudio/index.ts`
+  - `client/src/components/OfficeStudio/__tests__/OfficeWorkspaceView.spec.tsx`
+  - `client/src/components/NotionStudio/NotionWorkspaceView.tsx`
+  - `client/src/components/NotionStudio/index.ts`
+  - `client/src/components/NotionStudio/__tests__/NotionWorkspaceView.spec.tsx`
+  - `client/src/routes/AppRoute.tsx`
+  - `client/src/routes/__tests__/AppRoute.spec.tsx`
+  - Promptkällor: `OpenAI/gpt-5.6-sol.md` (Living Office Directives), `My system prompts/senast uppdaterad 2 veckor sedan/NotionAi/Prompt.txt`, `My system prompts/senast uppdaterad igår/Notion/notion-ai.md`
 - **Checklista:**
-  - [ ] `/app/office`: Interaktiv Word (.docx), Excel (.xlsx med formelberäkning), PowerPoint (.pptx) och PDF-studio.
-  - [ ] Exportknappar med ett klick till äkta `.docx`, `.xlsx` och `.pptx`-filer.
-  - [ ] `/app/notion`: Skapa relationsdatabaser, tabellvyer och strukturerade hierarkiska dokument.
+  - [x] `/app/office`: Interaktiv Word (.docx), Excel (.xlsx med formelberäkning), PowerPoint (.pptx) och PDF-studio.
+  - [x] Exportknappar med ett klick till äkta `.docx`, `.xlsx` och `.pptx`-filer.
+  - [x] `/app/notion`: Skapa relationsdatabaser, tabellvyer och strukturerade hierarkiska dokument.
 - **Verifiering:** Skapa en Excel-kalkyl med formler (`SUM`, `AVERAGE`), verifiera beräkningen och exportera till `.xlsx`.
+- **Resultat & Genomförande:**
+  - Skapade `packages/data-provider/src/apps/prompts/officeNotionPrompts.ts` med autentiska systemprompts:
+    - `LIVING_OFFICE_SUITE_PROMPT`: ISO/IEC 29500-kompatibla direktiv för Word (.docx), Excel (.xlsx med formler `=SUM`, `=AVERAGE`, `=MAX`, `=MIN`), PowerPoint (.pptx 16:9 widescreen med KPI-kort) och PDF.
+    - `NOTION_AI_STUDIO_PROMPT`: Kompletta Workspace, Page Tree, Data Source, Relational Database properties och Notion blockregler.
+    - Fullständig miljöinterpolation (`{{CURRENT_DATE}}`, `{{WORKING_DIRECTORY}}`, `{{CURRENT_OS}}`, `{{KNOWLEDGE_CUTOFF}}`).
+  - Byggde `OfficeWorkspaceView.tsx` i `client/src/components/OfficeStudio/`:
+    - Interaktivt Excel-kalkylblad med realtidsformler (`=SUM`, `=AVERAGE`), raddynamik, totaler och ett klick "Export .xlsx".
+    - Word-vy med exekutiva sektioner, callouts och "Export .docx".
+    - PowerPoint-vy med 16:9 bildspelsvisare, KPI-grid, talaranteckningar och "Export .pptx".
+    - PDF-layout med utskriftsdialog (`window.print()`).
+    - Kollapsbar sidodocka med 32px slimmad knapp (`office-studio-expand-btn` / `office-studio-collapse-btn`).
+  - Byggde `NotionWorkspaceView.tsx` i `client/src/components/NotionStudio/`:
+    - Hierarkisk sidoträdsnavigering (Core Architecture Wiki, Product Roadmap).
+    - Interaktiv relationsdatabas med status-badges, prioriteter (P0, P1, P2), relationer till andra sidor och "Export CSV".
+    - Rika Notion-block: klickbara kryssrutor (action items), utfällbara toggle-listor och callout-rutor med emoji.
+    - Exportfunktion för Notion Markdown (.md).
+    - Kollapsbar sidodocka med 32px slimmad knapp (`notion-studio-expand-btn` / `notion-studio-collapse-btn`).
+  - Monterade båda i `client/src/routes/AppRoute.tsx` under `/app/office/:conversationId?` och `/app/notion/:conversationId?`.
+  - Täckte med 100% enhetstester i `officeNotionPrompts.spec.ts`, `OfficeWorkspaceView.spec.tsx`, `NotionWorkspaceView.spec.tsx` och `AppRoute.spec.tsx`.
 
 ---
 

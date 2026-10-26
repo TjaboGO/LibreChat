@@ -2,6 +2,8 @@ import { memo } from 'react';
 import { isValidAppId } from 'librechat-data-provider';
 import { Navigate, useParams, useLocation } from 'react-router-dom';
 import CodingStudioWorkspaceView from '~/components/CodeStudios/CodingStudioWorkspaceView';
+import OfficeWorkspaceView from '~/components/OfficeStudio/OfficeWorkspaceView';
+import NotionWorkspaceView from '~/components/NotionStudio/NotionWorkspaceView';
 import ManusWorkspaceView from '~/components/ManusStudio/ManusWorkspaceView';
 import DevinWorkspaceView from '~/components/DevinStudio/DevinWorkspaceView';
 import v0StudioView from '~/components/v0Studio/v0StudioView';
@@ -85,6 +87,28 @@ function AppRoute() {
           <ChatRoute />
         </div>
         <FullStackStudio appId={appId} />
+      </div>
+    );
+  }
+
+  if (appId === 'office') {
+    return (
+      <div className="relative flex h-full w-full overflow-hidden">
+        <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
+          <ChatRoute />
+        </div>
+        <OfficeWorkspaceView />
+      </div>
+    );
+  }
+
+  if (appId === 'notion') {
+    return (
+      <div className="relative flex h-full w-full overflow-hidden">
+        <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
+          <ChatRoute />
+        </div>
+        <NotionWorkspaceView />
       </div>
     );
   }

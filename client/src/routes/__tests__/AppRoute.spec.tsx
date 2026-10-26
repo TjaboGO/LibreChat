@@ -43,6 +43,18 @@ jest.mock('~/components/Builders', () => ({
   },
 }));
 
+jest.mock('~/components/OfficeStudio/OfficeWorkspaceView', () => {
+  return function MockOfficeWorkspaceView() {
+    return <div data-testid="office-workspace-view-mock">Office Workspace View Mounted</div>;
+  };
+});
+
+jest.mock('~/components/NotionStudio/NotionWorkspaceView', () => {
+  return function MockNotionWorkspaceView() {
+    return <div data-testid="notion-workspace-view-mock">Notion Workspace View Mounted</div>;
+  };
+});
+
 let mockCurrentApp = getDefaultApp();
 let mockIsSpecialized = false;
 
@@ -236,9 +248,35 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       expect(screen.getByTestId('fullstack-studio-mock-bolt')).toBeInTheDocument();
     });
 
-    it('renders ChatRoute without studio views for other apps like /app/office/new', () => {
+    it('renders ChatRoute and OfficeWorkspaceView when on /app/office/:conversationId', () => {
       render(
         <MemoryRouter initialEntries={['/app/office/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('office-workspace-view-mock')).toBeInTheDocument();
+    });
+
+    it('renders ChatRoute and NotionWorkspaceView when on /app/notion/:conversationId', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/notion/new']}>
+          <Routes>
+            <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('chat-route-mock')).toBeInTheDocument();
+      expect(screen.getByTestId('notion-workspace-view-mock')).toBeInTheDocument();
+    });
+
+    it('renders ChatRoute without studio views for other apps like /app/higgsfield/new', () => {
+      render(
+        <MemoryRouter initialEntries={['/app/higgsfield/new']}>
           <Routes>
             <Route path="/app/:appId/:conversationId?" element={<AppRoute />} />
           </Routes>
@@ -249,6 +287,8 @@ describe('Scoped Routing & App Shell (Fas 32)', () => {
       expect(screen.queryByTestId('manus-workspace-view-mock')).toBeNull();
       expect(screen.queryByTestId('v0-studio-view-mock')).toBeNull();
       expect(screen.queryByTestId('fullstack-studio-mock-lovable')).toBeNull();
+      expect(screen.queryByTestId('office-workspace-view-mock')).toBeNull();
+      expect(screen.queryByTestId('notion-workspace-view-mock')).toBeNull();
     });
   });
 

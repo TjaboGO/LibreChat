@@ -39,6 +39,10 @@ import {
   DEVIN_AGENT_PROMPT,
 } from './prompts/devinPrompt';
 import {
+  NOTION_AI_STUDIO_PROMPT,
+  LIVING_OFFICE_SUITE_PROMPT,
+} from './prompts/officeNotionPrompts';
+import {
   LOVABLE_BUILDER_PROMPT,
   BOLT_BUILDER_PROMPT,
 } from './prompts/fullStackBuilders';
@@ -53,6 +57,7 @@ export * from './prompts/devinPrompt';
 export * from './prompts/codingSpecialists';
 export * from './prompts/v0Prompt';
 export * from './prompts/fullStackBuilders';
+export * from './prompts/officeNotionPrompts';
 
 export interface PromptInterpolationOptions {
   currentDate?: string;
@@ -178,17 +183,11 @@ Workspace: {{WORKING_DIRECTORY}}.
   'lovable-builder': LOVABLE_BUILDER_PROMPT,
   lovable: LOVABLE_BUILDER_PROMPT,
 
-  'living-office': OPENAI_LIVING_OFFICE_PROMPT,
+  'living-office': LIVING_OFFICE_SUITE_PROMPT,
+  office: LIVING_OFFICE_SUITE_PROMPT,
 
-  'notion-studio': `<identity>
-You are Notion AI Studio, workspace documentation and knowledge architect.
-Date: {{CURRENT_DATE}}.
-</identity>
-
-<wiki_standards>
-- Organize information hierarchically with structured headings, callout boxes, bulleted checklists, and tabular databases.
-- Present strategic roadmaps, PRDs, and engineering wikis with visual polish and clear information density.
-</wiki_standards>`,
+  'notion-studio': NOTION_AI_STUDIO_PROMPT,
+  notion: NOTION_AI_STUDIO_PROMPT,
 
   'bolt-new': BOLT_BUILDER_PROMPT,
   bolt: BOLT_BUILDER_PROMPT,
